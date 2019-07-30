@@ -1,0 +1,80 @@
+import World from './World'
+import Route from './Route'
+
+export class Scene {
+    name: string
+    canUpdate: boolean
+    world: World
+    game: any
+    route: Route
+    static game: any
+    static route: Route
+
+    constructor(name: string) {
+        this.name = name
+        this.canUpdate = false
+        this.world = new World(this)
+        this.game = Scene.game
+        this.route = Scene.route
+        this.route.push(this)
+    }
+
+    /**
+     * switchTo - 切换场景
+     * @param { String } sceneName - 场景名
+     * @param { Object } query - 场景参数
+     * 
+     * @example
+     * 
+     * import { Scene } from 'gamekit'
+     * class SceneHome extends Scene {
+     *     create() {
+     *         this.switchTo('sceneTwo', {
+     *             extra: 'data',
+     *         })
+     *     }
+     * }
+     */
+    public switchTo(sceneName: string, query: object = {}) {
+        this.route.to(sceneName, query)
+    }
+
+    /**
+     * getQuery - 获取场景参数
+     * @param { String } name - 参数 key 值
+     * 
+     * @example
+     * import { Scene } from 'gamekit'
+     * class SceneHome extends Scene {
+     *     create() {
+     *         this.getQuery() // { extra: 'data' }
+     *         this.getQuery('extra') // 'data'
+     *     }
+     * }
+     */
+    public getQuery(name?: string) {
+        if (name) return this.route.query[name]
+        return this.route.query
+    }
+
+    /**
+     * create
+     */
+    public create() {
+        
+    }
+
+    /**
+     * update
+     */
+    public update() {
+        
+    }
+
+    public shutdown(cleanUp: boolean = true) {
+        this.canUpdate = false
+        if (cleanUp) {
+            this.world.shutdown()
+        }
+    }
+}

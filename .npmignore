@@ -1,0 +1,11 @@
+node_modules
+example
+docs
+test
+rollup.config.js
+package-lock.json
+yarn.lock
+.babelrc
+.eslintrc
+.eslintignore
+.gitignore
