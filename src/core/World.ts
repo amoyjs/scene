@@ -1,4 +1,4 @@
-import { Container } from '@pixi/display'
+import { Container } from 'pixi.js'
 import { Scene } from '../core'
 
 /**
@@ -27,7 +27,6 @@ export default class World extends Container {
     }
 
     public shutdown() {
-        // @ts-ignore
         this.removeChildren()
     }
 }
