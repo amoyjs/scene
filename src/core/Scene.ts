@@ -1,13 +1,14 @@
 import World from './World'
 import Route from './Route'
+import { IGame } from '../types'
 
 export class Scene {
     name: string
     canUpdate: boolean
     world: World
-    game: any
+    game: IGame
     route: Route
-    static game: any
+    static game: IGame
     static route: Route
 
     constructor(name: string) {
