@@ -9,3 +9,4 @@ yarn.lock
 .eslintrc
 .eslintignore
 .gitignore
+.jsdoc.json
