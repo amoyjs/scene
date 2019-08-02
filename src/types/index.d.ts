@@ -1,1 +1,1 @@
-declare module '@pixi/display'
+export const useScene: (game: PIXI.Application, scene: object) => void
