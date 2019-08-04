@@ -5,8 +5,14 @@ export class Scene {
     constructor(name: string)
     getQuery: (name?: string) => object | string
     switchTo: (sceneName: string, query: object) => void
+    Loader: Loader
 }
 
-export interface IGame extends PIXI.Application{
+interface Loader {
+    add: (...args: string[]) => void
+    onLoaded: (closure: (loader: any, resource: any) => void) => void
+}
+
+export interface IGame extends PIXI.Application {
     world: PIXI.Container
 }
