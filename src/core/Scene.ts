@@ -1,3 +1,4 @@
+import { Loader } from 'pixi.js'
 import World from './World'
 import Route from './Route'
 import { IGame } from '../types'
@@ -18,6 +19,19 @@ export class Scene {
         this.game = Scene.game
         this.route = Scene.route
         this.route.push(this)
+    }
+
+    public get Loader() {
+        return {
+            add: (...args: any) => {
+                if (!Loader.shared.resources[args[0]]) {
+                    Loader.shared.add(...args)
+                }
+            },
+            onLoaded: (onLoaded: () => void = () => { }) => {
+                Loader.shared.load(onLoaded)
+            },
+        }
     }
 
     /**

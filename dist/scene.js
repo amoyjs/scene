@@ -68,6 +68,28 @@
             this.route = Scene.route;
             this.route.push(this);
         }
+        Object.defineProperty(Scene.prototype, "Loader", {
+            get: function () {
+                return {
+                    add: function () {
+                        var _a;
+                        var args = [];
+                        for (var _i = 0; _i < arguments.length; _i++) {
+                            args[_i] = arguments[_i];
+                        }
+                        if (!pixi_js.Loader.shared.resources[args[0]]) {
+                            (_a = pixi_js.Loader.shared).add.apply(_a, args);
+                        }
+                    },
+                    onLoaded: function (onLoaded) {
+                        if (onLoaded === void 0) { onLoaded = function () { }; }
+                        pixi_js.Loader.shared.load(onLoaded);
+                    }
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * switchTo - 切换场景
          * @param { String } sceneName - 场景名
