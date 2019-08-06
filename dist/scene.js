@@ -132,11 +132,14 @@
          * create
          */
         Scene.prototype.create = function () {
+            this.canUpdate = true;
         };
         /**
          * update
          */
         Scene.prototype.update = function () {
+            if (!this.canUpdate)
+                return false;
         };
         Scene.prototype.shutdown = function (cleanUp) {
             if (cleanUp === void 0) { cleanUp = true; }

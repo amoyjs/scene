@@ -76,14 +76,14 @@ export class Scene {
      * create
      */
     public create() {
-        
+        this.canUpdate = true
     }
 
     /**
      * update
      */
     public update() {
-        
+        if (!this.canUpdate) return false
     }
 
     public shutdown(cleanUp: boolean = true) {
