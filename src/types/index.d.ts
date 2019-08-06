@@ -4,7 +4,7 @@ export class Scene {
     game: PIXI.Application
     constructor(name: string)
     getQuery: (name?: string) => object | string
-    switchTo: (sceneName: string, query: object) => void
+    switchTo: (sceneName: string, query?: object) => void
     Loader: Loader
 }
 
