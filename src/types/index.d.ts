@@ -1,7 +1,10 @@
+import World from '../core/World'
+
 export const useScene: (game: PIXI.Application, scene: object) => void
 export class Scene {
     name: string
     game: PIXI.Application
+    world: World
     constructor(name: string)
     getQuery: (name?: string) => object | string
     switchTo: (sceneName: string, query?: object) => void
