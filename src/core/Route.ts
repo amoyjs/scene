@@ -1,15 +1,15 @@
 import { Scene } from './Scene'
 
 export default class Route {
-    scenes: {}
-    prevSceneName: string | any
-    currentSceneName: string | any
-    pendingSceneName: string | any
-    currentScene: Scene | null
-    instance: Route | null
-    query: any
-    game: any;
-    static instance: Route
+    public scenes: {}
+    public prevSceneName: string | any
+    public currentSceneName: string | any
+    public pendingSceneName: string | any
+    public currentScene: Scene | null
+    public instance: Route | null
+    public query: any
+    public game: any;
+    public static instance: Route
 
     constructor(game: any) {
         this.game = game

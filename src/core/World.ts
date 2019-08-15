@@ -7,9 +7,9 @@ import { Scene } from '../core'
  * @property { Bumber } y - 世界坐标 `y` 值
  */
 export default class World extends Container {
-    x: number
-    y: number
-    scene: Scene
+    public x: number
+    public y: number
+    public scene: Scene
 
     constructor(scene: Scene) {
         super()

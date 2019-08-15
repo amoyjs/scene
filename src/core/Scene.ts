@@ -4,13 +4,13 @@ import Route from './Route'
 import { IGame } from '../types'
 
 export class Scene {
-    name: string
-    canUpdate: boolean
-    world: World
-    game: IGame
-    route: Route
-    static game: IGame
-    static route: Route
+    public name: string
+    public canUpdate: boolean
+    public world: World
+    public game: IGame
+    public route: Route
+    public static game: IGame
+    public static route: Route
 
     constructor(name: string) {
         this.name = name
@@ -28,11 +28,11 @@ export class Scene {
                     Loader.shared.add(...args)
                 }
             },
-            onLoaded: (onLoaded: () => void = () => { }) => {
-                Loader.shared.load(onLoaded)
-            },
             Load: (images: object, closure: (name: string, path: string) => void) => {
                 Object.keys(images).map((key) => closure(key, images[key]))
+            },
+            onLoaded: (onLoaded: () => void = () => { }) => {
+                Loader.shared.load(onLoaded)
             },
         }
     }

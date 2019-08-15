@@ -81,12 +81,12 @@
                             (_a = pixi_js.Loader.shared).add.apply(_a, args);
                         }
                     },
+                    Load: function (images, closure) {
+                        Object.keys(images).map(function (key) { return closure(key, images[key]); });
+                    },
                     onLoaded: function (onLoaded) {
                         if (onLoaded === void 0) { onLoaded = function () { }; }
                         pixi_js.Loader.shared.load(onLoaded);
-                    },
-                    Load: function (images, closure) {
-                        Object.keys(images).map(function (key) { return closure(key, images[key]); });
                     }
                 };
             },
