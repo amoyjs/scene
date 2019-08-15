@@ -14,6 +14,7 @@ export class Scene {
 interface Loader {
     add: (...args: string[]) => void
     onLoaded: (closure: (loader: any, resource: any) => void) => void
+    Load: (images: object, closure: (name: string, path: string) => void) => void
 }
 
 export interface IGame extends PIXI.Application {

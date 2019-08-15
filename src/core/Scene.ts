@@ -31,6 +31,9 @@ export class Scene {
             onLoaded: (onLoaded: () => void = () => { }) => {
                 Loader.shared.load(onLoaded)
             },
+            Load: (images: object, closure: (name: string, path: string) => void) => {
+                Object.keys(images).map((key) => closure(key, images[key]))
+            },
         }
     }
 

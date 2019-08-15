@@ -80,6 +80,9 @@ var Scene = /** @class */ (function () {
                 onLoaded: function (onLoaded) {
                     if (onLoaded === void 0) { onLoaded = function () { }; }
                     Loader.shared.load(onLoaded);
+                },
+                Load: function (images, closure) {
+                    Object.keys(images).map(function (key) { return closure(key, images[key]); });
                 }
             };
         },
