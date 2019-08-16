@@ -10,11 +10,13 @@ export default class World extends Container {
     public x: number
     public y: number
     public scene: Scene
+    public isWorld: boolean
 
     constructor(scene: Scene) {
         super()
         this.init()
         this.scene = scene
+        this.isWorld = true
     }
 
     public init() {

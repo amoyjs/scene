@@ -40,6 +40,7 @@ var World = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.init();
         _this.scene = scene;
+        _this.isWorld = true;
         return _this;
     }
     World.prototype.init = function () {
