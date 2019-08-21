@@ -1,15 +1,15 @@
 import { Loader } from 'pixi.js'
 import World from './World'
 import Route from './Route'
-import { IGame } from '../types'
+import FontLoader from './FontLoader'
 
 export class Scene {
     public name: string
     public canUpdate: boolean
     public world: World
-    public game: IGame
+    public game: SCENE.IGame
     public route: Route
-    public static game: IGame
+    public static game: SCENE.IGame
     public static route: Route
 
     constructor(name: string) {

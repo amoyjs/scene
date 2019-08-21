@@ -1,13 +1,30 @@
-import World from '../core/World'
+declare const wx: any
 
-interface Loader {
-    add: (...args: string[]) => void
-    Load: (images: object, closure: (name: string, path: string) => void) => void
-    onLoaded: (closure: (loader: any, resource: any) => void) => void
-}
+declare namespace SCENE {
+    interface Loader {
+        add: (...args: string[]) => void
+        Load: (images: object) => void
+        LoadFont: (families: string[]) => void
+        onLoaded: (closure: (loader: any, resource: any) => void) => void
+    }
 
-export interface IGame extends PIXI.Application {
-    world: PIXI.Container
+    interface IGame extends PIXI.Application {
+        world: PIXI.Container
+    }
+
+    interface Scene {
+        
+    }
+
+    interface World {
+        x: number
+        y: number
+        scene: Scene
+        isWorld: boolean
+        init: () => void
+        onSceneChange: () => void
+        shutdown: () => void
+    }
 }
 
 declare module '@amoy/scene' {
@@ -15,10 +32,10 @@ declare module '@amoy/scene' {
     class Scene {
         name: string
         game: PIXI.Application
-        world: World
+        world: SCENE.World
         constructor(name: string)
         getQuery: (name?: string) => object | string
         switchTo: (sceneName: string, query?: object) => void
-        Loader: Loader
+        Loader: SCENE.Loader
     }
 }
