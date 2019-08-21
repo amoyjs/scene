@@ -1,3 +1,5 @@
+/// <reference types="pixi.js" />
+
 declare const wx: any
 
 declare namespace SCENE {
@@ -13,7 +15,12 @@ declare namespace SCENE {
     }
 
     interface Scene {
-        
+        name: string
+        game: PIXI.Application
+        world: World
+        getQuery: (name?: string) => object | string
+        switchTo: (sceneName: string, query?: object) => void
+        Loader: SCENE.Loader
     }
 
     interface World {
@@ -27,15 +34,8 @@ declare namespace SCENE {
     }
 }
 
+
 declare module '@amoy/scene' {
     function useScene(game: PIXI.Application, scene: object): void
-    class Scene {
-        name: string
-        game: PIXI.Application
-        world: SCENE.World
-        constructor(name: string)
-        getQuery: (name?: string) => object | string
-        switchTo: (sceneName: string, query?: object) => void
-        Loader: SCENE.Loader
-    }
+    const Scene: SCENE.Scene
 }
