@@ -22,17 +22,28 @@ export class Scene {
     }
 
     public get Loader() {
+        const state = {
+            count: 0,
+            needLoadFont: false,
+        }
         return {
             add: (...args: any) => {
-                if (!Loader.shared.resources[args[0]]) {
-                    Loader.shared.add(...args)
-                }
+                if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
             },
-            Load: (images: object, closure: (name: string, path: string) => void) => {
-                Object.keys(images).map((key) => closure(key, images[key]))
+            Load: (images: object) => {
+                Object.keys(images).map((key) => Loader.shared.add(key, images[key]))
+            },
+            LoadFont: (families: string[]) => {
+                state.needLoadFont = true
+                FontLoader.Load(families)
             },
             onLoaded: (onLoaded: () => void = () => { }) => {
-                Loader.shared.load(onLoaded)
+                const done = () => {
+                    state.count++
+                    if (state.count === 2) onLoaded()
+                }
+                Loader.shared.load(() => state.needLoadFont ? done() : onLoaded())
+                FontLoader.onLoaded(() => done())
             },
         }
     }
