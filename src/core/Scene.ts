@@ -9,7 +9,7 @@ export class Scene {
     public world: World
     public game: SCENE.IGame
     public route: Route
-    public resourcesGetter: Array<() => void>
+    public static resourceGetters: Array<() => void>
     public static game: SCENE.IGame
     public static route: Route
 
@@ -50,14 +50,14 @@ export class Scene {
     }
 
     public Load() {
-        return this.resourcesGetter.reduce((prev: any, current: any) => {
+        return Scene.resourceGetters.reduce((prev: any, current: any) => {
             prev = Object.assign(prev, current())
             return prev
         }, {})
     }
 
-    public useLoad(cb: () => void) {
-        this.resourcesGetter.push(cb)
+    public static useLoad(cb: () => void) {
+        this.resourceGetters.push(cb)
     }
 
     /**

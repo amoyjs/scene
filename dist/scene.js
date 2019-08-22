@@ -167,13 +167,13 @@
             configurable: true
         });
         Scene.prototype.Load = function () {
-            return this.resourcesGetter.reduce(function (prev, current) {
+            return Scene.resourceGetters.reduce(function (prev, current) {
                 prev = Object.assign(prev, current());
                 return prev;
             }, {});
         };
-        Scene.prototype.useLoad = function (cb) {
-            this.resourcesGetter.push(cb);
+        Scene.useLoad = function (cb) {
+            this.resourceGetters.push(cb);
         };
         /**
          * switchTo - 切换场景
