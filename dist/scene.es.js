@@ -140,7 +140,8 @@ var Scene = /** @class */ (function () {
                         (_a = Loader.shared).add.apply(_a, args);
                 },
                 Load: function (images) {
-                    Object.keys(images).map(function (key) { return Loader.shared.add(key, images[key]); });
+                    var _this = this;
+                    Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
                 },
                 LoadFont: function (families) {
                     state.needLoadFont = true;
@@ -161,6 +162,15 @@ var Scene = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Scene.prototype.Load = function () {
+        return this.resourcesGetter.reduce(function (prev, current) {
+            prev = Object.assign(prev, current());
+            return prev;
+        }, {});
+    };
+    Scene.prototype.useLoad = function (cb) {
+        this.resourcesGetter.push(cb);
+    };
     /**
      * switchTo - 切换场景
      * @param { String } sceneName - 场景名

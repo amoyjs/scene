@@ -18,8 +18,11 @@ declare namespace SCENE {
         name: string
         game: PIXI.Application
         world: World
+        constructor(): void
         getQuery: (name?: string) => object | string
         switchTo: (sceneName: string, query?: object) => void
+        Load: () => object
+        useLoad: (cb: () => void) => void
         Loader: SCENE.Loader
     }
 
@@ -28,9 +31,10 @@ declare namespace SCENE {
         y: number
         scene: Scene
         isWorld: boolean
-        init: () => void
-        onSceneChange: () => void
-        shutdown: () => void
+        constructor(): void
+        init(): void
+        onSceneChange(): void
+        shutdown(): void
     }
 }
 

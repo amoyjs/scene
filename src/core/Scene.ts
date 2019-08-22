@@ -9,6 +9,7 @@ export class Scene {
     public world: World
     public game: SCENE.IGame
     public route: Route
+    public resourcesGetter: Array<() => void>
     public static game: SCENE.IGame
     public static route: Route
 
@@ -30,8 +31,8 @@ export class Scene {
             add: (...args: any) => {
                 if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
             },
-            Load: (images: object) => {
-                Object.keys(images).map((key) => Loader.shared.add(key, images[key]))
+            Load(images: object) {
+                Object.keys(images).map((key) => this.add(key, images[key]))
             },
             LoadFont: (families: string[]) => {
                 state.needLoadFont = true
@@ -46,6 +47,17 @@ export class Scene {
                 FontLoader.onLoaded(() => done())
             },
         }
+    }
+
+    public Load() {
+        return this.resourcesGetter.reduce((prev: any, current: any) => {
+            prev = Object.assign(prev, current())
+            return prev
+        }, {})
+    }
+
+    public useLoad(cb: () => void) {
+        this.resourcesGetter.push(cb)
     }
 
     /**
