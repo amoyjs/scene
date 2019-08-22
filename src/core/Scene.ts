@@ -9,7 +9,7 @@ export class Scene {
     public world: World
     public game: SCENE.IGame
     public route: Route
-    public static resourceGetters: Array<() => void>
+    public static resourceGetters: Array<() => void> = []
     public static game: SCENE.IGame
     public static route: Route
 

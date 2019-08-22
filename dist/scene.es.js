@@ -229,6 +229,7 @@ var Scene = /** @class */ (function () {
             this.world.shutdown();
         }
     };
+    Scene.resourceGetters = [];
     return Scene;
 }());
 
