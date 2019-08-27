@@ -149,7 +149,7 @@
                     },
                     LoadFont: function (families) {
                         state.needLoadFont = true;
-                        FontLoader.Load(families);
+                        return FontLoader.Load(families);
                     },
                     onLoaded: function (onLoaded) {
                         if (onLoaded === void 0) { onLoaded = function () { }; }
@@ -166,7 +166,7 @@
             enumerable: true,
             configurable: true
         });
-        Scene.prototype.Load = function () {
+        Scene.prototype.getLoad = function () {
             return Scene.resourceGetters.reduce(function (prev, current) {
                 prev = Object.assign(prev, current());
                 return prev;
@@ -338,9 +338,7 @@
             // @ts-ignore
             if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
                 // @ts-ignore
-                this.currentScene.Load(function () {
-                    _this.currentScene.create();
-                });
+                this.currentScene.Load(function () { return _this.currentScene.create(); });
             }
             else {
                 this.currentScene.create();

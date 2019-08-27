@@ -12,16 +12,18 @@ declare namespace SCENE {
 
     interface IGame extends PIXI.Application {
         world: PIXI.Container
+        UI_DESIGN_RATIO: number
     }
 
     interface Scene {
         name: string
-        game: PIXI.Application
+        game: IGame
         world: World
-        constructor(): void
+        new(name: string): Scene
         getQuery: (name?: string) => object | string
         switchTo: (sceneName: string, query?: object) => void
-        Load: () => object
+        // Load: (done: () => void) => any
+        getLoad: () => object
         useLoad: (cb: () => void) => void
         Loader: SCENE.Loader
     }

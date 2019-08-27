@@ -113,9 +113,7 @@ export default class Route {
         // @ts-ignore
         if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
             // @ts-ignore
-            this.currentScene.Load(() => {
-                this.currentScene.create()
-            })
+            this.currentScene.Load(() => this.currentScene.create())
         } else {
             this.currentScene.create()
         }

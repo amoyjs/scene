@@ -36,7 +36,7 @@ export class Scene {
             },
             LoadFont: (families: string[]) => {
                 state.needLoadFont = true
-                FontLoader.Load(families)
+                return FontLoader.Load(families)
             },
             onLoaded: (onLoaded: () => void = () => { }) => {
                 const done = () => {
@@ -49,7 +49,7 @@ export class Scene {
         }
     }
 
-    public Load() {
+    public getLoad() {
         return Scene.resourceGetters.reduce((prev: any, current: any) => {
             prev = Object.assign(prev, current())
             return prev
