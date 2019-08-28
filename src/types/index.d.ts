@@ -22,7 +22,6 @@ declare namespace SCENE {
         new(name: string): Scene
         getQuery: (name?: string) => object | string
         switchTo: (sceneName: string, query?: object) => void
-        // Load: (done: () => void) => any
         getLoad: () => object
         useLoad: (cb: () => void) => void
         Loader: SCENE.Loader

@@ -339,6 +339,13 @@ var Route = /** @class */ (function () {
         else {
             this.currentScene.create();
         }
+        // @ts-ignore
+        if (this.currentScene.onLoading && typeof this.currentScene.onLoading === 'function') {
+            Loader.shared.on('progress', function (_, resource) {
+                // @ts-ignore
+                _this.currentScene.onLoading(_.progress, resource.name, resource.url);
+            });
+        }
         this.pendingSceneName = null;
     };
     Route.prototype.stateUpdate = function () {

@@ -1,3 +1,4 @@
+import { Loader } from 'pixi.js'
 import { Scene } from './Scene'
 
 export default class Route {
@@ -116,6 +117,13 @@ export default class Route {
             this.currentScene.Load(() => this.currentScene.create())
         } else {
             this.currentScene.create()
+        }
+        // @ts-ignore
+        if (this.currentScene.onLoading && typeof this.currentScene.onLoading === 'function') {
+            Loader.shared.on('progress', (_, resource) => {
+                // @ts-ignore
+                this.currentScene.onLoading(_.progress, resource.name, resource.url)
+            })
         }
         this.pendingSceneName = null
     }
