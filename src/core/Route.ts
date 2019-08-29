@@ -3,24 +3,24 @@ import { Scene } from './Scene'
 
 export default class Route {
     public scenes: {}
-    public prevSceneName: string | any
-    public currentSceneName: string | any
-    public pendingSceneName: string | any
-    public currentScene: Scene | null
-    public instance: Route | null
+    public prevSceneName: string
+    public currentSceneName: string
+    public pendingSceneName: string
+    public currentScene: Scene
+    public instance: Route
     public query: any
-    public game: any;
+    public game: any
     public static instance: Route
 
     constructor(game: any) {
         this.game = game
         this.scenes = {}
         this.query = {}
-        this.prevSceneName = null
-        this.currentSceneName = null
-        this.pendingSceneName = null
-        this.currentScene = null
-        this.instance = null
+    }
+
+    public static create(game: any) {
+        if (!this.instance) this.instance = new Route(game)
+        return this.instance
     }
 
     /**

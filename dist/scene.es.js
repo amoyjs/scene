@@ -1,60 +1,4 @@
-import { Container, Loader } from 'pixi.js';
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
-
-/**
- * @class
- * @property { Bumber } x - 世界坐标 `x` 值
- * @property { Bumber } y - 世界坐标 `y` 值
- */
-var World = /** @class */ (function (_super) {
-    __extends(World, _super);
-    function World(scene) {
-        var _this = _super.call(this) || this;
-        _this.init();
-        _this.scene = scene;
-        _this.isWorld = true;
-        return _this;
-    }
-    World.prototype.init = function () {
-        this.x = 0;
-        this.y = 0;
-    };
-    World.prototype.onSceneChange = function () {
-        this.init();
-    };
-    World.prototype.shutdown = function () {
-        this.removeChildren();
-    };
-    return World;
-}(Container));
+import { Loader, Container } from 'pixi.js';
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -116,13 +60,20 @@ var FontLoader = /** @class */ (function () {
 
 var Scene = /** @class */ (function () {
     function Scene(name) {
+        var _this = this;
         this.name = name;
         this.canUpdate = false;
-        this.world = new World(this);
-        this.game = Scene.game;
-        this.route = Scene.route;
-        this.route.push(this);
+        Scene.addons.map(function (addon) { return addon.call(_this); });
     }
+    Scene.use = function (addons) {
+        var _this = this;
+        if (Array.isArray(addons)) {
+            addons.map(function (addon) { return _this.use(addon); });
+        }
+        else {
+            this.addons.push(addons);
+        }
+    };
     Object.defineProperty(Scene.prototype, "Loader", {
         get: function () {
             var state = {
@@ -209,15 +160,9 @@ var Scene = /** @class */ (function () {
             return this.route.query[name];
         return this.route.query;
     };
-    /**
-     * create
-     */
     Scene.prototype.create = function () {
         this.canUpdate = true;
     };
-    /**
-     * update
-     */
     Scene.prototype.update = function () {
         if (!this.canUpdate)
             return false;
@@ -229,6 +174,7 @@ var Scene = /** @class */ (function () {
             this.world.shutdown();
         }
     };
+    Scene.addons = [];
     Scene.resourceGetters = [];
     return Scene;
 }());
@@ -238,12 +184,12 @@ var Route = /** @class */ (function () {
         this.game = game;
         this.scenes = {};
         this.query = {};
-        this.prevSceneName = null;
-        this.currentSceneName = null;
-        this.pendingSceneName = null;
-        this.currentScene = null;
-        this.instance = null;
     }
+    Route.create = function (game) {
+        if (!this.instance)
+            this.instance = new Route(game);
+        return this.instance;
+    };
     /**
      * 把场景保存在 `this.scenes` 中
      * @param { Scene } scene - 场景实例
@@ -389,15 +335,75 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+/**
+ * @class
+ * @property { Bumber } x - 世界坐标 `x` 值
+ * @property { Bumber } y - 世界坐标 `y` 值
+ */
+var World = /** @class */ (function (_super) {
+    __extends(World, _super);
+    function World(scene) {
+        var _this = _super.call(this) || this;
+        _this.init();
+        _this.scene = scene;
+        _this.isWorld = true;
+        return _this;
+    }
+    World.prototype.init = function () {
+        this.x = 0;
+        this.y = 0;
+    };
+    World.prototype.onSceneChange = function () {
+        this.init();
+    };
+    World.prototype.shutdown = function () {
+        this.removeChildren();
+    };
+    return World;
+}(Container));
+
+Scene.use(function () {
+    this.world = new World(this);
+    this.route = Route.create(this.game);
+    this.route.push(this);
+});
 function useScene(game, scenes) {
-    var route = new Route(game);
     var keys = Object.keys(scenes);
     var values = Object.values(scenes);
-    values.map(function (Scene, index) {
-        Scene.__proto__.game = game;
-        Scene.__proto__.route = route;
-        new Scene(keys[index]);
+    values.map(function (scene, index) {
+        Scene.prototype.game = game;
+        new scene(keys[index]);
     });
+    var route = Route.create(game);
     route.start(keys[0]);
     game.ticker.add(function () { return route.update(); });
 }

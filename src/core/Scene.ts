@@ -9,17 +9,22 @@ export class Scene {
     public world: World
     public game: SCENE.IGame
     public route: Route
+    public static addons: Array<() => void> = []
     public static resourceGetters: Array<() => void> = []
-    public static game: SCENE.IGame
-    public static route: Route
 
     constructor(name: string) {
         this.name = name
         this.canUpdate = false
-        this.world = new World(this)
-        this.game = Scene.game
-        this.route = Scene.route
-        this.route.push(this)
+
+        Scene.addons.map((addon) => addon.call(this))
+    }
+
+    public static use(addons: () => void | (() => void)[]) {
+        if (Array.isArray(addons)) {
+            addons.map((addon) => this.use(addon))
+        } else {
+            this.addons.push(addons)
+        }
     }
 
     public get Loader() {
@@ -98,16 +103,10 @@ export class Scene {
         return this.route.query
     }
 
-    /**
-     * create
-     */
     public create() {
         this.canUpdate = true
     }
 
-    /**
-     * update
-     */
     public update() {
         if (!this.canUpdate) return false
     }
