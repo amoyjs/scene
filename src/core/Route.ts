@@ -9,10 +9,10 @@ export default class Route {
     public currentScene: Scene
     public instance: Route
     public query: any
-    public game: any
+    public game: AMOY.IGame
     public static instance: Route
 
-    constructor(game: any) {
+    constructor(game: AMOY.IGame) {
         this.game = game
         this.scenes = {}
         this.query = {}
@@ -93,7 +93,7 @@ export default class Route {
         }
         if (this.currentSceneName !== this.pendingSceneName) {
             this.currentScene = this.scenes[pendingSceneName]
-            this.setGameWorld()
+            // this.setGameWorld()
             this.cleanStage()
             this.fetchNextScene()
             this.stateUpdate()
@@ -101,16 +101,16 @@ export default class Route {
         }
     }
 
-    private setGameWorld() {
-        this.game.world = this.currentScene.world
-    }
+    // private setGameWorld() {
+    //     this.game.world = this.currentScene.world
+    // }
 
     private cleanStage() {
         this.game.stage.removeChildren()
     }
 
     private fetchNextScene() {
-        this.game.stage.addChild(this.currentScene.world)
+        this.game.stage.addChild(this.currentScene.stage)
         // @ts-ignore
         if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
             // @ts-ignore
@@ -137,9 +137,9 @@ export default class Route {
         if (this.prevSceneName) {
             const preScene = this.scenes[this.prevSceneName]
             preScene.shutdown()
-            this.game.stage.removeChild(preScene.world)
+            this.game.stage.removeChild(preScene.stage)
         }
-        this.currentScene.world.onSceneChange()
+        this.currentScene.stage.onSceneChange()
     }
 
     public getCurrentScene() {

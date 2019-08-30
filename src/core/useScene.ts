@@ -1,9 +1,9 @@
 import { Scene } from './Scene'
 import Route from './Route'
-import World from './World'
+import Stage from './Stage'
 
 Scene.use(function () {
-    this.world = new World(this)
+    this.stage = new Stage(this)
     this.route = Route.create(this.game)
     this.route.push(this)
 })

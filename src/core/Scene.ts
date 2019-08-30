@@ -1,14 +1,12 @@
 import { Loader } from 'pixi.js'
-import World from './World'
-import Route from './Route'
 import FontLoader from './FontLoader'
 
 export class Scene {
     public name: string
     public canUpdate: boolean
-    public world: World
-    public game: SCENE.IGame
-    public route: Route
+    public stage: SCENE.Stage
+    public game: AMOY.IGame
+    public route: SCENE.Route
     public static addons: Array<() => void> = []
     public static resourceGetters: Array<() => void> = []
 
@@ -114,7 +112,7 @@ export class Scene {
     public shutdown(cleanUp: boolean = true) {
         this.canUpdate = false
         if (cleanUp) {
-            this.world.shutdown()
+            this.stage.shutdown()
         }
     }
 }

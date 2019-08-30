@@ -9,9 +9,7 @@ export default class FontLoader {
     }
     public static Load(paths: string[]) {
         if (isWeChat) {
-            return paths.map((path) => {
-                wx.loadFont(path)
-            })
+            return paths.map((path) => wx.loadFont(path))
         } else {
             const families = paths.map((path) => {
                 const indexDot = path.lastIndexOf(`.`)

@@ -1,4 +1,5 @@
 /// <reference types="pixi.js" />
+/// <reference types="amoy.js" />
 
 declare const wx: any
 
@@ -10,15 +11,10 @@ declare namespace SCENE {
         onLoaded: (closure: (loader: any, resource: any) => void) => void
     }
 
-    interface IGame extends PIXI.Application {
-        world: PIXI.Container
-        UI_DESIGN_RATIO: number
-    }
-
     interface Scene {
         name: string
-        game: IGame
-        world: World
+        game: AMOY.IGame
+        stage: Stage
         Loader: SCENE.Loader
         new(name: string): Scene
         getQuery: (name?: string) => object | string
@@ -30,15 +26,17 @@ declare namespace SCENE {
         shutdown: (cleanUp: boolean)  => void
     }
 
-    interface World {
-        x: number
-        y: number
+    class Stage extends PIXI.Container {
         scene: Scene
-        isWorld: boolean
-        constructor(): void
+        isStage: boolean
         init(): void
         onSceneChange(): void
         shutdown(): void
+    }
+
+    interface Route {
+        query: any
+        to: (sceneName: string, query: object) => void
     }
 }
 

@@ -39,9 +39,7 @@
 	    FontLoader.Load = function (paths) {
 	        var _this = this;
 	        if (isWeChat) {
-	            return paths.map(function (path) {
-	                wx.loadFont(path);
-	            });
+	            return paths.map(function (path) { return wx.loadFont(path); });
 	        }
 	        else {
 	            var families = paths.map(function (path) {
@@ -175,7 +173,7 @@
 	        if (cleanUp === void 0) { cleanUp = true; }
 	        this.canUpdate = false;
 	        if (cleanUp) {
-	            this.world.shutdown();
+	            this.stage.shutdown();
 	        }
 	    };
 	    Scene.addons = [];
@@ -265,22 +263,22 @@
 	        }
 	        if (this.currentSceneName !== this.pendingSceneName) {
 	            this.currentScene = this.scenes[pendingSceneName];
-	            this.setGameWorld();
+	            // this.setGameWorld()
 	            this.cleanStage();
 	            this.fetchNextScene();
 	            this.stateUpdate();
 	            this.onSceneChange();
 	        }
 	    };
-	    Route.prototype.setGameWorld = function () {
-	        this.game.world = this.currentScene.world;
-	    };
+	    // private setGameWorld() {
+	    //     this.game.world = this.currentScene.world
+	    // }
 	    Route.prototype.cleanStage = function () {
 	        this.game.stage.removeChildren();
 	    };
 	    Route.prototype.fetchNextScene = function () {
 	        var _this = this;
-	        this.game.stage.addChild(this.currentScene.world);
+	        this.game.stage.addChild(this.currentScene.stage);
 	        // @ts-ignore
 	        if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
 	            // @ts-ignore
@@ -306,9 +304,9 @@
 	        if (this.prevSceneName) {
 	            var preScene = this.scenes[this.prevSceneName];
 	            preScene.shutdown();
-	            this.game.stage.removeChild(preScene.world);
+	            this.game.stage.removeChild(preScene.stage);
 	        }
-	        this.currentScene.world.onSceneChange();
+	        this.currentScene.stage.onSceneChange();
 	    };
 	    Route.prototype.getCurrentScene = function () {
 	        return this.currentScene;
@@ -373,30 +371,31 @@
 	 * @property { Bumber } x - 世界坐标 `x` 值
 	 * @property { Bumber } y - 世界坐标 `y` 值
 	 */
-	var World = /** @class */ (function (_super) {
-	    __extends(World, _super);
-	    function World(scene) {
+	var Stage = /** @class */ (function (_super) {
+	    __extends(Stage, _super);
+	    function Stage(scene) {
 	        var _this = _super.call(this) || this;
 	        _this.init();
 	        _this.scene = scene;
 	        _this.isWorld = true;
+	        _this.isStage = true;
 	        return _this;
 	    }
-	    World.prototype.init = function () {
+	    Stage.prototype.init = function () {
 	        this.x = 0;
 	        this.y = 0;
 	    };
-	    World.prototype.onSceneChange = function () {
+	    Stage.prototype.onSceneChange = function () {
 	        this.init();
 	    };
-	    World.prototype.shutdown = function () {
+	    Stage.prototype.shutdown = function () {
 	        this.removeChildren();
 	    };
-	    return World;
+	    return Stage;
 	}(pixi_js.Container));
 
 	Scene.use(function () {
-	    this.world = new World(this);
+	    this.stage = new Stage(this);
 	    this.route = Route.create(this.game);
 	    this.route.push(this);
 	});
