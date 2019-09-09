@@ -5,10 +5,10 @@ declare const wx: any
 
 declare namespace SCENE {
     interface Loader {
-        add: (...args: string[]) => void
-        Load: (images: object) => void
-        LoadFont: (families: string[]) => void
-        onLoaded: (closure: (loader: any, resource: any) => void) => void
+        add(...args: string[]): void
+        Load(images: object): void
+        LoadFont(families: string[]): void
+        onLoaded(closure: (loader: any, resource: any) => void): void
     }
 
     interface Scene {
@@ -17,13 +17,13 @@ declare namespace SCENE {
         stage: Stage
         Loader: SCENE.Loader
         new(name: string): Scene
-        getQuery: (name?: string) => object | string
-        switchTo: (sceneName: string, query?: object) => void
-        getLoad: () => object
-        useLoad: (cb: () => void) => void
-        create: () => void
-        update: () => void
-        shutdown: (cleanUp: boolean)  => void
+        getQuery(name?: string): object | string
+        switchTo(sceneName: string, query?: object): void
+        getLoad(): object
+        useLoad(cb: () => void): void
+        create(): void
+        update(): void
+        shutdown(cleanUp: boolean): void
     }
 
     class Stage extends PIXI.Container {
@@ -36,7 +36,7 @@ declare namespace SCENE {
 
     interface Route {
         query: any
-        to: (sceneName: string, query: object) => void
+        to(sceneName: string, query: object): void
     }
 }
 
