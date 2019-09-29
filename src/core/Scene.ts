@@ -4,6 +4,11 @@ import FontLoader from './FontLoader'
 export class Scene {
     public name: string
     public canUpdate: boolean
+    public ratio: number
+    public ratios: {
+        x: number
+        y: number
+    }
     public stage: SCENE.Stage
     public game: AMOY.IGame
     public route: SCENE.Route
@@ -13,7 +18,8 @@ export class Scene {
     constructor(name: string) {
         this.name = name
         this.canUpdate = false
-
+        this.ratio = this.game.PIXEL_RATIO.x
+        this.ratios = this.game.PIXEL_RATIO
         Scene.addons.map((addon) => addon.call(this))
     }
 
@@ -70,7 +76,7 @@ export class Scene {
      * 
      * @example
      * 
-     * import { Scene } from 'gamekit'
+     * import { Scene } from 'amoy.js'
      * class SceneHome extends Scene {
      *     create() {
      *         this.switchTo('sceneTwo', {
@@ -88,7 +94,7 @@ export class Scene {
      * @param { String } name - 参数 key 值
      * 
      * @example
-     * import { Scene } from 'gamekit'
+     * import { Scene } from 'amoy.js'
      * class SceneHome extends Scene {
      *     create() {
      *         this.getQuery() // { extra: 'data' }
@@ -102,6 +108,10 @@ export class Scene {
     }
 
     public create() {
+        // 
+    }
+
+    public useUpdate() {
         this.canUpdate = true
     }
 

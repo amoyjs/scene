@@ -65,6 +65,8 @@
 	        var _this = this;
 	        this.name = name;
 	        this.canUpdate = false;
+	        this.ratio = this.game.PIXEL_RATIO.x;
+	        this.ratios = this.game.PIXEL_RATIO;
 	        Scene.addons.map(function (addon) { return addon.call(_this); });
 	    }
 	    Scene.use = function (addons) {
@@ -131,7 +133,7 @@
 	     *
 	     * @example
 	     *
-	     * import { Scene } from 'gamekit'
+	     * import { Scene } from 'amoy.js'
 	     * class SceneHome extends Scene {
 	     *     create() {
 	     *         this.switchTo('sceneTwo', {
@@ -149,7 +151,7 @@
 	     * @param { String } name - 参数 key 值
 	     *
 	     * @example
-	     * import { Scene } from 'gamekit'
+	     * import { Scene } from 'amoy.js'
 	     * class SceneHome extends Scene {
 	     *     create() {
 	     *         this.getQuery() // { extra: 'data' }
@@ -163,6 +165,9 @@
 	        return this.route.query;
 	    };
 	    Scene.prototype.create = function () {
+	        // 
+	    };
+	    Scene.prototype.useUpdate = function () {
 	        this.canUpdate = true;
 	    };
 	    Scene.prototype.update = function () {
@@ -263,25 +268,19 @@
 	        }
 	        if (this.currentSceneName !== this.pendingSceneName) {
 	            this.currentScene = this.scenes[pendingSceneName];
-	            // this.setGameWorld()
 	            this.cleanStage();
 	            this.fetchNextScene();
 	            this.stateUpdate();
 	            this.onSceneChange();
 	        }
 	    };
-	    // private setGameWorld() {
-	    //     this.game.world = this.currentScene.world
-	    // }
 	    Route.prototype.cleanStage = function () {
 	        this.game.stage.removeChildren();
 	    };
 	    Route.prototype.fetchNextScene = function () {
 	        var _this = this;
 	        this.game.stage.addChild(this.currentScene.stage);
-	        // @ts-ignore
 	        if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
-	            // @ts-ignore
 	            this.currentScene.Load(function () { return _this.currentScene.create(); });
 	        }
 	        else {

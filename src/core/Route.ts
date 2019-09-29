@@ -6,7 +6,7 @@ export default class Route {
     public prevSceneName: string
     public currentSceneName: string
     public pendingSceneName: string
-    public currentScene: Scene
+    public currentScene: SCENE.Scene
     public instance: Route
     public query: any
     public game: AMOY.IGame
@@ -93,7 +93,6 @@ export default class Route {
         }
         if (this.currentSceneName !== this.pendingSceneName) {
             this.currentScene = this.scenes[pendingSceneName]
-            // this.setGameWorld()
             this.cleanStage()
             this.fetchNextScene()
             this.stateUpdate()
@@ -101,19 +100,13 @@ export default class Route {
         }
     }
 
-    // private setGameWorld() {
-    //     this.game.world = this.currentScene.world
-    // }
-
     private cleanStage() {
         this.game.stage.removeChildren()
     }
 
     private fetchNextScene() {
         this.game.stage.addChild(this.currentScene.stage)
-        // @ts-ignore
         if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
-            // @ts-ignore
             this.currentScene.Load(() => this.currentScene.create())
         } else {
             this.currentScene.create()

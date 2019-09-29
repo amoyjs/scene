@@ -16,12 +16,15 @@ declare namespace SCENE {
         game: AMOY.IGame
         stage: Stage
         Loader: SCENE.Loader
+        canUpdate: boolean
         new(name: string): Scene
+        Load(cb: () => void): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
         getLoad(): object
         useLoad(cb: () => void): void
         create(): void
+        useUpdate(): void
         update(): void
         shutdown(cleanUp: boolean): void
     }
