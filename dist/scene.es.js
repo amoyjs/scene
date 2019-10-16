@@ -1,4 +1,5 @@
-import { Loader, Container } from 'pixi.js';
+import * as PIXI from 'pixi.js';
+import { Loader, Container, Application } from 'pixi.js';
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -193,19 +194,9 @@ var Route = /** @class */ (function () {
             this.instance = new Route(game);
         return this.instance;
     };
-    /**
-     * 把场景保存在 `this.scenes` 中
-     * @param { Scene } scene - 场景实例
-     * @ignore
-     */
     Route.prototype.push = function (scene) {
         this.scenes[scene.name] = scene;
     };
-    /**
-     * 移除场景
-     * @param { Scene | String } scene - 场景实例或场景名
-     * @ignore
-     */
     Route.prototype.remove = function (scene) {
         if (typeof scene === 'string') {
             delete this.scenes[scene];
@@ -217,23 +208,11 @@ var Route = /** @class */ (function () {
             console.warn("\u9700\u8981\u79FB\u9664\u7684\u573A\u666F " + scene + " \u4E0D\u5B58\u5728");
         }
     };
-    /**
-     * 启动场景
-     * @param { String } sceneName - 场景名
-     * @param { Object } query - 场景参数
-     * @ignore
-     */
     Route.prototype.start = function (sceneName, query) {
         if (sceneName === void 0) { sceneName = ''; }
         if (query === void 0) { query = {}; }
         this.to(sceneName, query);
     };
-    /**
-     * 切换场景
-     * @param { String } sceneName - 场景名
-     * @param { Object } query - 场景参数
-     * @ignore
-     */
     Route.prototype.to = function (sceneName, query) {
         if (this.currentSceneName === sceneName)
             return false;
@@ -242,10 +221,6 @@ var Route = /** @class */ (function () {
             this.query = query;
         }
     };
-    /**
-     * 场景更新
-     * @ignore
-     */
     Route.prototype.update = function () {
         if (this.pendingSceneName)
             this.setCurrentScene(this.pendingSceneName);
@@ -253,10 +228,6 @@ var Route = /** @class */ (function () {
             this.currentScene.update && this.currentScene.update();
         }
     };
-    /**
-     * 初始化当前成精
-     * @ignore
-     */
     Route.prototype.setCurrentScene = function (pendingSceneName) {
         if (!this.isScene(pendingSceneName)) {
             console.warn("\u573A\u666F " + pendingSceneName + " \u4E0D\u5B58\u5728");
@@ -406,5 +377,67 @@ function useScene(game, scenes) {
     game.ticker.add(function () { return route.update(); });
 }
 
-export { Scene, useScene };
+function getView() {
+    // @ts-ignore
+    if (typeof canvas !== 'undefined') {
+        // @ts-ignore
+        return canvas;
+    }
+    else {
+        var view = document.createElement('canvas');
+        document.body.appendChild(view);
+        return view;
+    }
+}
+function usesify(target) {
+    return function use(addons) {
+        if (Array.isArray(addons)) {
+            addons.map(function (addon) { return use(addon); });
+        }
+        else {
+            if (typeof addons === 'function') {
+                addons(target);
+            }
+            else {
+                console.error("addon " + addons + " must be a function");
+            }
+        }
+    };
+}
+
+var defaultConfigure = {
+    view: getView(),
+    backgroundColor: 0x000000,
+    autoResize: true,
+    width: window.innerWidth,
+    height: window.innerHeight
+};
+
+function createGame(configure) {
+    configure = Object.assign(defaultConfigure, configure);
+    var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes, beforeScene = configure.beforeScene, afterScene = configure.afterScene;
+    var game = new Application(configure);
+    game.renderer.resize(width, height);
+    game.resources = Loader.shared.resources;
+    // @ts-ignore
+    game.Loader = Loader;
+    if (UIWidth && UIHeight) {
+        game.UI_DESIGN_RATIO = width / UIWidth;
+        game.PIXEL_RATIO = {
+            x: width / UIWidth,
+            y: height / UIHeight
+        };
+    }
+    else {
+        console.warn("must specified both \"options.UIWidth\" and \"options.UIHeight\" in createGame(options), or you can not use \"game.PIXEL_RATIO\" correctly.");
+    }
+    useScene(game, scenes);
+    return game;
+}
+
+function use(addons) {
+    usesify(PIXI)(addons);
+}
+
+export { Scene, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map

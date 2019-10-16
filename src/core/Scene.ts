@@ -10,7 +10,7 @@ export class Scene {
         y: number
     }
     public stage: SCENE.Stage
-    public game: AMOY.IGame
+    public game: SCENE.IGame
     public route: SCENE.Route
     public static addons: Array<() => void> = []
     public static resourceGetters: Array<() => void> = []

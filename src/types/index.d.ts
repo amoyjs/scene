@@ -1,5 +1,4 @@
 /// <reference types="pixi.js" />
-/// <reference types="amoy.js" />
 
 declare const wx: any
 
@@ -13,7 +12,7 @@ declare namespace SCENE {
 
     interface Scene {
         name: string
-        game: AMOY.IGame
+        game: IGame
         stage: Stage
         Loader: SCENE.Loader
         canUpdate: boolean
@@ -41,10 +40,48 @@ declare namespace SCENE {
         query: any
         to(sceneName: string, query: object): void
     }
+
+    interface IConfigure {
+        scenes: object
+        UIWidth?: number
+        UIHeight?: number
+        view?: HTMLCanvasElement
+        backgroundColor?: number
+        autoStart?: boolean
+        sharedTicker?: boolean
+        sharedLoader?: boolean
+        transparent?: boolean
+        autoResize?: boolean
+        antialias?: boolean
+        preserveDrawingBuffer?: boolean
+        resolution?: number
+        forceCanvas?: boolean
+        clearBeforeRender?: boolean
+        roundPixels?: boolean
+        forceFXAA?: boolean
+        legacy?: boolean
+        showFPS?: boolean
+        width?: number
+        height?: number
+        pf?: string
+    }
+
+    interface IGame extends PIXI.Application {
+        PIXEL_RATIO: {
+            x: number
+            y: number
+        }
+        UI_DESIGN_RATIO: number
+        world?: PIXI.Container
+        resources: any
+        Loader: PIXI.Loader
+    }
 }
 
 
 declare module '@amoy/scene' {
     function useScene(game: PIXI.Application, scene: object): void
+    function createGame(configure: SCENE.IConfigure): SCENE.IGame
+    function use(addons: (core: any) => void | ((core: any) => void)[]): any
     const Scene: SCENE.Scene
 }

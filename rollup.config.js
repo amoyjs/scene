@@ -14,6 +14,7 @@ const output = options => ({
     ...options,
     globals: {
         'pixi.js': 'PIXI',
+        '@pixi/unsafe-eval': 'UNSAFE_EVAL',
     },
 })
 

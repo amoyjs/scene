@@ -437,6 +437,11 @@
   dependencies:
     "@pixi/settings" "^5.1.1"
 
+"@pixi/unsafe-eval@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@pixi/unsafe-eval/-/unsafe-eval-5.0.4.tgz#bf42b46b591b4a82dfa26ab370ad065342d8ec94"
+  integrity sha512-csGzQKJO6Zrxiz/+y96KxcYtki3OCYy9W0kqWojOZxk28yAhMWlAfAunROVnM6HDb8JDijoVgV3txqTy7U26AQ==
+
 "@pixi/utils@^5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@pixi/utils/-/utils-5.1.1.tgz#6e4d611044c9118326d175602b7b17f38ed735fc"

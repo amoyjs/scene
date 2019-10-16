@@ -1,5 +1,4 @@
 import { Container } from 'pixi.js'
-import { Scene } from '.'
 
 /**
  * @class
@@ -9,11 +8,11 @@ import { Scene } from '.'
 export default class Stage extends Container {
     public x: number
     public y: number
-    public scene: Scene
+    public scene: SCENE.Scene
     public isWorld: boolean
     public isStage: boolean
 
-    constructor(scene: Scene) {
+    constructor(scene: SCENE.Scene) {
         super()
         this.init()
         this.scene = scene

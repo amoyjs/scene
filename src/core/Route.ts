@@ -9,10 +9,10 @@ export default class Route {
     public currentScene: SCENE.Scene
     public instance: Route
     public query: any
-    public game: AMOY.IGame
+    public game: SCENE.IGame
     public static instance: Route
 
-    constructor(game: AMOY.IGame) {
+    constructor(game: SCENE.IGame) {
         this.game = game
         this.scenes = {}
         this.query = {}
@@ -23,21 +23,11 @@ export default class Route {
         return this.instance
     }
 
-    /**
-     * 把场景保存在 `this.scenes` 中
-     * @param { Scene } scene - 场景实例
-     * @ignore
-     */
-    public push(scene: Scene) {
+    public push(scene: SCENE.Scene) {
         this.scenes[scene.name] = scene
     }
 
-    /**
-     * 移除场景
-     * @param { Scene | String } scene - 场景实例或场景名
-     * @ignore
-     */
-    public remove(scene: string | Scene) {
+    public remove(scene: string | SCENE.Scene) {
         if (typeof scene === 'string') {
             delete this.scenes[scene]
         } else if (scene instanceof Scene) {
@@ -47,22 +37,10 @@ export default class Route {
         }
     }
 
-    /**
-     * 启动场景
-     * @param { String } sceneName - 场景名
-     * @param { Object } query - 场景参数
-     * @ignore
-     */
     public start(sceneName: string = '', query: object = {}) {
         this.to(sceneName, query)
     }
 
-    /**
-     * 切换场景
-     * @param { String } sceneName - 场景名
-     * @param { Object } query - 场景参数
-     * @ignore
-     */
     public to(sceneName: string, query: object) {
         if (this.currentSceneName === sceneName) return false
         if (this.isScene(sceneName)) {
@@ -71,10 +49,6 @@ export default class Route {
         }
     }
 
-    /**
-     * 场景更新
-     * @ignore
-     */
     public update() {
         if (this.pendingSceneName) this.setCurrentScene(this.pendingSceneName)
         if (this.currentScene && this.currentScene.canUpdate) {
@@ -82,10 +56,6 @@ export default class Route {
         }
     }
 
-    /**
-     * 初始化当前成精
-     * @ignore
-     */
     private setCurrentScene(pendingSceneName: string) {
         if (!this.isScene(pendingSceneName)) {
             console.warn(`场景 ${pendingSceneName} 不存在`)

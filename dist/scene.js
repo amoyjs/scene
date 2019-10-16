@@ -2,7 +2,7 @@
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('pixi.js')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'pixi.js'], factory) :
 	(global = global || self, factory(global.SceneKit = {}, global.PIXI));
-}(this, function (exports, pixi_js) { 'use strict';
+}(this, function (exports, PIXI) { 'use strict';
 
 	function createCommonjsModule(fn, module) {
 		return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -91,8 +91,8 @@
 	                    for (var _i = 0; _i < arguments.length; _i++) {
 	                        args[_i] = arguments[_i];
 	                    }
-	                    if (!pixi_js.Loader.shared.resources[args[0]])
-	                        (_a = pixi_js.Loader.shared).add.apply(_a, args);
+	                    if (!PIXI.Loader.shared.resources[args[0]])
+	                        (_a = PIXI.Loader.shared).add.apply(_a, args);
 	                },
 	                Load: function (images) {
 	                    var _this = this;
@@ -109,7 +109,7 @@
 	                        if (state.count === 2)
 	                            onLoaded();
 	                    };
-	                    pixi_js.Loader.shared.load(function () { return state.needLoadFont ? done() : onLoaded(); });
+	                    PIXI.Loader.shared.load(function () { return state.needLoadFont ? done() : onLoaded(); });
 	                    FontLoader.onLoaded(function () { return done(); });
 	                }
 	            };
@@ -197,19 +197,9 @@
 	            this.instance = new Route(game);
 	        return this.instance;
 	    };
-	    /**
-	     * 把场景保存在 `this.scenes` 中
-	     * @param { Scene } scene - 场景实例
-	     * @ignore
-	     */
 	    Route.prototype.push = function (scene) {
 	        this.scenes[scene.name] = scene;
 	    };
-	    /**
-	     * 移除场景
-	     * @param { Scene | String } scene - 场景实例或场景名
-	     * @ignore
-	     */
 	    Route.prototype.remove = function (scene) {
 	        if (typeof scene === 'string') {
 	            delete this.scenes[scene];
@@ -221,23 +211,11 @@
 	            console.warn("\u9700\u8981\u79FB\u9664\u7684\u573A\u666F " + scene + " \u4E0D\u5B58\u5728");
 	        }
 	    };
-	    /**
-	     * 启动场景
-	     * @param { String } sceneName - 场景名
-	     * @param { Object } query - 场景参数
-	     * @ignore
-	     */
 	    Route.prototype.start = function (sceneName, query) {
 	        if (sceneName === void 0) { sceneName = ''; }
 	        if (query === void 0) { query = {}; }
 	        this.to(sceneName, query);
 	    };
-	    /**
-	     * 切换场景
-	     * @param { String } sceneName - 场景名
-	     * @param { Object } query - 场景参数
-	     * @ignore
-	     */
 	    Route.prototype.to = function (sceneName, query) {
 	        if (this.currentSceneName === sceneName)
 	            return false;
@@ -246,10 +224,6 @@
 	            this.query = query;
 	        }
 	    };
-	    /**
-	     * 场景更新
-	     * @ignore
-	     */
 	    Route.prototype.update = function () {
 	        if (this.pendingSceneName)
 	            this.setCurrentScene(this.pendingSceneName);
@@ -257,10 +231,6 @@
 	            this.currentScene.update && this.currentScene.update();
 	        }
 	    };
-	    /**
-	     * 初始化当前成精
-	     * @ignore
-	     */
 	    Route.prototype.setCurrentScene = function (pendingSceneName) {
 	        if (!this.isScene(pendingSceneName)) {
 	            console.warn("\u573A\u666F " + pendingSceneName + " \u4E0D\u5B58\u5728");
@@ -288,7 +258,7 @@
 	        }
 	        // @ts-ignore
 	        if (this.currentScene.onLoading && typeof this.currentScene.onLoading === 'function') {
-	            pixi_js.Loader.shared.on('progress', function (_, resource) {
+	            PIXI.Loader.shared.on('progress', function (_, resource) {
 	                // @ts-ignore
 	                _this.currentScene.onLoading(_.progress, resource.name, resource.url);
 	            });
@@ -391,7 +361,7 @@
 	        this.removeChildren();
 	    };
 	    return Stage;
-	}(pixi_js.Container));
+	}(PIXI.Container));
 
 	Scene.use(function () {
 	    this.stage = new Stage(this);
@@ -410,7 +380,71 @@
 	    game.ticker.add(function () { return route.update(); });
 	}
 
+	function getView() {
+	    // @ts-ignore
+	    if (typeof canvas !== 'undefined') {
+	        // @ts-ignore
+	        return canvas;
+	    }
+	    else {
+	        var view = document.createElement('canvas');
+	        document.body.appendChild(view);
+	        return view;
+	    }
+	}
+	function usesify(target) {
+	    return function use(addons) {
+	        if (Array.isArray(addons)) {
+	            addons.map(function (addon) { return use(addon); });
+	        }
+	        else {
+	            if (typeof addons === 'function') {
+	                addons(target);
+	            }
+	            else {
+	                console.error("addon " + addons + " must be a function");
+	            }
+	        }
+	    };
+	}
+
+	var defaultConfigure = {
+	    view: getView(),
+	    backgroundColor: 0x000000,
+	    autoResize: true,
+	    width: window.innerWidth,
+	    height: window.innerHeight
+	};
+
+	function createGame(configure) {
+	    configure = Object.assign(defaultConfigure, configure);
+	    var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes, beforeScene = configure.beforeScene, afterScene = configure.afterScene;
+	    var game = new PIXI.Application(configure);
+	    game.renderer.resize(width, height);
+	    game.resources = PIXI.Loader.shared.resources;
+	    // @ts-ignore
+	    game.Loader = PIXI.Loader;
+	    if (UIWidth && UIHeight) {
+	        game.UI_DESIGN_RATIO = width / UIWidth;
+	        game.PIXEL_RATIO = {
+	            x: width / UIWidth,
+	            y: height / UIHeight
+	        };
+	    }
+	    else {
+	        console.warn("must specified both \"options.UIWidth\" and \"options.UIHeight\" in createGame(options), or you can not use \"game.PIXEL_RATIO\" correctly.");
+	    }
+	    useScene(game, scenes);
+	    return game;
+	}
+
+	function use(addons) {
+	    usesify(PIXI)(addons);
+	}
+
 	exports.Scene = Scene;
+	exports.createGame = createGame;
+	exports.use = use;
 	exports.useScene = useScene;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
