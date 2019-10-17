@@ -91,7 +91,7 @@ declare namespace SCENE {
 
 declare module '@amoy/scene' {
     const Scene: SCENE.Scene
-    const Component: SCENE.Component
+    class Component extends SCENE.Component { }
     function use(addons: (core: any) => void | ((core: any) => void)[]): any
     function useScene(game: PIXI.Application, scene: object): void
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
