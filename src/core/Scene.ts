@@ -1,5 +1,4 @@
 import { Loader } from 'pixi.js'
-import FontLoader from './FontLoader'
 
 export class Scene {
     public name: string
@@ -32,10 +31,6 @@ export class Scene {
     }
 
     public get Loader() {
-        const state = {
-            count: 0,
-            needLoadFont: false,
-        }
         return {
             add: (...args: any) => {
                 if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
@@ -43,17 +38,8 @@ export class Scene {
             Load(images: object) {
                 Object.keys(images).map((key) => this.add(key, images[key]))
             },
-            LoadFont: (families: string[]) => {
-                state.needLoadFont = true
-                return FontLoader.Load(families)
-            },
             onLoaded: (onLoaded: () => void = () => { }) => {
-                const done = () => {
-                    state.count++
-                    if (state.count === 2) onLoaded()
-                }
-                Loader.shared.load(() => state.needLoadFont ? done() : onLoaded())
-                FontLoader.onLoaded(() => done())
+                Loader.shared.load(() => onLoaded())
             },
         }
     }
@@ -69,39 +55,10 @@ export class Scene {
         this.resourceGetters.push(cb)
     }
 
-    /**
-     * switchTo - 切换场景
-     * @param { String } sceneName - 场景名
-     * @param { Object } query - 场景参数
-     * 
-     * @example
-     * 
-     * import { Scene } from 'amoy.js'
-     * class SceneHome extends Scene {
-     *     create() {
-     *         this.switchTo('sceneTwo', {
-     *             extra: 'data',
-     *         })
-     *     }
-     * }
-     */
     public switchTo(sceneName: string, query: object = {}) {
         this.route.to(sceneName, query)
     }
 
-    /**
-     * getQuery - 获取场景参数
-     * @param { String } name - 参数 key 值
-     * 
-     * @example
-     * import { Scene } from 'amoy.js'
-     * class SceneHome extends Scene {
-     *     create() {
-     *         this.getQuery() // { extra: 'data' }
-     *         this.getQuery('extra') // 'data'
-     *     }
-     * }
-     */
     public getQuery(name?: string) {
         if (name) return this.route.query[name]
         return this.route.query

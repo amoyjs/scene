@@ -1,10 +1,5 @@
 import { Container } from 'pixi.js'
 
-/**
- * @class
- * @property { Bumber } x - 世界坐标 `x` 值
- * @property { Bumber } y - 世界坐标 `y` 值
- */
 export default class Stage extends Container {
     public x: number
     public y: number
