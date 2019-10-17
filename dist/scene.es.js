@@ -274,9 +274,7 @@ function useScene(game, scenes) {
 }
 
 function getView() {
-    // @ts-ignore
     if (typeof canvas !== 'undefined') {
-        // @ts-ignore
         return canvas;
     }
     else {
@@ -311,12 +309,10 @@ var defaultConfigure = {
 
 function createGame(configure) {
     configure = Object.assign(defaultConfigure, configure);
-    var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes, beforeScene = configure.beforeScene, afterScene = configure.afterScene;
+    var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes;
     var game = new Application(configure);
-    game.renderer.resize(width, height);
-    game.resources = Loader.shared.resources;
-    // @ts-ignore
     game.Loader = Loader;
+    game.resources = Loader.shared.resources;
     if (UIWidth && UIHeight) {
         game.UI_DESIGN_RATIO = width / UIWidth;
         game.PIXEL_RATIO = {

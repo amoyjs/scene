@@ -277,9 +277,7 @@
     }
 
     function getView() {
-        // @ts-ignore
         if (typeof canvas !== 'undefined') {
-            // @ts-ignore
             return canvas;
         }
         else {
@@ -314,12 +312,10 @@
 
     function createGame(configure) {
         configure = Object.assign(defaultConfigure, configure);
-        var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes, beforeScene = configure.beforeScene, afterScene = configure.afterScene;
+        var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes;
         var game = new PIXI.Application(configure);
-        game.renderer.resize(width, height);
-        game.resources = PIXI.Loader.shared.resources;
-        // @ts-ignore
         game.Loader = PIXI.Loader;
+        game.resources = PIXI.Loader.shared.resources;
         if (UIWidth && UIHeight) {
             game.UI_DESIGN_RATIO = width / UIWidth;
             game.PIXEL_RATIO = {

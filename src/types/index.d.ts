@@ -1,6 +1,7 @@
 /// <reference types="pixi.js" />
 
 declare const wx: any
+declare const canvas: any
 
 declare namespace SCENE {
     interface Loader {
@@ -84,7 +85,7 @@ declare namespace SCENE {
         UI_DESIGN_RATIO: number
         world?: PIXI.Container
         resources: any
-        Loader: PIXI.Loader
+        Loader: typeof PIXI.Loader
     }
 }
 

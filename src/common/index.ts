@@ -2,9 +2,7 @@ export * from './compatibleWeChatGame'
 
 
 export function getView() {
-    // @ts-ignore
     if (typeof canvas !== 'undefined') {
-        // @ts-ignore
         return canvas
     } else {
         const view = document.createElement('canvas')

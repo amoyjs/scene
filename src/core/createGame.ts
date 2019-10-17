@@ -1,17 +1,15 @@
-import { Loader, Application as Game } from 'pixi.js'
+import { Application as Game, Loader } from 'pixi.js'
 import { useScene } from './useScene'
 import defaultConfigure from '../configure'
 
 export function createGame(configure: SCENE.IConfigure) {
     configure = Object.assign(defaultConfigure, configure)
 
-    const { UIWidth, UIHeight, width, height, scenes, beforeScene, afterScene } = configure
+    const { UIWidth, UIHeight, width, height, scenes } = configure
     const game = new Game(configure) as SCENE.IGame
 
-    game.renderer.resize(width!, height!)
-    game.resources = Loader.shared.resources
-    // @ts-ignore
     game.Loader = Loader
+    game.resources = Loader.shared.resources
 
     if (UIWidth && UIHeight) {
         game.UI_DESIGN_RATIO = width! / UIWidth
