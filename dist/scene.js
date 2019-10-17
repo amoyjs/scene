@@ -334,10 +334,25 @@
         return game;
     }
 
+    var Component = /** @class */ (function (_super) {
+        __extends(Component, _super);
+        function Component() {
+            var _this = _super.call(this) || this;
+            _this.game = Scene.prototype.game;
+            _this.stage = _this.game.stage;
+            _this.stage.addChild(_this);
+            _this.ratio = _this.game.PIXEL_RATIO.x;
+            _this.ratios = _this.game.PIXEL_RATIO;
+            return _this;
+        }
+        return Component;
+    }(PIXI.Container));
+
     function use(addons) {
         usesify(PIXI)(addons);
     }
 
+    exports.Component = Component;
     exports.Scene = Scene;
     exports.createGame = createGame;
     exports.use = use;

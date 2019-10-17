@@ -36,6 +36,16 @@ declare namespace SCENE {
         shutdown(): void
     }
 
+    class Component extends PIXI.Container {
+        game: IGame
+        stage: Stage
+        ratio: number
+        ratios: {
+            x: number
+            y: number
+        }
+    }
+
     interface Route {
         query: any
         to(sceneName: string, query: object): void
@@ -81,6 +91,7 @@ declare namespace SCENE {
 
 declare module '@amoy/scene' {
     const Scene: SCENE.Scene
+    const Component: SCENE.Component
     function use(addons: (core: any) => void | ((core: any) => void)[]): any
     function useScene(game: PIXI.Application, scene: object): void
     function createGame(configure: SCENE.IConfigure): SCENE.IGame

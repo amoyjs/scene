@@ -331,9 +331,23 @@ function createGame(configure) {
     return game;
 }
 
+var Component = /** @class */ (function (_super) {
+    __extends(Component, _super);
+    function Component() {
+        var _this = _super.call(this) || this;
+        _this.game = Scene.prototype.game;
+        _this.stage = _this.game.stage;
+        _this.stage.addChild(_this);
+        _this.ratio = _this.game.PIXEL_RATIO.x;
+        _this.ratios = _this.game.PIXEL_RATIO;
+        return _this;
+    }
+    return Component;
+}(Container));
+
 function use(addons) {
     usesify(PIXI)(addons);
 }
 
-export { Scene, createGame, use, useScene };
+export { Component, Scene, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map
