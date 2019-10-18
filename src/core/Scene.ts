@@ -64,9 +64,7 @@ export class Scene {
         return this.route.query
     }
 
-    public create() {
-        // 
-    }
+    public create() {}
 
     public useUpdate() {
         this.canUpdate = true

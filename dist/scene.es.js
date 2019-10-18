@@ -62,9 +62,7 @@ var Scene = /** @class */ (function () {
             return this.route.query[name];
         return this.route.query;
     };
-    Scene.prototype.create = function () {
-        // 
-    };
+    Scene.prototype.create = function () { };
     Scene.prototype.useUpdate = function () {
         this.canUpdate = true;
     };
@@ -273,13 +271,24 @@ function useScene(game, scenes) {
     game.ticker.add(function () { return route.update(); });
 }
 
+var defaultConfigure = {
+    backgroundColor: 0x000000,
+    autoResize: true,
+    width: window.innerWidth,
+    height: window.innerHeight
+};
+
 function getView() {
     if (typeof canvas !== 'undefined') {
         return canvas;
     }
     else {
         var view = document.createElement('canvas');
-        document.body.appendChild(view);
+        view.dataset.id = 'first';
+        var canvases = Array.from(document.querySelectorAll('canvas'));
+        var canvas = canvases.filter(function (canvas) { return canvas.dataset.id === 'first'; })[0];
+        if (!canvas)
+            document.body.appendChild(view);
         return view;
     }
 }
@@ -299,17 +308,11 @@ function usesify(target) {
     };
 }
 
-var defaultConfigure = {
-    view: getView(),
-    backgroundColor: 0x000000,
-    autoResize: true,
-    width: window.innerWidth,
-    height: window.innerHeight
-};
-
 function createGame(configure) {
+    var view = configure.view;
     configure = Object.assign(defaultConfigure, configure);
     var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes;
+    configure.view = view || getView();
     var game = new Application(configure);
     game.Loader = Loader;
     game.resources = Loader.shared.resources;

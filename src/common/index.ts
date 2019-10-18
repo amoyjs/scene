@@ -1,12 +1,14 @@
 export * from './compatibleWeChatGame'
 
-
 export function getView() {
     if (typeof canvas !== 'undefined') {
         return canvas
     } else {
         const view = document.createElement('canvas')
-        document.body.appendChild(view)
+        view.dataset.id = 'first'
+        const canvases = Array.from(document.querySelectorAll('canvas'))
+        const [canvas] = canvases.filter((canvas: any) => canvas.dataset.id === 'first')
+        if (!canvas) document.body.appendChild(view)
         return view
     }
 }

@@ -1,11 +1,14 @@
 import { Application as Game, Loader } from 'pixi.js'
 import { useScene } from './useScene'
 import defaultConfigure from '../configure'
+import { getView } from '../common'
 
 export function createGame(configure: SCENE.IConfigure) {
+    const { view } = configure
     configure = Object.assign(defaultConfigure, configure)
 
     const { UIWidth, UIHeight, width, height, scenes } = configure
+    configure.view = view || getView()
     const game = new Game(configure) as SCENE.IGame
 
     game.Loader = Loader
