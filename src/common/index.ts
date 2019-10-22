@@ -13,8 +13,8 @@ export function getView() {
     }
 }
 
-export function usesify(target: object) {
-    return function use(addons: (core: any) => void | Array<(core: any) => void>) {
+export function usesify(target: object): SCENE.ADDON {
+    return function use(addons: SCENE.ADDON) {
         if (Array.isArray(addons)) {
             addons.map((addon) => use(addon))
         } else {

@@ -260,12 +260,10 @@ Scene.use(function () {
     this.route.push(this);
 });
 function useScene(game, scenes) {
-    var keys = Object.keys(scenes);
+    var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
     var values = Object.values(scenes);
-    values.map(function (scene, index) {
-        Scene.prototype.game = game;
-        new scene(keys[index]);
-    });
+    Scene.prototype.game = game;
+    values.map(function (scene, index) { return new scene(keys[index]); });
     var route = Route.create(game);
     route.start(keys[0]);
     game.ticker.add(function () { return route.update(); });
@@ -344,9 +342,10 @@ var Component = /** @class */ (function (_super) {
     return Component;
 }(Container));
 
-function use(addons) {
-    usesify(PIXI)(addons);
-}
+// export function use(addons: (core: any) => void | ((core: any) => void)[]) {
+//     usesify(PIXI)(addons)
+// }
+var use = usesify(PIXI);
 
 export { Component, Scene, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map

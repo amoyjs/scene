@@ -87,13 +87,15 @@ declare namespace SCENE {
         resources: any
         Loader: typeof PIXI.Loader
     }
+
+    type ADDON = (core: any) => void | Array<(core: any) => void>
 }
 
 
 declare module '@amoy/scene' {
     const Scene: SCENE.Scene
     class Component extends SCENE.Component { }
-    function use(addons: (core: any) => void | ((core: any) => void)[]): any
+    function use(addons: SCENE.ADDON): any
     function useScene(game: PIXI.Application, scene: object): void
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
 }

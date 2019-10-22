@@ -9,13 +9,10 @@ Scene.use(function () {
 })
 
 export function useScene(game: any, scenes: object) {
-    const keys = Object.keys(scenes)
+    const keys = Object.keys(scenes).map((key) => key.toLowerCase())
     const values = Object.values(scenes)
-    values.map((scene, index) => {
-        Scene.prototype.game = game
-        new scene(keys[index])
-    })
-
+    Scene.prototype.game = game
+    values.map((scene, index) => new scene(keys[index]))
     const route = Route.create(game)
     route.start(keys[0])
     game.ticker.add(() => route.update())
