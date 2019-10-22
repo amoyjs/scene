@@ -4,6 +4,95 @@
     (global = global || self, factory(global.SceneKit = {}, global.PIXI));
 }(this, function (exports, PIXI) { 'use strict';
 
+    var Route = /** @class */ (function () {
+        function Route(game) {
+            this.game = game;
+            this.scenes = {};
+            this.query = {};
+        }
+        Route.create = function (game) {
+            if (!this.instance)
+                this.instance = new Route(game);
+            return this.instance;
+        };
+        Route.prototype.push = function (scene) {
+            this.scenes[scene.name] = scene;
+        };
+        Route.prototype.to = function (sceneName, query) {
+            if (query === void 0) { query = {}; }
+            if (this.currentSceneName === sceneName)
+                return false;
+            if (this.isScene(sceneName)) {
+                this.pendingSceneName = sceneName;
+                this.query = query;
+            }
+        };
+        Route.prototype.update = function () {
+            if (this.pendingSceneName)
+                this.setCurrentScene(this.pendingSceneName);
+            if (this.currentScene && this.currentScene.canUpdate) {
+                this.currentScene.update && this.currentScene.update();
+            }
+        };
+        Route.prototype.setCurrentScene = function (pendingSceneName) {
+            if (!this.isScene(pendingSceneName)) {
+                console.warn("\u573A\u666F " + pendingSceneName + " \u4E0D\u5B58\u5728");
+                return false;
+            }
+            if (this.currentSceneName !== this.pendingSceneName) {
+                this.currentScene = this.scenes[pendingSceneName];
+                this.cleanStage();
+                this.fetchNextScene();
+                this.stateUpdate();
+                this.onSceneChange();
+            }
+        };
+        Route.prototype.cleanStage = function () {
+            this.game.stage.removeChildren();
+        };
+        Route.prototype.fetchNextScene = function () {
+            var _this = this;
+            this.game.stage.addChild(this.currentScene.stage);
+            if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
+                this.currentScene.Load(function () { return _this.currentScene.create(); });
+            }
+            else {
+                this.currentScene.create();
+            }
+            PIXI.Loader.shared.on('progress', function (_, resource) {
+                if (_this.currentScene.onLoading && typeof _this.currentScene.onLoading === 'function') {
+                    _this.currentScene.onLoading(_.progress, resource.name, resource.url);
+                }
+            });
+            this.pendingSceneName = null;
+        };
+        Route.prototype.stateUpdate = function () {
+            this.prevSceneName = this.currentSceneName;
+            this.currentSceneName = this.currentScene.name;
+        };
+        Route.prototype.onSceneChange = function () {
+            if (this.prevSceneName) {
+                var preScene = this.scenes[this.prevSceneName];
+                preScene.shutdown();
+                this.game.stage.removeChild(preScene.stage);
+            }
+            this.currentScene.stage.onSceneChange();
+        };
+        Route.prototype.isScene = function (scene) {
+            if (scene === void 0) { scene = ''; }
+            var hasScene = this.scenes[scene] !== undefined;
+            return hasScene;
+        };
+        Route.prototype.destroy = function () {
+            this.game = null;
+            this.scenes = {};
+            this.pendingSceneName = null;
+            this.currentSceneName = null;
+            this.currentScene = null;
+        };
+        return Route;
+    }());
+
     var Scene = /** @class */ (function () {
         function Scene(name) {
             var _this = this;
@@ -85,126 +174,6 @@
         return Scene;
     }());
 
-    var Route = /** @class */ (function () {
-        function Route(game) {
-            this.game = game;
-            this.scenes = {};
-            this.query = {};
-        }
-        Route.create = function (game) {
-            if (!this.instance)
-                this.instance = new Route(game);
-            return this.instance;
-        };
-        Route.prototype.push = function (scene) {
-            this.scenes[scene.name] = scene;
-        };
-        Route.prototype.remove = function (scene) {
-            if (typeof scene === 'string') {
-                delete this.scenes[scene];
-            }
-            else if (scene instanceof Scene) {
-                delete this.scenes[scene.name];
-            }
-            else {
-                console.warn("\u9700\u8981\u79FB\u9664\u7684\u573A\u666F " + scene + " \u4E0D\u5B58\u5728");
-            }
-        };
-        Route.prototype.start = function (sceneName, query) {
-            if (sceneName === void 0) { sceneName = ''; }
-            if (query === void 0) { query = {}; }
-            this.to(sceneName, query);
-        };
-        Route.prototype.to = function (sceneName, query) {
-            if (this.currentSceneName === sceneName)
-                return false;
-            if (this.isScene(sceneName)) {
-                this.pendingSceneName = sceneName;
-                this.query = query;
-            }
-        };
-        Route.prototype.update = function () {
-            if (this.pendingSceneName)
-                this.setCurrentScene(this.pendingSceneName);
-            if (this.currentScene && this.currentScene.canUpdate) {
-                this.currentScene.update && this.currentScene.update();
-            }
-        };
-        Route.prototype.setCurrentScene = function (pendingSceneName) {
-            if (!this.isScene(pendingSceneName)) {
-                console.warn("\u573A\u666F " + pendingSceneName + " \u4E0D\u5B58\u5728");
-                return false;
-            }
-            if (this.currentSceneName !== this.pendingSceneName) {
-                this.currentScene = this.scenes[pendingSceneName];
-                this.cleanStage();
-                this.fetchNextScene();
-                this.stateUpdate();
-                this.onSceneChange();
-            }
-        };
-        Route.prototype.cleanStage = function () {
-            this.game.stage.removeChildren();
-        };
-        Route.prototype.fetchNextScene = function () {
-            var _this = this;
-            this.game.stage.addChild(this.currentScene.stage);
-            if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
-                this.currentScene.Load(function () { return _this.currentScene.create(); });
-            }
-            else {
-                this.currentScene.create();
-            }
-            // @ts-ignore
-            if (this.currentScene.onLoading && typeof this.currentScene.onLoading === 'function') {
-                PIXI.Loader.shared.on('progress', function (_, resource) {
-                    // @ts-ignore
-                    _this.currentScene.onLoading(_.progress, resource.name, resource.url);
-                });
-            }
-            this.pendingSceneName = null;
-        };
-        Route.prototype.stateUpdate = function () {
-            this.prevSceneName = this.currentSceneName;
-            this.currentSceneName = this.currentScene.name;
-        };
-        Route.prototype.onSceneChange = function () {
-            if (this.prevSceneName) {
-                var preScene = this.scenes[this.prevSceneName];
-                preScene.shutdown();
-                this.game.stage.removeChild(preScene.stage);
-            }
-            this.currentScene.stage.onSceneChange();
-        };
-        Route.prototype.getCurrentScene = function () {
-            return this.currentScene;
-        };
-        Route.prototype.getSceneByName = function (sceneName) {
-            if (this.scenes[sceneName]) {
-                return this.scenes[sceneName];
-            }
-            else {
-                console.error("\u573A\u666F " + sceneName + " \u4E0D\u5B58\u5728");
-            }
-        };
-        /**
-         * 判断是否是合法的「场景」
-         */
-        Route.prototype.isScene = function (scene) {
-            if (scene === void 0) { scene = ''; }
-            var hasScene = this.scenes[scene] !== undefined;
-            return hasScene;
-        };
-        Route.prototype.destroy = function () {
-            this.game = null;
-            this.scenes = {};
-            this.pendingSceneName = null;
-            this.currentSceneName = null;
-            this.currentScene = null;
-        };
-        return Route;
-    }());
-
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
     Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -236,17 +205,22 @@
 
     var Stage = /** @class */ (function (_super) {
         __extends(Stage, _super);
-        function Stage(scene) {
+        function Stage(game) {
             var _this = _super.call(this) || this;
-            _this.init();
-            _this.scene = scene;
-            _this.isWorld = true;
+            _this.game = game;
             _this.isStage = true;
+            _this.init();
             return _this;
         }
         Stage.prototype.init = function () {
             this.x = 0;
             this.y = 0;
+            this.setSize();
+        };
+        Stage.prototype.setSize = function () {
+            this.beginFill(0xffffff, 0);
+            this.drawRect(0, 0, this.game.view.width, this.game.view.height);
+            this.endFill();
         };
         Stage.prototype.onSceneChange = function () {
             this.init();
@@ -255,10 +229,10 @@
             this.removeChildren();
         };
         return Stage;
-    }(PIXI.Container));
+    }(PIXI.Graphics));
 
     Scene.use(function () {
-        this.stage = new Stage(this);
+        this.stage = new Stage(this.game);
         this.route = Route.create(this.game);
         this.route.push(this);
     });
@@ -268,7 +242,7 @@
         Scene.prototype.game = game;
         values.map(function (scene, index) { return new scene(keys[index]); });
         var route = Route.create(game);
-        route.start(keys[0]);
+        route.to(keys[0]);
         game.ticker.add(function () { return route.update(); });
     }
 
@@ -345,10 +319,8 @@
         return Component;
     }(PIXI.Container));
 
-    // export function use(addons: (core: any) => void | ((core: any) => void)[]) {
-    //     usesify(PIXI)(addons)
-    // }
     var use = usesify(PIXI);
+    window.PIXI = PIXI;
 
     exports.Component = Component;
     exports.Scene = Scene;
