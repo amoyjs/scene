@@ -3,7 +3,7 @@ import Route from './Route'
 import Stage from './Stage'
 
 Scene.use(function () {
-    this.stage = new Stage(this)
+    this.stage = new Stage(this.game)
     this.route = Route.create(this.game)
     this.route.push(this)
 })
@@ -14,6 +14,6 @@ export function useScene(game: any, scenes: object) {
     Scene.prototype.game = game
     values.map((scene, index) => new scene(keys[index]))
     const route = Route.create(game)
-    route.start(keys[0])
+    route.to(keys[0])
     game.ticker.add(() => route.update())
 }

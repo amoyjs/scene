@@ -49,7 +49,7 @@ declare namespace SCENE {
 
     interface Route {
         query: any
-        to(sceneName: string, query: object): void
+        to(sceneName: string, query?: object): void
     }
 
     interface IConfigure {

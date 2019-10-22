@@ -1,17 +1,26 @@
-import { Container } from 'pixi.js'
+import { Graphics } from 'pixi.js'
 
-export default class Stage extends Container {
+export default class Stage extends Graphics {
+    private game: SCENE.IGame
     public isStage: boolean
 
-    constructor(scene: SCENE.Scene) {
+    constructor(game: SCENE.IGame) {
         super()
-        this.init()
+        this.game = game
         this.isStage = true
+        this.init()
     }
-
-    public init() {
+    
+    private init() {
         this.x = 0
         this.y = 0
+        this.setSize()
+    }
+
+    public setSize() {
+        this.beginFill(0xffffff, 0)
+        this.drawRect(0, 0, this.game.view.width, this.game.view.height)
+        this.endFill()
     }
 
     public onSceneChange() {
