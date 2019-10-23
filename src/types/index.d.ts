@@ -2,6 +2,7 @@
 
 declare const wx: any
 declare const canvas: any
+declare module '@pixi/unsafe-eval'
 
 declare namespace SCENE {
     interface Loader {

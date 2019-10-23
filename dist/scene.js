@@ -2,7 +2,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('pixi.js')) :
     typeof define === 'function' && define.amd ? define(['exports', 'pixi.js'], factory) :
     (global = global || self, factory(global.SceneKit = {}, global.PIXI));
-}(this, function (exports, PIXI$1) { 'use strict';
+}(this, function (exports, PIXI) { 'use strict';
 
     var Route = /** @class */ (function () {
         function Route(game) {
@@ -59,7 +59,7 @@
             else {
                 this.currentScene.create();
             }
-            PIXI$1.Loader.shared.on('progress', function (_, resource) {
+            PIXI.Loader.shared.on('progress', function (_, resource) {
                 if (_this.currentScene.onLoading && typeof _this.currentScene.onLoading === 'function') {
                     _this.currentScene.onLoading(_.progress, resource.name, resource.url);
                 }
@@ -120,8 +120,8 @@
                         for (var _i = 0; _i < arguments.length; _i++) {
                             args[_i] = arguments[_i];
                         }
-                        if (!PIXI$1.Loader.shared.resources[args[0]])
-                            (_a = PIXI$1.Loader.shared).add.apply(_a, args);
+                        if (!PIXI.Loader.shared.resources[args[0]])
+                            (_a = PIXI.Loader.shared).add.apply(_a, args);
                     },
                     Load: function (images) {
                         var _this = this;
@@ -129,7 +129,7 @@
                     },
                     onLoaded: function (onLoaded) {
                         if (onLoaded === void 0) { onLoaded = function () { }; }
-                        PIXI$1.Loader.shared.load(function () { return onLoaded(); });
+                        PIXI.Loader.shared.load(function () { return onLoaded(); });
                     }
                 };
             },
@@ -229,7 +229,7 @@
             this.removeChildren();
         };
         return Stage;
-    }(PIXI$1.Graphics));
+    }(PIXI.Graphics));
 
     Scene.use(function () {
         this.stage = new Stage(this.game);
@@ -516,8 +516,8 @@
         if (typeof eval !== 'function')
             install(PIXI);
         // @ts-ignore
-        PIXI$1.Renderer.create = function (options) {
-            return new PIXI$1.Renderer(options);
+        PIXI.Renderer.create = function (options) {
+            return new PIXI.Renderer(options);
         };
     }
 
@@ -547,9 +547,9 @@
         configure = Object.assign(defaultConfigure, configure);
         var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes;
         configure.view = view || getView();
-        var game = new PIXI$1.Application(configure);
-        game.Loader = PIXI$1.Loader;
-        game.resources = PIXI$1.Loader.shared.resources;
+        var game = new PIXI.Application(configure);
+        game.Loader = PIXI.Loader;
+        game.resources = PIXI.Loader.shared.resources;
         if (UIWidth && UIHeight) {
             game.UI_DESIGN_RATIO = width / UIWidth;
             game.PIXEL_RATIO = {
@@ -576,11 +576,11 @@
             return _this;
         }
         return Component;
-    }(PIXI$1.Container));
+    }(PIXI.Container));
 
-    var use = usesify(PIXI$1);
+    var use = usesify(PIXI);
     compatibleWeChatGame();
-    window.PIXI = PIXI$1;
+    window.PIXI = PIXI;
 
     exports.Component = Component;
     exports.Scene = Scene;

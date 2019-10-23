@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js'
 import { Renderer } from 'pixi.js'
 import { install } from '@pixi/unsafe-eval'
 

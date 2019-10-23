@@ -1,4 +1,4 @@
-import * as PIXI$1 from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { Loader, Graphics, Renderer, Application, Container } from 'pixi.js';
 
 var Route = /** @class */ (function () {
@@ -575,9 +575,9 @@ var Component = /** @class */ (function (_super) {
     return Component;
 }(Container));
 
-var use = usesify(PIXI$1);
+var use = usesify(PIXI);
 compatibleWeChatGame();
-window.PIXI = PIXI$1;
+window.PIXI = PIXI;
 
 export { Component, Scene, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map
