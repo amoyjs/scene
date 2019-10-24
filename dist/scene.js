@@ -518,9 +518,14 @@
     }
 
     function getView() {
-        var view = document.createElement('canvas');
-        document.body.appendChild(view);
-        return view;
+        if (typeof canvas !== 'undefined') {
+            return canvas;
+        }
+        else {
+            var view = document.createElement('canvas');
+            document.body.appendChild(view);
+            return view;
+        }
     }
     function usesify(target) {
         return function use(addons) {

@@ -1,9 +1,13 @@
 export * from './compatibleWeChatGame'
 
 export function getView() {
-    const view = document.createElement('canvas')
-    document.body.appendChild(view)
-    return view
+    if (typeof canvas !== 'undefined') {
+        return canvas
+    } else {
+        const view = document.createElement('canvas')
+        document.body.appendChild(view)
+        return view
+    }
 }
 
 export function usesify(target: object): SCENE.ADDON {
