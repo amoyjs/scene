@@ -61,16 +61,9 @@ export default class Route {
 
     private fetchNextScene() {
         this.game.stage.addChild(this.currentScene.stage)
-        if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
-            this.currentScene.Load(() => this.currentScene.create())
-        } else {
-            this.currentScene.create()
-        }
-        Loader.shared.on('progress', (_, resource) => {
-            if (this.currentScene.onLoading && typeof this.currentScene.onLoading === 'function') {
-                this.currentScene.onLoading(_.progress, resource.name, resource.url)
-            }
-        })
+        this.currentScene.Load()
+        Loader.shared.load(() => this.currentScene.create())
+        Loader.shared.on('progress', (_, resource) => this.currentScene.onLoading(_.progress, resource.name, resource.url))
         this.pendingSceneName = null
     }
 

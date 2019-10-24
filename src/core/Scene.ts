@@ -44,6 +44,10 @@ export class Scene {
         }
     }
 
+    public Load() {
+        this.Loader.Load(this.getLoad())
+    }
+
     public getLoad() {
         return Scene.resourceGetters.reduce((prev: any, current: any) => {
             prev = Object.assign(prev, current())
@@ -64,7 +68,9 @@ export class Scene {
         return this.route.query
     }
 
-    public create() {}
+    public create() { }
+
+    public onLoading() { }
 
     public useUpdate() {
         this.canUpdate = true

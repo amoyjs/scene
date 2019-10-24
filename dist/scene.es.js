@@ -50,17 +50,9 @@ var Route = /** @class */ (function () {
     Route.prototype.fetchNextScene = function () {
         var _this = this;
         this.game.stage.addChild(this.currentScene.stage);
-        if (this.currentScene.Load && typeof this.currentScene.Load === 'function') {
-            this.currentScene.Load(function () { return _this.currentScene.create(); });
-        }
-        else {
-            this.currentScene.create();
-        }
-        Loader.shared.on('progress', function (_, resource) {
-            if (_this.currentScene.onLoading && typeof _this.currentScene.onLoading === 'function') {
-                _this.currentScene.onLoading(_.progress, resource.name, resource.url);
-            }
-        });
+        this.currentScene.Load();
+        Loader.shared.load(function () { return _this.currentScene.create(); });
+        Loader.shared.on('progress', function (_, resource) { return _this.currentScene.onLoading(_.progress, resource.name, resource.url); });
         this.pendingSceneName = null;
     };
     Route.prototype.stateUpdate = function () {
@@ -133,6 +125,9 @@ var Scene = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Scene.prototype.Load = function () {
+        this.Loader.Load(this.getLoad());
+    };
     Scene.prototype.getLoad = function () {
         return Scene.resourceGetters.reduce(function (prev, current) {
             prev = Object.assign(prev, current());
@@ -152,6 +147,7 @@ var Scene = /** @class */ (function () {
         return this.route.query;
     };
     Scene.prototype.create = function () { };
+    Scene.prototype.onLoading = function () { };
     Scene.prototype.useUpdate = function () {
         this.canUpdate = true;
     };
