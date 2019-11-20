@@ -16,6 +16,11 @@ declare namespace SCENE {
         name: string
         game: IGame
         stage: Stage
+        ratio: number
+        ratios: {
+            x: number
+            y: number
+        }
         Loader: SCENE.Loader
         canUpdate: boolean
         new(name: string): Scene
