@@ -28,10 +28,11 @@ $ yarn add @amoy/scene
 
 ```js
 // app.js
+// use pixi `Application`
 import { Application } from 'pixi.js'
 import { useScene } from '@amoy/scene'
 import SceneHome from 'path/to/SceneHome'
-import SceneAbout from 'path/to/SceneAbout'
+import SceneSomething from 'path/to/SceneSomething'
 
 const game = new Application({
     width: window.innerWidth,
@@ -40,27 +41,38 @@ const game = new Application({
 
 useScene(game, {
     home: SceneHome,
-    about: SceneAbout,
+    something: SceneSomething,
 })
 
 document.body.appendChild(game.view)
 
+// or use @amoy/scene `createGame`
+import { createGame } from '@amoy/scene'
+
+createGame({
+    width: window.innerWidth, // defaults to `window.innerWidth`
+    height: window.innerHeight, // defaults to `window.innerHeight`
+    scenes: {
+        home: SceneHome
+        something: SceneSomething
+    },
+})
+
 // path/to/SceneHome.ts
 import { Sprite } from 'pixi.js'
 import { Scene } from '@amoy/scene'
+
+Scene.useLoad(() => ({
+    'bunny', require('./images/bunny'),
+}))
 
 class SceneHome extends Scene {
     constructor(name) {
         super(name)
     }
 
-    Load(done) {
-        setTimeout(() => {
-            // Load resources here...
-            // and then call `done()` after resource loaded
-            // and `create` method will call after `done()`
-            done()
-        }, 1000)
+    Load() {
+        this.Loader.Load(this.getLoad())
     }
 
     create() {
@@ -71,7 +83,7 @@ class SceneHome extends Scene {
         helloWorld.x = 200
         helloWorld.y = 200
         helloWorld.on('tap', () => {
-            this.switchTo('about', {
+            this.switchTo('something', {
                 from: 'SceneHome',
             })
         })
@@ -79,18 +91,17 @@ class SceneHome extends Scene {
     }
 }
 
-// path/to/SceneAbout.ts
+// path/to/SceneSomething.ts
 import { Sprite } from 'pixi.js'
 import { Scene } from '@amoy/scene'
 
-class SceneAbout extends Scene {
+class SceneSomething extends Scene {
     constructor(name) {
         super(name)
     }
 
-    Load(done) {
+    Load() {
         this.Loader.add('bunny', require('./images/bunny'))
-        this.Loader.onLoaded(done)
     }
 
     create() {
