@@ -199,56 +199,6 @@
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    var Stage = /** @class */ (function (_super) {
-        __extends(Stage, _super);
-        function Stage(game) {
-            var _this = _super.call(this) || this;
-            _this.game = game;
-            _this.isStage = true;
-            _this.init();
-            return _this;
-        }
-        Stage.prototype.init = function () {
-            this.x = 0;
-            this.y = 0;
-            this.setSize();
-        };
-        Stage.prototype.setSize = function () {
-            this.beginFill(0xffffff, 0);
-            this.drawRect(0, 0, this.game.view.width, this.game.view.height);
-            this.endFill();
-        };
-        Stage.prototype.onSceneChange = function () {
-            this.init();
-        };
-        Stage.prototype.shutdown = function () {
-            this.removeChildren();
-        };
-        return Stage;
-    }(PIXI.Graphics));
-
-    Scene.use(function () {
-        this.stage = new Stage(this.game);
-        this.route = Route.create(this.game);
-        this.route.push(this);
-    });
-    function useScene(game, scenes) {
-        var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
-        var values = Object.values(scenes);
-        Scene.prototype.game = game;
-        values.map(function (scene, index) { return new scene(keys[index]); });
-        var route = Route.create(game);
-        route.to(keys[0]);
-        game.ticker.add(function () { return route.update(); });
-    }
-
-    var defaultConfigure = {
-        backgroundColor: 0x000000,
-        autoResize: true,
-        width: window.innerWidth,
-        height: window.innerHeight
-    };
-
     /*!
      * @pixi/unsafe-eval - v5.0.4
      * Compiled Fri, 07 Jun 2019 17:17:49 UTC
@@ -542,6 +492,60 @@
             }
         };
     }
+    function remove(display) {
+        display.children.map(function (item) { return remove(item); });
+        display.removeChildren();
+    }
+
+    var Stage = /** @class */ (function (_super) {
+        __extends(Stage, _super);
+        function Stage(game) {
+            var _this = _super.call(this) || this;
+            _this.game = game;
+            _this.isStage = true;
+            _this.init();
+            return _this;
+        }
+        Stage.prototype.init = function () {
+            this.x = 0;
+            this.y = 0;
+            this.setSize();
+        };
+        Stage.prototype.setSize = function () {
+            this.beginFill(0xffffff, 0);
+            this.drawRect(0, 0, this.game.view.width, this.game.view.height);
+            this.endFill();
+        };
+        Stage.prototype.onSceneChange = function () {
+            this.init();
+        };
+        Stage.prototype.shutdown = function () {
+            remove(this);
+        };
+        return Stage;
+    }(PIXI.Graphics));
+
+    Scene.use(function () {
+        this.stage = new Stage(this.game);
+        this.route = Route.create(this.game);
+        this.route.push(this);
+    });
+    function useScene(game, scenes) {
+        var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
+        var values = Object.values(scenes);
+        Scene.prototype.game = game;
+        values.map(function (scene, index) { return new scene(keys[index]); });
+        var route = Route.create(game);
+        route.to(keys[0]);
+        game.ticker.add(function () { return route.update(); });
+    }
+
+    var defaultConfigure = {
+        backgroundColor: 0x000000,
+        autoResize: true,
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
 
     function createGame(configure) {
         var view = configure.view;

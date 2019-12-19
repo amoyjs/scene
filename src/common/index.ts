@@ -23,3 +23,8 @@ export function usesify(target: object): SCENE.ADDON {
         }
     }
 }
+
+export function remove(display: PIXI.Container) {
+    display.children.map((item: PIXI.Container) => remove(item))
+    display.removeChildren()
+}

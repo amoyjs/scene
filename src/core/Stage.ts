@@ -1,4 +1,5 @@
 import { Graphics } from 'pixi.js'
+import { remove } from '../common'
 
 export default class Stage extends Graphics {
     private game: SCENE.IGame
@@ -28,6 +29,6 @@ export default class Stage extends Graphics {
     }
 
     public shutdown() {
-        this.removeChildren()
+        remove(this)
     }
 }
