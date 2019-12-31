@@ -54,6 +54,11 @@ declare namespace SCENE {
         }
     }
 
+    class SizeComponent extends Component {
+        new(x?: number, y?: number, width?: number, height?: number, radius?: number, color?: number, opacity?: number): void
+        setSize(width?: number, height?: number, radius?: number): void
+    }
+
     interface Route {
         query: any
         to(sceneName: string, query?: object): void
@@ -102,6 +107,7 @@ declare namespace SCENE {
 declare module '@amoy/scene' {
     const Scene: SCENE.Scene
     class Component extends SCENE.Component { }
+    class SizeComponent extends SCENE.SizeComponent { }
     function use(addons: SCENE.ADDON): any
     function useScene(game: PIXI.Application, scene: object): void
     function createGame(configure: SCENE.IConfigure): SCENE.IGame

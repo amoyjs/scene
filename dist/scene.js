@@ -582,6 +582,50 @@
         }
         return Component;
     }(PIXI.Container));
+    var SizeComponent = /** @class */ (function (_super) {
+        __extends(SizeComponent, _super);
+        function SizeComponent(x, y, width, height, radius, color, opacity) {
+            if (x === void 0) { x = 0; }
+            if (y === void 0) { y = 0; }
+            if (width === void 0) { width = window.innerWidth; }
+            if (height === void 0) { height = window.innerHeight; }
+            if (radius === void 0) { radius = 0; }
+            var _this = _super.call(this) || this;
+            _this.game = Scene.prototype.game;
+            _this.stage = _this.game.stage;
+            _this.color = 0xffffff;
+            _this.opacity = 0;
+            _this.frame = {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0,
+                radius: 0
+            };
+            _this.stage.addChild(_this);
+            _this.ratio = _this.game.PIXEL_RATIO.x;
+            _this.ratios = _this.game.PIXEL_RATIO;
+            _this.frame = { x: x, y: y, width: width, height: height, radius: radius };
+            _this.beginFill(_this.color, _this.opacity);
+            _this.drawRoundedRect(x, y, width, height, radius);
+            _this.endFill();
+            return _this;
+        }
+        SizeComponent.prototype.setSize = function (width, height, radius) {
+            if (width === void 0) { width = 0; }
+            if (height === void 0) { height = 0; }
+            if (radius === void 0) { radius = this.frame.radius; }
+            this.clear();
+            this.frame.width = width;
+            this.frame.height = height;
+            this.frame.radius = radius;
+            var _a = this.frame, x = _a.x, y = _a.y;
+            this.beginFill(this.color, this.opacity);
+            this.drawRoundedRect(x, y, width, height, radius);
+            this.endFill();
+        };
+        return SizeComponent;
+    }(PIXI.Graphics));
 
     var use = usesify(PIXI);
     compatibleWeChatGame();
@@ -589,6 +633,7 @@
 
     exports.Component = Component;
     exports.Scene = Scene;
+    exports.SizeComponent = SizeComponent;
     exports.createGame = createGame;
     exports.use = use;
     exports.useScene = useScene;
