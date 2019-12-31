@@ -41,6 +41,8 @@ export class SizeComponent extends Graphics {
         this.ratio = this.game.PIXEL_RATIO.x
         this.ratios = this.game.PIXEL_RATIO
 
+        this.color = color
+        this.opacity = opacity
         this.frame = { x, y, width, height, radius }
         this.beginFill(this.color, this.opacity)
         this.drawRoundedRect(x, y, width, height, radius)

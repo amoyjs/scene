@@ -590,6 +590,8 @@
             if (width === void 0) { width = window.innerWidth; }
             if (height === void 0) { height = window.innerHeight; }
             if (radius === void 0) { radius = 0; }
+            if (color === void 0) { color = 0xffffff; }
+            if (opacity === void 0) { opacity = 0; }
             var _this = _super.call(this) || this;
             _this.game = Scene.prototype.game;
             _this.stage = _this.game.stage;
@@ -605,6 +607,8 @@
             _this.stage.addChild(_this);
             _this.ratio = _this.game.PIXEL_RATIO.x;
             _this.ratios = _this.game.PIXEL_RATIO;
+            _this.color = color;
+            _this.opacity = opacity;
             _this.frame = { x: x, y: y, width: width, height: height, radius: radius };
             _this.beginFill(_this.color, _this.opacity);
             _this.drawRoundedRect(x, y, width, height, radius);

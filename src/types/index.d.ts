@@ -56,6 +56,7 @@ declare namespace SCENE {
 
     class SizeComponent extends Component {
         new(x?: number, y?: number, width?: number, height?: number, radius?: number, color?: number, opacity?: number): void
+        constructor(x?: number, y?: number, width?: number, height?: number, radius?: number, color?: number, opacity?: number)
         setSize(width?: number, height?: number, radius?: number): void
     }
 
