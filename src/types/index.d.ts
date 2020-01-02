@@ -16,8 +16,8 @@ declare namespace SCENE {
         resourceGetters: Array<() => void>
         useLoad(cb: () => void): void
         getLoad(): object
-        Load(onLoading: (percent: number, name: string, url: string) => void): void
-        onLoaded(onLoaded: () => void): void
+        Load(onLoading?: (percent: number, name: string, url: string) => void): void
+        onLoaded(onLoaded?: () => void): void
     }
 
     interface Scene {
