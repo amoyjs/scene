@@ -1,16 +1,4 @@
-import { Loader } from 'pixi.js'
-
-const SceneLoader = {
-    add: (...args: any) => {
-        if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
-    },
-    Load(images: object) {
-        Object.keys(images).map((key) => this.add(key, images[key]))
-    },
-    onLoaded: (onLoaded: () => void = () => { }) => {
-        Loader.shared.load(() => onLoaded())
-    },
-}
+import { Resource, ResourceLoader } from './Resource'
 
 export class Scene {
     public name: string
@@ -23,6 +11,7 @@ export class Scene {
     public stage: SCENE.Stage
     public game: SCENE.IGame
     public route: SCENE.Route
+    public Loader = ResourceLoader
     public static addons: Array<() => void> = []
     public static resourceGetters: Array<() => void> = []
 
@@ -42,32 +31,28 @@ export class Scene {
         }
     }
 
-    public get Loader() {
-        return SceneLoader
+    public static Load(onLoading = (percent: number, name: string, url: string) => {}) {
+        Resource.Load(onLoading)
     }
 
-    public static Load(onLoading = (percent: number, name: string, url: string) => {}) {
-        SceneLoader.Load(this.getLoad())
-        Loader.shared.on('progress', (_, resource) => onLoading(_.progress, resource.name, resource.url))
+    public static onLoaded(onLoaded: () => void = () => { }) {
+        Resource.onLoaded(onLoaded)
     }
 
     public Load() {
-        SceneLoader.Load(this.getLoad())
+        Resource.Load()
     }
 
     public static getLoad() {
-        return Scene.resourceGetters.reduce((prev: any, current: any) => {
-            prev = Object.assign(prev, current())
-            return prev
-        }, {})
+        return Resource.getLoad()
     }
 
     public getLoad() {
-        return Scene.getLoad()
+        return Resource.getLoad()
     }
 
     public static useLoad(cb: () => void) {
-        this.resourceGetters.push(cb)
+        Resource.useLoad(cb)
     }
 
     public switchTo(sceneName: string, query: object = {}) {

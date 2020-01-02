@@ -4,6 +4,47 @@
     (global = global || self, factory(global.SceneKit = {}, global.PIXI));
 }(this, function (exports, PIXI) { 'use strict';
 
+    var ResourceLoader = {
+        add: function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (!PIXI.Loader.shared.resources[args[0]])
+                (_a = PIXI.Loader.shared).add.apply(_a, args);
+        },
+        Load: function (images) {
+            var _this = this;
+            Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
+        },
+        onLoaded: function (onLoaded) {
+            if (onLoaded === void 0) { onLoaded = function () { }; }
+            PIXI.Loader.shared.load(function () { return onLoaded(); });
+        }
+    };
+    var Resource = /** @class */ (function () {
+        function Resource() {
+        }
+        Resource.useLoad = function (cb) {
+            this.resourceGetters.push(cb);
+        };
+        Resource.getLoad = function () {
+            return this.resourceGetters.reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
+        };
+        Resource.Load = function (onLoading) {
+            if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
+            ResourceLoader.Load(this.getLoad());
+            PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+        };
+        Resource.onLoaded = function (onLoaded) {
+            if (onLoaded === void 0) { onLoaded = function () { }; }
+            PIXI.Loader.shared.load(function () { return onLoaded(); });
+        };
+        Resource.resourceGetters = [];
+        return Resource;
+    }());
+
     var Route = /** @class */ (function () {
         function Route(game) {
             this.game = game;
@@ -85,28 +126,10 @@
         return Route;
     }());
 
-    var SceneLoader = {
-        add: function () {
-            var _a;
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            if (!PIXI.Loader.shared.resources[args[0]])
-                (_a = PIXI.Loader.shared).add.apply(_a, args);
-        },
-        Load: function (images) {
-            var _this = this;
-            Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
-        },
-        onLoaded: function (onLoaded) {
-            if (onLoaded === void 0) { onLoaded = function () { }; }
-            PIXI.Loader.shared.load(function () { return onLoaded(); });
-        }
-    };
     var Scene = /** @class */ (function () {
         function Scene(name) {
             var _this = this;
+            this.Loader = ResourceLoader;
             this.name = name;
             this.canUpdate = false;
             this.ratio = this.game.PIXEL_RATIO.x;
@@ -122,32 +145,25 @@
                 this.addons.push(addons);
             }
         };
-        Object.defineProperty(Scene.prototype, "Loader", {
-            get: function () {
-                return SceneLoader;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Scene.Load = function (onLoading) {
             if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
-            SceneLoader.Load(this.getLoad());
-            PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+            Resource.Load(onLoading);
+        };
+        Scene.onLoaded = function (onLoaded) {
+            if (onLoaded === void 0) { onLoaded = function () { }; }
+            Resource.onLoaded(onLoaded);
         };
         Scene.prototype.Load = function () {
-            SceneLoader.Load(this.getLoad());
+            Resource.Load();
         };
         Scene.getLoad = function () {
-            return Scene.resourceGetters.reduce(function (prev, current) {
-                prev = Object.assign(prev, current());
-                return prev;
-            }, {});
+            return Resource.getLoad();
         };
         Scene.prototype.getLoad = function () {
-            return Scene.getLoad();
+            return Resource.getLoad();
         };
         Scene.useLoad = function (cb) {
-            this.resourceGetters.push(cb);
+            Resource.useLoad(cb);
         };
         Scene.prototype.switchTo = function (sceneName, query) {
             if (query === void 0) { query = {}; }
@@ -645,6 +661,8 @@
     window.PIXI = PIXI;
 
     exports.Component = Component;
+    exports.Resource = Resource;
+    exports.ResourceLoader = ResourceLoader;
     exports.Scene = Scene;
     exports.SizeComponent = SizeComponent;
     exports.createGame = createGame;

@@ -1,6 +1,47 @@
 import * as PIXI from 'pixi.js';
 import { Loader, Renderer, Graphics, Application, Container } from 'pixi.js';
 
+var ResourceLoader = {
+    add: function () {
+        var _a;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if (!Loader.shared.resources[args[0]])
+            (_a = Loader.shared).add.apply(_a, args);
+    },
+    Load: function (images) {
+        var _this = this;
+        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
+    },
+    onLoaded: function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        Loader.shared.load(function () { return onLoaded(); });
+    }
+};
+var Resource = /** @class */ (function () {
+    function Resource() {
+    }
+    Resource.useLoad = function (cb) {
+        this.resourceGetters.push(cb);
+    };
+    Resource.getLoad = function () {
+        return this.resourceGetters.reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
+    };
+    Resource.Load = function (onLoading) {
+        if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
+        ResourceLoader.Load(this.getLoad());
+        Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+    };
+    Resource.onLoaded = function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        Loader.shared.load(function () { return onLoaded(); });
+    };
+    Resource.resourceGetters = [];
+    return Resource;
+}());
+
 var Route = /** @class */ (function () {
     function Route(game) {
         this.game = game;
@@ -82,28 +123,10 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 
-var SceneLoader = {
-    add: function () {
-        var _a;
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (!Loader.shared.resources[args[0]])
-            (_a = Loader.shared).add.apply(_a, args);
-    },
-    Load: function (images) {
-        var _this = this;
-        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
-    },
-    onLoaded: function (onLoaded) {
-        if (onLoaded === void 0) { onLoaded = function () { }; }
-        Loader.shared.load(function () { return onLoaded(); });
-    }
-};
 var Scene = /** @class */ (function () {
     function Scene(name) {
         var _this = this;
+        this.Loader = ResourceLoader;
         this.name = name;
         this.canUpdate = false;
         this.ratio = this.game.PIXEL_RATIO.x;
@@ -119,32 +142,25 @@ var Scene = /** @class */ (function () {
             this.addons.push(addons);
         }
     };
-    Object.defineProperty(Scene.prototype, "Loader", {
-        get: function () {
-            return SceneLoader;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Scene.Load = function (onLoading) {
         if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
-        SceneLoader.Load(this.getLoad());
-        Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+        Resource.Load(onLoading);
+    };
+    Scene.onLoaded = function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        Resource.onLoaded(onLoaded);
     };
     Scene.prototype.Load = function () {
-        SceneLoader.Load(this.getLoad());
+        Resource.Load();
     };
     Scene.getLoad = function () {
-        return Scene.resourceGetters.reduce(function (prev, current) {
-            prev = Object.assign(prev, current());
-            return prev;
-        }, {});
+        return Resource.getLoad();
     };
     Scene.prototype.getLoad = function () {
-        return Scene.getLoad();
+        return Resource.getLoad();
     };
     Scene.useLoad = function (cb) {
-        this.resourceGetters.push(cb);
+        Resource.useLoad(cb);
     };
     Scene.prototype.switchTo = function (sceneName, query) {
         if (query === void 0) { query = {}; }
@@ -641,5 +657,5 @@ var use = usesify(PIXI);
 compatibleWeChatGame();
 window.PIXI = PIXI;
 
-export { Component, Scene, SizeComponent, createGame, use, useScene };
+export { Component, Resource, ResourceLoader, Scene, SizeComponent, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map

@@ -12,6 +12,14 @@ declare namespace SCENE {
         onLoaded(closure: (loader: any, resource: any) => void): void
     }
 
+    interface Resource {
+        resourceGetters: Array<() => void>
+        useLoad(cb: () => void): void
+        getLoad(): object
+        Load(onLoading: (percent: number, name: string, url: string) => void): void
+        onLoaded(onLoaded: () => void): void
+    }
+
     interface Scene {
         name: string
         game: IGame
@@ -24,12 +32,13 @@ declare namespace SCENE {
         Loader: SCENE.Loader
         canUpdate: boolean
         new(name: string): Scene
+        useLoad(cb: () => void): void
+        getLoad(): object
         onLoading(percent: number, name: string, url: string): void
         Load(onLoading?: (percent: number, name: string, url: string) => void): void
+        onLoaded(onLoaded: () => void): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
-        getLoad(): object
-        useLoad(cb: () => void): void
         create(): void
         useUpdate(): void
         update(): void
@@ -107,6 +116,7 @@ declare namespace SCENE {
 
 declare module '@amoy/scene' {
     const Scene: SCENE.Scene
+    const Resource: SCENE.Resource
     class Component extends SCENE.Component { }
     class SizeComponent extends SCENE.SizeComponent { }
     function use(addons: SCENE.ADDON): any
