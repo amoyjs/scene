@@ -13,7 +13,6 @@ export class Scene {
     public route: SCENE.Route
     public Loader = ResourceLoader
     public static addons: Array<() => void> = []
-    public static resourceGetters: Array<() => void> = []
 
     constructor(name: string) {
         this.name = name
@@ -31,27 +30,12 @@ export class Scene {
         }
     }
 
-    public static Load(onLoading = (percent: number, name: string, url: string) => {}) {
-        Resource.Load(onLoading)
-    }
-
-    public static onLoaded(onLoaded: () => void = () => { }) {
-        Resource.onLoaded(onLoaded)
-    }
-
     public Load() {
         Resource.Load()
     }
 
-    public static getLoad() {
-        return Resource.getLoad()
-    }
-
-    public getLoad() {
-        return Resource.getLoad()
-    }
-
     public static useLoad(cb: () => void) {
+        console.warn(`Scene.useLoad() will be deprecated, please update to version "@amoy/scene@0.4.34" or later and use "Resource.useLoad()" to instead.`)
         Resource.useLoad(cb)
     }
 

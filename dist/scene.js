@@ -146,24 +146,11 @@
                 this.addons.push(addons);
             }
         };
-        Scene.Load = function (onLoading) {
-            if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
-            Resource.Load(onLoading);
-        };
-        Scene.onLoaded = function (onLoaded) {
-            if (onLoaded === void 0) { onLoaded = function () { }; }
-            Resource.onLoaded(onLoaded);
-        };
         Scene.prototype.Load = function () {
             Resource.Load();
         };
-        Scene.getLoad = function () {
-            return Resource.getLoad();
-        };
-        Scene.prototype.getLoad = function () {
-            return Resource.getLoad();
-        };
         Scene.useLoad = function (cb) {
+            console.warn("Scene.useLoad() will be deprecated, please update to version \"@amoy/scene@0.4.34\" or later and use \"Resource.useLoad()\" to instead.");
             Resource.useLoad(cb);
         };
         Scene.prototype.switchTo = function (sceneName, query) {
@@ -192,7 +179,6 @@
             }
         };
         Scene.addons = [];
-        Scene.resourceGetters = [];
         return Scene;
     }());
 
