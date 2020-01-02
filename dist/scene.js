@@ -85,6 +85,25 @@
         return Route;
     }());
 
+    var SceneLoader = {
+        add: function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (!PIXI.Loader.shared.resources[args[0]])
+                (_a = PIXI.Loader.shared).add.apply(_a, args);
+        },
+        Load: function (images) {
+            var _this = this;
+            Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
+        },
+        onLoaded: function (onLoaded) {
+            if (onLoaded === void 0) { onLoaded = function () { }; }
+            PIXI.Loader.shared.load(function () { return onLoaded(); });
+        }
+    };
     var Scene = /** @class */ (function () {
         function Scene(name) {
             var _this = this;
@@ -105,37 +124,27 @@
         };
         Object.defineProperty(Scene.prototype, "Loader", {
             get: function () {
-                return {
-                    add: function () {
-                        var _a;
-                        var args = [];
-                        for (var _i = 0; _i < arguments.length; _i++) {
-                            args[_i] = arguments[_i];
-                        }
-                        if (!PIXI.Loader.shared.resources[args[0]])
-                            (_a = PIXI.Loader.shared).add.apply(_a, args);
-                    },
-                    Load: function (images) {
-                        var _this = this;
-                        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
-                    },
-                    onLoaded: function (onLoaded) {
-                        if (onLoaded === void 0) { onLoaded = function () { }; }
-                        PIXI.Loader.shared.load(function () { return onLoaded(); });
-                    }
-                };
+                return SceneLoader;
             },
             enumerable: true,
             configurable: true
         });
-        Scene.prototype.Load = function () {
-            this.Loader.Load(this.getLoad());
+        Scene.Load = function (onLoading) {
+            if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
+            SceneLoader.Load(this.getLoad());
+            PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
         };
-        Scene.prototype.getLoad = function () {
+        Scene.prototype.Load = function () {
+            SceneLoader.Load(this.getLoad());
+        };
+        Scene.getLoad = function () {
             return Scene.resourceGetters.reduce(function (prev, current) {
                 prev = Object.assign(prev, current());
                 return prev;
             }, {});
+        };
+        Scene.prototype.getLoad = function () {
+            return Scene.getLoad();
         };
         Scene.useLoad = function (cb) {
             this.resourceGetters.push(cb);

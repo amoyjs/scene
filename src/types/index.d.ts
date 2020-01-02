@@ -25,7 +25,7 @@ declare namespace SCENE {
         canUpdate: boolean
         new(name: string): Scene
         onLoading(percent: number, name: string, url: string): void
-        Load(): void
+        Load(onLoading?: (percent: number, name: string, url: string) => void): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
         getLoad(): object

@@ -1,5 +1,17 @@
 import { Loader } from 'pixi.js'
 
+const SceneLoader = {
+    add: (...args: any) => {
+        if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
+    },
+    Load(images: object) {
+        Object.keys(images).map((key) => this.add(key, images[key]))
+    },
+    onLoaded: (onLoaded: () => void = () => { }) => {
+        Loader.shared.load(() => onLoaded())
+    },
+}
+
 export class Scene {
     public name: string
     public canUpdate: boolean
@@ -31,28 +43,27 @@ export class Scene {
     }
 
     public get Loader() {
-        return {
-            add: (...args: any) => {
-                if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
-            },
-            Load(images: object) {
-                Object.keys(images).map((key) => this.add(key, images[key]))
-            },
-            onLoaded: (onLoaded: () => void = () => { }) => {
-                Loader.shared.load(() => onLoaded())
-            },
-        }
+        return SceneLoader
+    }
+
+    public static Load(onLoading = (percent: number, name: string, url: string) => {}) {
+        SceneLoader.Load(this.getLoad())
+        Loader.shared.on('progress', (_, resource) => onLoading(_.progress, resource.name, resource.url))
     }
 
     public Load() {
-        this.Loader.Load(this.getLoad())
+        SceneLoader.Load(this.getLoad())
     }
 
-    public getLoad() {
+    public static getLoad() {
         return Scene.resourceGetters.reduce((prev: any, current: any) => {
             prev = Object.assign(prev, current())
             return prev
         }, {})
+    }
+
+    public getLoad() {
+        return Scene.getLoad()
     }
 
     public static useLoad(cb: () => void) {
