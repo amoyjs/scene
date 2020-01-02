@@ -9,6 +9,7 @@ export default class Stage extends Graphics {
         super()
         this.game = game
         this.isStage = true
+        this.sortableChildren = true
         this.init()
     }
     

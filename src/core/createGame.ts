@@ -13,6 +13,7 @@ export function createGame(configure: SCENE.IConfigure) {
 
     game.Loader = Loader
     game.resources = Loader.shared.resources
+    game.stage.sortableChildren = true
 
     if (UIWidth && UIHeight) {
         game.UI_DESIGN_RATIO = width! / UIWidth

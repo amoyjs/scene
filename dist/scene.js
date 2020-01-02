@@ -515,6 +515,7 @@
             var _this = _super.call(this) || this;
             _this.game = game;
             _this.isStage = true;
+            _this.sortableChildren = true;
             _this.init();
             return _this;
         }
@@ -567,6 +568,7 @@
         var game = new PIXI.Application(configure);
         game.Loader = PIXI.Loader;
         game.resources = PIXI.Loader.shared.resources;
+        game.stage.sortableChildren = true;
         if (UIWidth && UIHeight) {
             game.UI_DESIGN_RATIO = width / UIWidth;
             game.PIXEL_RATIO = {

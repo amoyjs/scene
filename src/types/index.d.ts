@@ -32,11 +32,8 @@ declare namespace SCENE {
         Loader: SCENE.Loader
         canUpdate: boolean
         new(name: string): Scene
-        useLoad(cb: () => void): void
-        getLoad(): object
         onLoading(percent: number, name: string, url: string): void
         Load(onLoading?: (percent: number, name: string, url: string) => void): void
-        onLoaded(onLoaded: () => void): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
         create(): void
