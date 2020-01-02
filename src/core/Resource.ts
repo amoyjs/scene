@@ -26,6 +26,7 @@ export class Resource {
     public static Load(onLoading = (percent: number, name: string, url: string) => {}) {
         ResourceLoader.Load(this.getLoad())
         Loader.shared.on('progress', (_, resource) => onLoading(_.progress, resource.name, resource.url))
+        Loader.shared.load()
     }
 
     public static onLoaded(onLoaded: () => void = () => { }) {

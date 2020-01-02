@@ -33,6 +33,7 @@ var Resource = /** @class */ (function () {
         if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
         ResourceLoader.Load(this.getLoad());
         Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+        Loader.shared.load();
     };
     Resource.onLoaded = function (onLoaded) {
         if (onLoaded === void 0) { onLoaded = function () { }; }

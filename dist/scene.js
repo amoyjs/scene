@@ -36,6 +36,7 @@
             if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
             ResourceLoader.Load(this.getLoad());
             PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+            PIXI.Loader.shared.load();
         };
         Resource.onLoaded = function (onLoaded) {
             if (onLoaded === void 0) { onLoaded = function () { }; }
