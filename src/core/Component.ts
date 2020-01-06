@@ -8,7 +8,7 @@ export class Component extends Container {
         y: number
     }
     public game = Scene.prototype.game
-    public stage = Scene.prototype.stage
+    public stage = this.game.stage
     constructor() {
         super()
         this.stage.addChild(this)
@@ -25,7 +25,7 @@ export class SizeComponent extends Graphics {
         y: number
     }
     public game = Scene.prototype.game
-    public stage = Scene.prototype.stage
+    public stage = this.game.stage
     private color = 0xffffff
     private opacity = 0
     private frame = {

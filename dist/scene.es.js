@@ -591,7 +591,7 @@ var Component = /** @class */ (function (_super) {
     function Component() {
         var _this = _super.call(this) || this;
         _this.game = Scene.prototype.game;
-        _this.stage = Scene.prototype.stage;
+        _this.stage = _this.game.stage;
         _this.stage.addChild(_this);
         _this.ratio = _this.game.PIXEL_RATIO.x;
         _this.ratios = _this.game.PIXEL_RATIO;
@@ -611,7 +611,7 @@ var SizeComponent = /** @class */ (function (_super) {
         if (opacity === void 0) { opacity = 0; }
         var _this = _super.call(this) || this;
         _this.game = Scene.prototype.game;
-        _this.stage = Scene.prototype.stage;
+        _this.stage = _this.game.stage;
         _this.color = 0xffffff;
         _this.opacity = 0;
         _this.frame = {
