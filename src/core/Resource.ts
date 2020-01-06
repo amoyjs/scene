@@ -23,13 +23,12 @@ export class Resource {
         return this.resourceGetters.reduce((prev: any, current: any) => Object.assign(prev, current()), {})
     }
 
-    public static Load(onLoading = (percent: number, name: string, url: string) => {}) {
+    public static Load(onLoaded: (resources: any) => void = () => { }) {
         ResourceLoader.Load(this.getLoad())
-        Loader.shared.on('progress', (_, resource) => onLoading(_.progress, resource.name, resource.url))
-        Loader.shared.load()
+        Loader.shared.load(() => onLoaded(Loader.shared.resources))
     }
 
-    public static onLoaded(onLoaded: () => void = () => { }) {
-        Loader.shared.load(() => onLoaded())
+    public static onLoading(onLoading = (percent: number, name: string, url: string) => {}) {
+        Loader.shared.on('progress', (_, resource) => onLoading(_.progress, resource.name, resource.url))
     }
 }

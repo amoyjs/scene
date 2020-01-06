@@ -34,6 +34,8 @@ export class Scene {
         Resource.Load()
     }
 
+    public onLoading() {}
+
     public static useLoad(cb: () => void) {
         console.warn(`Scene.useLoad() will be deprecated, please update to version "@amoy/scene@0.4.34" or later and use "Resource.useLoad()" to instead.`)
         Resource.useLoad(cb)
@@ -48,9 +50,7 @@ export class Scene {
         return this.route.query
     }
 
-    public create() { }
-
-    public onLoading() { }
+    public create() {}
 
     public useUpdate() {
         this.canUpdate = true

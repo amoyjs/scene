@@ -16,8 +16,8 @@ declare namespace SCENE {
         resourceGetters: Array<() => void>
         useLoad(cb: () => void): void
         getLoad(): object
-        Load(onLoading?: (percent: number, name: string, url: string) => void): void
-        onLoaded(onLoaded?: () => void): void
+        Load(onLoaded?: (resources: any) => void): void
+        onLoading(onLoading?: (percent: number, name: string, url: string) => void): void
     }
 
     interface Scene {
@@ -33,7 +33,7 @@ declare namespace SCENE {
         canUpdate: boolean
         new(name: string): Scene
         onLoading(percent: number, name: string, url: string): void
-        Load(onLoading?: (percent: number, name: string, url: string) => void): void
+        Load(): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
         create(): void
