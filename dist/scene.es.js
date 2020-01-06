@@ -125,12 +125,14 @@ var Route = /** @class */ (function () {
 
 var Scene = /** @class */ (function () {
     function Scene(name) {
+        var _this = this;
         this.Loader = ResourceLoader;
         this.name = name;
         this.canUpdate = false;
         this.ratio = this.game.PIXEL_RATIO.x;
         this.ratios = this.game.PIXEL_RATIO;
         this.route.push(this);
+        Scene.addons.map(function (addon) { return addon.call(_this); });
     }
     Scene.use = function (addons) {
         var _this = this;
@@ -138,7 +140,7 @@ var Scene = /** @class */ (function () {
             addons.map(function (addon) { return _this.use(addon); });
         }
         else if (typeof addons === 'function') {
-            addons.call(Scene.prototype);
+            this.addons.push(addons);
         }
         else {
             throw Error("Scene.use() expected a function.");
