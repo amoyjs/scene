@@ -69,6 +69,7 @@ declare namespace SCENE {
     interface Route {
         query: any
         to(sceneName: string, query?: object): void
+        push(scene: SCENE.Scene): void
     }
 
     interface IConfigure {

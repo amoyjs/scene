@@ -19,14 +19,16 @@ export class Scene {
         this.canUpdate = false
         this.ratio = this.game.PIXEL_RATIO.x
         this.ratios = this.game.PIXEL_RATIO
-        Scene.addons.map((addon) => addon.call(this))
+        this.route.push(this)
     }
 
     public static use(addons: () => void | (() => void)[]) {
         if (Array.isArray(addons)) {
             addons.map((addon) => this.use(addon))
+        } else if (typeof addons === 'function') {
+            addons.call(Scene.prototype)
         } else {
-            this.addons.push(addons)
+            throw Error(`Scene.use() expected a function.`);
         }
     }
 

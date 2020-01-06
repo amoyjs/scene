@@ -1,13 +1,11 @@
 import { Graphics } from 'pixi.js'
-import { remove } from '../common'
+import { remove, ScreenSize } from '../common'
 
 export default class Stage extends Graphics {
-    private game: SCENE.IGame
     public isStage: boolean
 
-    constructor(game: SCENE.IGame) {
+    constructor() {
         super()
-        this.game = game
         this.isStage = true
         this.sortableChildren = true
         this.init()
@@ -21,7 +19,7 @@ export default class Stage extends Graphics {
 
     public setSize() {
         this.beginFill(0xffffff, 0)
-        this.drawRect(0, 0, this.game.view.width, this.game.view.height)
+        this.drawRect(0, 0, ScreenSize.width, ScreenSize.height)
         this.endFill()
     }
 

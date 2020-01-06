@@ -28,3 +28,8 @@ export function remove(display: PIXI.Container) {
     display.children.map((item: PIXI.Container) => remove(item))
     display.removeChildren()
 }
+
+export const ScreenSize = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+}

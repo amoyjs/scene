@@ -32,15 +32,14 @@
         Resource.getLoad = function () {
             return this.resourceGetters.reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
         };
-        Resource.Load = function (onLoading) {
-            if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
-            ResourceLoader.Load(this.getLoad());
-            PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
-            PIXI.Loader.shared.load();
-        };
-        Resource.onLoaded = function (onLoaded) {
+        Resource.Load = function (onLoaded) {
             if (onLoaded === void 0) { onLoaded = function () { }; }
-            PIXI.Loader.shared.load(function () { return onLoaded(); });
+            ResourceLoader.Load(this.getLoad());
+            PIXI.Loader.shared.load(function () { return onLoaded(PIXI.Loader.shared.resources); });
+        };
+        Resource.onLoading = function (onLoading) {
+            if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
+            PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
         };
         Resource.resourceGetters = [];
         return Resource;
@@ -129,26 +128,29 @@
 
     var Scene = /** @class */ (function () {
         function Scene(name) {
-            var _this = this;
             this.Loader = ResourceLoader;
             this.name = name;
             this.canUpdate = false;
             this.ratio = this.game.PIXEL_RATIO.x;
             this.ratios = this.game.PIXEL_RATIO;
-            Scene.addons.map(function (addon) { return addon.call(_this); });
+            this.route.push(this);
         }
         Scene.use = function (addons) {
             var _this = this;
             if (Array.isArray(addons)) {
                 addons.map(function (addon) { return _this.use(addon); });
             }
+            else if (typeof addons === 'function') {
+                addons.call(Scene.prototype);
+            }
             else {
-                this.addons.push(addons);
+                throw Error("Scene.use() expected a function.");
             }
         };
         Scene.prototype.Load = function () {
             Resource.Load();
         };
+        Scene.prototype.onLoading = function () { };
         Scene.useLoad = function (cb) {
             console.warn("Scene.useLoad() will be deprecated, please update to version \"@amoy/scene@0.4.34\" or later and use \"Resource.useLoad()\" to instead.");
             Resource.useLoad(cb);
@@ -163,7 +165,6 @@
             return this.route.query;
         };
         Scene.prototype.create = function () { };
-        Scene.prototype.onLoading = function () { };
         Scene.prototype.useUpdate = function () {
             this.canUpdate = true;
         };
@@ -508,12 +509,15 @@
         display.children.map(function (item) { return remove(item); });
         display.removeChildren();
     }
+    var ScreenSize = {
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
 
     var Stage = /** @class */ (function (_super) {
         __extends(Stage, _super);
-        function Stage(game) {
+        function Stage() {
             var _this = _super.call(this) || this;
-            _this.game = game;
             _this.isStage = true;
             _this.sortableChildren = true;
             _this.init();
@@ -526,7 +530,7 @@
         };
         Stage.prototype.setSize = function () {
             this.beginFill(0xffffff, 0);
-            this.drawRect(0, 0, this.game.view.width, this.game.view.height);
+            this.drawRect(0, 0, ScreenSize.width, ScreenSize.height);
             this.endFill();
         };
         Stage.prototype.onSceneChange = function () {
@@ -539,17 +543,17 @@
     }(PIXI.Graphics));
 
     Scene.use(function () {
-        this.stage = new Stage(this.game);
-        this.route = Route.create(this.game);
-        this.route.push(this);
+        this.stage = new Stage();
     });
     function useScene(game, scenes) {
         var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
         var values = Object.values(scenes);
-        Scene.prototype.game = game;
-        values.map(function (scene, index) { return new scene(keys[index]); });
         var route = Route.create(game);
-        route.to(keys[0]);
+        Scene.prototype.game = game;
+        Scene.prototype.route = route;
+        values.map(function (scene, index) { return new scene(keys[index]); });
+        var name = keys[0];
+        route.to(name);
         game.ticker.add(function () { return route.update(); });
     }
 
@@ -588,7 +592,7 @@
         function Component() {
             var _this = _super.call(this) || this;
             _this.game = Scene.prototype.game;
-            _this.stage = _this.game.stage;
+            _this.stage = Scene.prototype.stage;
             _this.stage.addChild(_this);
             _this.ratio = _this.game.PIXEL_RATIO.x;
             _this.ratios = _this.game.PIXEL_RATIO;
@@ -608,7 +612,7 @@
             if (opacity === void 0) { opacity = 0; }
             var _this = _super.call(this) || this;
             _this.game = Scene.prototype.game;
-            _this.stage = _this.game.stage;
+            _this.stage = Scene.prototype.stage;
             _this.color = 0xffffff;
             _this.opacity = 0;
             _this.frame = {
