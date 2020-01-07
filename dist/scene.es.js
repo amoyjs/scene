@@ -123,7 +123,7 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 
-var Scene = /** @class */ (function () {
+var Scene$1 = /** @class */ (function () {
     function Scene(name) {
         var _this = this;
         this.Loader = ResourceLoader;
@@ -508,6 +508,12 @@ function remove(display) {
     display.children.map(function (item) { return remove(item); });
     display.removeChildren();
 }
+function getGame() {
+    return Scene$1.prototype.game;
+}
+function getStage() {
+    return getGame().stage.children.find(function (stage) { return stage.name === Route.create(getGame()).currentScene.name; });
+}
 var ScreenSize = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -515,8 +521,9 @@ var ScreenSize = {
 
 var Stage = /** @class */ (function (_super) {
     __extends(Stage, _super);
-    function Stage() {
+    function Stage(name) {
         var _this = _super.call(this) || this;
+        _this.name = name;
         _this.isStage = true;
         _this.sortableChildren = true;
         _this.init();
@@ -541,15 +548,15 @@ var Stage = /** @class */ (function (_super) {
     return Stage;
 }(Graphics));
 
-Scene.use(function () {
-    this.stage = new Stage();
+Scene$1.use(function () {
+    this.stage = new Stage(this.name);
 });
 function useScene(game, scenes) {
     var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
     var values = Object.values(scenes);
     var route = Route.create(game);
-    Scene.prototype.game = game;
-    Scene.prototype.route = route;
+    Scene$1.prototype.game = game;
+    Scene$1.prototype.route = route;
     values.map(function (scene, index) { return new scene(keys[index]); });
     var name = keys[0];
     route.to(name);
@@ -590,8 +597,8 @@ var Component = /** @class */ (function (_super) {
     __extends(Component, _super);
     function Component() {
         var _this = _super.call(this) || this;
-        _this.game = Scene.prototype.game;
-        _this.stage = _this.game.stage;
+        _this.game = getGame();
+        _this.stage = getStage();
         _this.stage.addChild(_this);
         _this.ratio = _this.game.PIXEL_RATIO.x;
         _this.ratios = _this.game.PIXEL_RATIO;
@@ -652,5 +659,5 @@ var use = usesify(PIXI);
 compatibleWeChatGame();
 window.PIXI = PIXI;
 
-export { Component, Resource, ResourceLoader, Scene, SizeComponent, createGame, use, useScene };
+export { Component, Resource, ResourceLoader, Scene$1 as Scene, SizeComponent, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map

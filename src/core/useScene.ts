@@ -3,7 +3,7 @@ import Route from './Route'
 import Stage from './Stage'
 
 Scene.use(function () {
-    this.stage = new Stage()
+    this.stage = new Stage(this.name)
 })
 
 export function useScene(game: any, scenes: object) {

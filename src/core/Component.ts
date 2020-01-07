@@ -1,5 +1,5 @@
-import { Scene } from './Scene'
 import { Container, Graphics } from 'pixi.js'
+import { getStage, getGame } from '../common'
 
 export class Component extends Container {
     public ratio: number
@@ -7,8 +7,8 @@ export class Component extends Container {
         x: number
         y: number
     }
-    public game = Scene.prototype.game
-    public stage = this.game.stage
+    public game = getGame()
+    public stage = getStage()
     constructor() {
         super()
         this.stage.addChild(this)

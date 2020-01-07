@@ -2,10 +2,12 @@ import { Graphics } from 'pixi.js'
 import { remove, ScreenSize } from '../common'
 
 export default class Stage extends Graphics {
+    public name: string
     public isStage: boolean
 
-    constructor() {
+    constructor(name: string) {
         super()
+        this.name = name
         this.isStage = true
         this.sortableChildren = true
         this.init()
