@@ -60,19 +60,11 @@ createGame({
 
 // path/to/SceneHome.ts
 import { Sprite } from 'pixi.js'
-import { Scene } from '@amoy/scene'
-
-Scene.useLoad(() => ({
-    'bunny', require('./images/bunny'),
-}))
+import { Scene, Resource } from '@amoy/scene'
 
 class SceneHome extends Scene {
     constructor(name) {
         super(name)
-    }
-
-    Load() {
-        this.Loader.Load(this.getLoad())
     }
 
     create() {
@@ -87,7 +79,7 @@ class SceneHome extends Scene {
                 from: 'SceneHome',
             })
         })
-        this.game.stage.addChild(helloWorld)
+        this.stage.addChild(helloWorld)
     }
 }
 
@@ -95,18 +87,18 @@ class SceneHome extends Scene {
 import { Sprite } from 'pixi.js'
 import { Scene } from '@amoy/scene'
 
+Resource.useLoad(() => ({
+    'bunny', require('./images/bunny'),
+}))
+
 class SceneSomething extends Scene {
     constructor(name) {
         super(name)
     }
 
-    Load() {
-        this.Loader.add('bunny', require('./images/bunny'))
-    }
-
     create() {
         const s1 = Sprite.from('bunny')
-        this.game.stage.addChild(helloWorld)
+        this.stage.addChild(helloWorld)
     }
 }
 ```
