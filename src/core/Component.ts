@@ -24,8 +24,8 @@ export class SizeComponent extends Graphics {
         x: number
         y: number
     }
-    public game = Scene.prototype.game
-    public stage = this.game.stage
+    public game = getGame()
+    public stage = getStage()
     private color = 0xffffff
     private opacity = 0
     private frame = {

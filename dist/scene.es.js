@@ -123,7 +123,7 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 
-var Scene$1 = /** @class */ (function () {
+var Scene = /** @class */ (function () {
     function Scene(name) {
         var _this = this;
         this.Loader = ResourceLoader;
@@ -509,7 +509,7 @@ function remove(display) {
     display.removeChildren();
 }
 function getGame() {
-    return Scene$1.prototype.game;
+    return Scene.prototype.game;
 }
 function getStage() {
     return getGame().stage.children.find(function (stage) { return stage.name === Route.create(getGame()).currentScene.name; });
@@ -548,15 +548,15 @@ var Stage = /** @class */ (function (_super) {
     return Stage;
 }(Graphics));
 
-Scene$1.use(function () {
+Scene.use(function () {
     this.stage = new Stage(this.name);
 });
 function useScene(game, scenes) {
     var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
     var values = Object.values(scenes);
     var route = Route.create(game);
-    Scene$1.prototype.game = game;
-    Scene$1.prototype.route = route;
+    Scene.prototype.game = game;
+    Scene.prototype.route = route;
     values.map(function (scene, index) { return new scene(keys[index]); });
     var name = keys[0];
     route.to(name);
@@ -617,8 +617,8 @@ var SizeComponent = /** @class */ (function (_super) {
         if (color === void 0) { color = 0xffffff; }
         if (opacity === void 0) { opacity = 0; }
         var _this = _super.call(this) || this;
-        _this.game = Scene.prototype.game;
-        _this.stage = _this.game.stage;
+        _this.game = getGame();
+        _this.stage = getStage();
         _this.color = 0xffffff;
         _this.opacity = 0;
         _this.frame = {
@@ -659,5 +659,5 @@ var use = usesify(PIXI);
 compatibleWeChatGame();
 window.PIXI = PIXI;
 
-export { Component, Resource, ResourceLoader, Scene$1 as Scene, SizeComponent, createGame, use, useScene };
+export { Component, Resource, ResourceLoader, Scene, SizeComponent, createGame, use, useScene };
 //# sourceMappingURL=scene.es.js.map
