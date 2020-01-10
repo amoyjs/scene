@@ -1,4 +1,3 @@
-export * from './compatibleWeChatGame'
 import { Scene } from '../core/Scene'
 import Route from '../core/Route'
 
@@ -35,8 +34,8 @@ export function getGame() {
     return Scene.prototype.game
 }
 
-export function getStage() {
-    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.create(getGame()).currentScene.name)
+export function getStage(): SCENE.Stage {
+    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.create(getGame()).currentScene.name) as SCENE.Stage
 }
 
 export const ScreenSize = {
