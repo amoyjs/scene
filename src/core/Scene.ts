@@ -21,6 +21,7 @@ export class Scene {
         this.ratio = this.game.PIXEL_RATIO.x
         this.ratios = this.game.PIXEL_RATIO
         this.stage = new Stage(name)
+        // @ts-ignore
         this.route.push(this)
     }
 

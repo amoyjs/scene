@@ -20,6 +20,7 @@ declare namespace SCENE {
     }
 
     interface Scene {
+        new(name: string): Scene
         name: string
         game: IGame
         stage: Stage

@@ -1,11 +1,11 @@
 {
   "name": "@amoy/scene",
   "moduleName": "SceneKit",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Scene for pixi.js.",
   "main": "dist/scene.js",
   "module": "dist/scene.es.js",
-  "types": "src/types/index.d.ts",
+  "types": "types/index.d.ts",
   "scripts": {
     "start": "NODE_ENV=development rollup -w -c rollup.config.js",
     "dev": "NODE_ENV=development rollup -c rollup.config.js",
@@ -27,9 +27,6 @@
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.2"
-  },
-  "dependencies": {
-    "@pixi/unsafe-eval": "^5.0.4"
   },
   "peerDependencies": {
     "pixi.js": "^5.1.5"
