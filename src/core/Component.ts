@@ -1,5 +1,14 @@
 import { Container, Graphics } from 'pixi.js'
-import { getStage, getGame } from '../common'
+import { Scene } from './Scene'
+import { Route } from './Route'
+
+export function getGame() {
+    return Scene.prototype.game
+}
+
+export function getStage(): SCENE.Stage {
+    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.create(getGame()).currentScene.name) as SCENE.Stage
+}
 
 export class Component extends Container {
     public ratio: number

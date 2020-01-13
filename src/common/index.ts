@@ -1,5 +1,5 @@
 import { Scene } from '../core/Scene'
-import Route from '../core/Route'
+import { Route } from '../core/Route'
 
 export function getView() {
     if (typeof canvas !== 'undefined') {
@@ -11,15 +11,15 @@ export function getView() {
     }
 }
 
-export function usesify(target: object): SCENE.ADDON {
-    return function use(addons: SCENE.ADDON) {
-        if (Array.isArray(addons)) {
-            addons.map((addon) => use(addon))
+export function createExtend(store: any[]) {
+    return function extend(extendsions: Function | Array<Function>) {
+        if (Array.isArray(extendsions)) {
+            extendsions.map((extendsion) => store.push(extendsion))
         } else {
-            if (typeof addons === 'function') {
-                addons(target)
+            if (typeof extendsions === 'function') {
+                store.push(extendsions)
             } else {
-                console.error(`addon ${addons} must be a function`)
+                console.error(`addon ${extendsions} must be a function`)
             }
         }
     }
@@ -30,15 +30,7 @@ export function remove(display: PIXI.Container) {
     display.removeChildren()
 }
 
-export function getGame() {
-    return Scene.prototype.game
-}
-
-export function getStage(): SCENE.Stage {
-    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.create(getGame()).currentScene.name) as SCENE.Stage
-}
-
 export const ScreenSize = {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: window.screen.width,
+    height: window.screen.height,
 }

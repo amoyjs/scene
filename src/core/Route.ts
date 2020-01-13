@@ -1,6 +1,6 @@
 import { Loader } from 'pixi.js'
 
-export default class Route {
+export class Route {
     public scenes: {}
     public prevSceneName: string
     public currentSceneName: string

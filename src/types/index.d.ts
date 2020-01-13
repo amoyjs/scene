@@ -8,8 +8,7 @@ declare namespace SCENE {
     interface Loader {
         add(...args: string[]): void
         Load(images: object): void
-        LoadFont(families: string[]): void
-        onLoaded(closure: (loader: any, resource: any) => void): void
+        onLoaded(onLoaded: (resources: any) => void): void
     }
 
     interface Resource {
@@ -31,7 +30,6 @@ declare namespace SCENE {
         }
         Loader: SCENE.Loader
         canUpdate: boolean
-        new(name: string): Scene
         onLoading(percent: number, name: string, url: string): void
         Load(): void
         getQuery(name?: string): object | string
@@ -43,7 +41,6 @@ declare namespace SCENE {
     }
 
     class Stage extends PIXI.Container {
-        scene: Scene
         isStage: boolean
         init(): void
         onSceneChange(): void
@@ -74,6 +71,7 @@ declare namespace SCENE {
 
     interface IConfigure {
         scenes: object
+        orientation?: 'landscape' | 'portrait'
         UIWidth?: number
         UIHeight?: number
         view?: HTMLCanvasElement
@@ -103,12 +101,12 @@ declare namespace SCENE {
             y: number
         }
         UI_DESIGN_RATIO: number
-        world?: PIXI.Container
         resources: any
         Loader: typeof PIXI.Loader
+        configure: SCENE.IConfigure
     }
 
-    type ADDON = (core: any) => void | Array<(core: any) => void>
+    type ADDON = (core: any, options: any) => void | Array<(core: any, options: any) => void>
 }
 
 
@@ -118,6 +116,6 @@ declare module '@amoy/scene' {
     class Component extends SCENE.Component { }
     class SizeComponent extends SCENE.SizeComponent { }
     function use(addons: SCENE.ADDON): any
-    function useScene(game: PIXI.Application, scene: object): void
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
+    function createScene(game: PIXI.Application, scenes: Map<string, SCENE.Scene>): void
 }

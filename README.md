@@ -30,7 +30,7 @@ $ yarn add @amoy/scene
 // app.js
 // use pixi `Application`
 import { Application } from 'pixi.js'
-import { useScene } from '@amoy/scene'
+import { createScene } from '@amoy/scene'
 import SceneHome from 'path/to/SceneHome'
 import SceneSomething from 'path/to/SceneSomething'
 
@@ -39,7 +39,7 @@ const game = new Application({
     height: window.innerHeight,
 })
 
-useScene(game, {
+createScene(game, {
     home: SceneHome,
     something: SceneSomething,
 })

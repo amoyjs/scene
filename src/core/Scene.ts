@@ -1,4 +1,5 @@
 import { Resource, ResourceLoader } from './Resource'
+import { Stage } from './Stage'
 
 export class Scene {
     public name: string
@@ -19,8 +20,8 @@ export class Scene {
         this.canUpdate = false
         this.ratio = this.game.PIXEL_RATIO.x
         this.ratios = this.game.PIXEL_RATIO
+        this.stage = new Stage(name)
         this.route.push(this)
-        Scene.addons.map((addon) => addon.call(this))
     }
 
     public static use(addons: () => void | (() => void)[]) {

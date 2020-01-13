@@ -1,6 +1,6 @@
 export default {
     backgroundColor: 0x000000,
     autoResize: true,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: window.screen.width,
+    height: window.screen.height,
 }

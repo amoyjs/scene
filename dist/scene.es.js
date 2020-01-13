@@ -1,46 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Loader, Graphics, Application, Container } from 'pixi.js';
-
-var ResourceLoader = {
-    add: function () {
-        var _a;
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (!Loader.shared.resources[args[0]])
-            (_a = Loader.shared).add.apply(_a, args);
-    },
-    Load: function (images) {
-        var _this = this;
-        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
-    },
-    onLoaded: function (onLoaded) {
-        if (onLoaded === void 0) { onLoaded = function () { }; }
-        Loader.shared.load(function () { return onLoaded(); });
-    }
-};
-var Resource = /** @class */ (function () {
-    function Resource() {
-    }
-    Resource.useLoad = function (cb) {
-        this.resourceGetters.push(cb);
-    };
-    Resource.getLoad = function () {
-        return this.resourceGetters.reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
-    };
-    Resource.Load = function (onLoaded) {
-        if (onLoaded === void 0) { onLoaded = function () { }; }
-        ResourceLoader.Load(this.getLoad());
-        Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
-    };
-    Resource.onLoading = function (onLoading) {
-        if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
-        Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
-    };
-    Resource.resourceGetters = [];
-    return Resource;
-}());
+import { Loader, Graphics, Container, Application } from 'pixi.js';
 
 var Route = /** @class */ (function () {
     function Route(game) {
@@ -123,16 +82,133 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 
+var ResourceLoader = {
+    add: function () {
+        var _a;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if (!Loader.shared.resources[args[0]])
+            (_a = Loader.shared).add.apply(_a, args);
+    },
+    Load: function (images) {
+        var _this = this;
+        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
+    },
+    onLoaded: function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
+    }
+};
+var Resource = /** @class */ (function () {
+    function Resource() {
+    }
+    Resource.useLoad = function (cb) {
+        this.resourceGetters.push(cb);
+    };
+    Resource.getLoad = function () {
+        return this.resourceGetters.reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
+    };
+    Resource.Load = function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        ResourceLoader.Load(this.getLoad());
+        Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
+    };
+    Resource.onLoading = function (onLoading) {
+        if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
+        Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+    };
+    Resource.resourceGetters = [];
+    return Resource;
+}());
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+function getView() {
+    if (typeof canvas !== 'undefined') {
+        return canvas;
+    }
+    else {
+        var view = document.createElement('canvas');
+        document.body.appendChild(view);
+        return view;
+    }
+}
+function remove(display) {
+    display.children.map(function (item) { return remove(item); });
+    display.removeChildren();
+}
+var ScreenSize = {
+    width: window.screen.width,
+    height: window.screen.height
+};
+
+var Stage = /** @class */ (function (_super) {
+    __extends(Stage, _super);
+    function Stage(name) {
+        var _this = _super.call(this) || this;
+        _this.name = name;
+        _this.isStage = true;
+        _this.sortableChildren = true;
+        _this.init();
+        return _this;
+    }
+    Stage.prototype.init = function () {
+        this.x = 0;
+        this.y = 0;
+        this.setSize();
+    };
+    Stage.prototype.setSize = function () {
+        this.beginFill(0xffffff, 0);
+        this.drawRect(0, 0, ScreenSize.width, ScreenSize.height);
+        this.endFill();
+    };
+    Stage.prototype.onSceneChange = function () {
+        this.init();
+    };
+    Stage.prototype.shutdown = function () {
+        remove(this);
+    };
+    return Stage;
+}(Graphics));
+
 var Scene = /** @class */ (function () {
     function Scene(name) {
-        var _this = this;
         this.Loader = ResourceLoader;
         this.name = name;
         this.canUpdate = false;
         this.ratio = this.game.PIXEL_RATIO.x;
         this.ratios = this.game.PIXEL_RATIO;
+        this.stage = new Stage(name);
         this.route.push(this);
-        Scene.addons.map(function (addon) { return addon.call(_this); });
     }
     Scene.use = function (addons) {
         var _this = this;
@@ -182,149 +258,12 @@ var Scene = /** @class */ (function () {
     return Scene;
 }());
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
-
-function getView() {
-    if (typeof canvas !== 'undefined') {
-        return canvas;
-    }
-    else {
-        var view = document.createElement('canvas');
-        document.body.appendChild(view);
-        return view;
-    }
-}
-function usesify(target) {
-    return function use(addons) {
-        if (Array.isArray(addons)) {
-            addons.map(function (addon) { return use(addon); });
-        }
-        else {
-            if (typeof addons === 'function') {
-                addons(target);
-            }
-            else {
-                console.error("addon " + addons + " must be a function");
-            }
-        }
-    };
-}
-function remove(display) {
-    display.children.map(function (item) { return remove(item); });
-    display.removeChildren();
-}
 function getGame() {
     return Scene.prototype.game;
 }
 function getStage() {
     return getGame().stage.children.find(function (stage) { return stage.name === Route.create(getGame()).currentScene.name; });
 }
-var ScreenSize = {
-    width: window.innerWidth,
-    height: window.innerHeight
-};
-
-var Stage = /** @class */ (function (_super) {
-    __extends(Stage, _super);
-    function Stage(name) {
-        var _this = _super.call(this) || this;
-        _this.name = name;
-        _this.isStage = true;
-        _this.sortableChildren = true;
-        _this.init();
-        return _this;
-    }
-    Stage.prototype.init = function () {
-        this.x = 0;
-        this.y = 0;
-        this.setSize();
-    };
-    Stage.prototype.setSize = function () {
-        this.beginFill(0xffffff, 0);
-        this.drawRect(0, 0, ScreenSize.width, ScreenSize.height);
-        this.endFill();
-    };
-    Stage.prototype.onSceneChange = function () {
-        this.init();
-    };
-    Stage.prototype.shutdown = function () {
-        remove(this);
-    };
-    return Stage;
-}(Graphics));
-
-Scene.use(function () {
-    this.stage = new Stage(this.name);
-});
-function useScene(game, scenes) {
-    var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
-    var values = Object.values(scenes);
-    var route = Route.create(game);
-    Scene.prototype.game = game;
-    Scene.prototype.route = route;
-    values.map(function (scene, index) { return new scene(keys[index]); });
-    var name = keys[0];
-    route.to(name);
-    game.ticker.add(function () { return route.update(); });
-}
-
-var defaultConfigure = {
-    backgroundColor: 0x000000,
-    autoResize: true,
-    width: window.innerWidth,
-    height: window.innerHeight
-};
-
-function createGame(configure) {
-    var view = configure.view;
-    configure = Object.assign(defaultConfigure, configure);
-    var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight, width = configure.width, height = configure.height, scenes = configure.scenes;
-    configure.view = view || getView();
-    var game = new Application(configure);
-    game.Loader = Loader;
-    game.resources = Loader.shared.resources;
-    game.stage.sortableChildren = true;
-    if (UIWidth && UIHeight) {
-        game.UI_DESIGN_RATIO = width / UIWidth;
-        game.PIXEL_RATIO = {
-            x: width / UIWidth,
-            y: height / UIHeight
-        };
-    }
-    else {
-        console.warn("must specified both \"options.UIWidth\" and \"options.UIHeight\" in createGame(options), or you can not use \"game.PIXEL_RATIO\" correctly.");
-    }
-    useScene(game, scenes);
-    return game;
-}
-
 var Component = /** @class */ (function (_super) {
     __extends(Component, _super);
     function Component() {
@@ -387,8 +326,72 @@ var SizeComponent = /** @class */ (function (_super) {
     return SizeComponent;
 }(Graphics));
 
-var use = usesify(PIXI);
+var extensions = [];
+function use(extendsions) {
+    if (Array.isArray(extendsions)) {
+        extendsions.map(function (extendsion) { return extensions.push(extendsion); });
+    }
+    else {
+        if (typeof extendsions === 'function') {
+            extensions.push(extendsions);
+        }
+        else {
+            console.error("addon " + extendsions + " must be a function");
+        }
+    }
+}
+
+function createScene(game, scenes) {
+    var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
+    var values = Object.values(scenes);
+    extensions.map(function (extension) { return extension(PIXI, { game: game, Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader }); });
+    values.map(function (scene, index) { return new scene(keys[index]); });
+    var route = Route.create(game);
+    var name = keys[0];
+    route.to(name);
+    game.ticker.add(function () { return route.update(); });
+}
+
+var defaultConfigure = {
+    backgroundColor: 0x000000,
+    autoResize: true,
+    width: window.screen.width,
+    height: window.screen.height
+};
+
+function extendGame(_a, _b) {
+    var Loader = _a.Loader;
+    var game = _b.game;
+    game.Loader = Loader;
+    game.resources = Loader.shared.resources;
+    Scene.prototype.game = game;
+    Scene.prototype.route = Route.create(game);
+    var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight, width = _c.width, height = _c.height;
+    if (UIWidth && UIHeight) {
+        game.UI_DESIGN_RATIO = width / UIWidth;
+        game.PIXEL_RATIO = {
+            x: width / UIWidth,
+            y: height / UIHeight
+        };
+    }
+    else {
+        console.warn("must specified both \"options.UIWidth\" and \"options.UIHeight\" in createGame(options), or you can not use \"game.PIXEL_RATIO\" correctly.");
+    }
+}
+
+var Game = Application;
+use(extendGame);
+function createGame(configure) {
+    var view = configure.view;
+    configure = Object.assign(defaultConfigure, configure);
+    configure.view = view || getView();
+    var game = new Game(configure);
+    game.configure = configure;
+    createScene(game, configure.scenes);
+    return game;
+}
+
 window.PIXI = PIXI;
 
-export { Component, Resource, ResourceLoader, Scene, SizeComponent, createGame, use, useScene };
+export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, createScene, getGame, getStage, use };
 //# sourceMappingURL=scene.es.js.map

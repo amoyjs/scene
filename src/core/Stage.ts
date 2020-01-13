@@ -1,7 +1,7 @@
 import { Graphics } from 'pixi.js'
 import { remove, ScreenSize } from '../common'
 
-export default class Stage extends Graphics {
+export class Stage extends Graphics {
     public name: string
     public isStage: boolean
 
@@ -13,7 +13,7 @@ export default class Stage extends Graphics {
         this.init()
     }
     
-    private init() {
+    public init() {
         this.x = 0
         this.y = 0
         this.setSize()

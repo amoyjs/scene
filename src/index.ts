@@ -1,7 +1,6 @@
 export * from './core'
 import * as PIXI from 'pixi.js'
-import { usesify } from './common'
 
-export const use = usesify(PIXI)
+export { use } from './common/use'
 
 window.PIXI = PIXI

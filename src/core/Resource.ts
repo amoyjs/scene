@@ -7,8 +7,8 @@ export const ResourceLoader = {
     Load(images: object) {
         Object.keys(images).map((key) => this.add(key, images[key]))
     },
-    onLoaded: (onLoaded: () => void = () => { }) => {
-        Loader.shared.load(() => onLoaded())
+    onLoaded: (onLoaded: (resources: any) => void = () => { }) => {
+        Loader.shared.load(() => onLoaded(Loader.shared.resources))
     },
 }
 
