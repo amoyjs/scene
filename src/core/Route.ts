@@ -81,16 +81,8 @@ export class Route {
         this.currentScene.stage.onSceneChange()
     }
 
-    isScene(scene: string = '') {
+    private isScene(scene: string = '') {
         const hasScene = this.scenes[scene] !== undefined
         return hasScene
-    }
-
-    destroy() {
-        this.game = null
-        this.scenes = {}
-        this.pendingSceneName = null
-        this.currentSceneName = null
-        this.currentScene = null
     }
 }

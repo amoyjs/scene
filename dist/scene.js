@@ -75,13 +75,6 @@
             var hasScene = this.scenes[scene] !== undefined;
             return hasScene;
         };
-        Route.prototype.destroy = function () {
-            this.game = null;
-            this.scenes = {};
-            this.pendingSceneName = null;
-            this.currentSceneName = null;
-            this.currentScene = null;
-        };
         return Route;
     }());
 
@@ -340,7 +333,7 @@
                 extensions.push(extendsions);
             }
             else {
-                console.error("addon " + extendsions + " must be a function");
+                console.error("extendsion " + extendsions + " must be a function");
             }
         }
     }
@@ -348,8 +341,8 @@
     function createScene(game, scenes) {
         var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
         var values = Object.values(scenes);
-        extensions.map(function (extension) { return extension(PIXI, { game: game, Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader }); });
-        values.map(function (scene, index) { return new scene(keys[index]); });
+        extensions.map(function (extension) { return extension(PIXI, { game: game, Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route }); });
+        values.map(function (Scene, index) { return new Scene(keys[index]); });
         var route = Route.create(game);
         var name = keys[0];
         route.to(name);

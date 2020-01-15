@@ -1,6 +1,3 @@
-import { Scene } from '../core/Scene'
-import { Route } from '../core/Route'
-
 export function getView() {
     if (typeof canvas !== 'undefined') {
         return canvas
@@ -12,7 +9,7 @@ export function getView() {
 }
 
 export function createExtend(store: any[]) {
-    return function extend(extendsions: Function | Array<Function>) {
+    return function extend(extendsions: () => void | Array<() => void>) {
         if (Array.isArray(extendsions)) {
             extendsions.map((extendsion) => store.push(extendsion))
         } else {

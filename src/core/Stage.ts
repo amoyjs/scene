@@ -12,7 +12,7 @@ export class Stage extends Graphics {
         this.sortableChildren = true
         this.init()
     }
-    
+
     public init() {
         this.x = 0
         this.y = 0

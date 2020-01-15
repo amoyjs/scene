@@ -1,8 +1,6 @@
 /// <reference types="pixi.js" />
 
-declare const wx: any
 declare const canvas: any
-declare module '@pixi/unsafe-eval'
 
 declare namespace SCENE {
     interface Loader {
@@ -107,7 +105,8 @@ declare namespace SCENE {
         configure: SCENE.IConfigure
     }
 
-    type ADDON = (core: any, options: any) => void | Array<(core: any, options: any) => void>
+    type EXTENSION = (PIXI: any, options: any) => void
+    type EXTENSIONS = EXTENSION | EXTENSION[]
 }
 
 
@@ -116,7 +115,7 @@ declare module '@amoy/scene' {
     const Resource: SCENE.Resource
     class Component extends SCENE.Component { }
     class SizeComponent extends SCENE.SizeComponent { }
-    function use(addons: SCENE.ADDON): any
+    function use(extension: SCENE.EXTENSIONS): any
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
     function createScene(game: PIXI.Application, scenes: Map<string, SCENE.Scene>): void
 }

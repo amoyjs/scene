@@ -13,8 +13,8 @@ export function getStage(): SCENE.Stage {
 export class Component extends Container {
     public ratio: number
     public ratios: {
-        x: number
-        y: number
+        x: number,
+        y: number,
     }
     public game = getGame()
     public stage = getStage()
@@ -26,12 +26,11 @@ export class Component extends Container {
     }
 }
 
-
 export class SizeComponent extends Graphics {
     public ratio: number
     public ratios: {
-        x: number
-        y: number
+        x: number,
+        y: number,
     }
     public game = getGame()
     public stage = getStage()

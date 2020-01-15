@@ -6,8 +6,8 @@ export class Scene {
     public canUpdate: boolean
     public ratio: number
     public ratios: {
-        x: number
-        y: number
+        x: number,
+        y: number,
     }
     public stage: SCENE.Stage
     public game: SCENE.IGame
@@ -25,13 +25,13 @@ export class Scene {
         this.route.push(this)
     }
 
-    public static use(addons: () => void | (() => void)[]) {
+    public static use(addons: () => void | Array<() => void>) {
         if (Array.isArray(addons)) {
             addons.map((addon) => this.use(addon))
         } else if (typeof addons === 'function') {
             this.addons.push(addons)
         } else {
-            throw Error(`Scene.use() expected a function.`);
+            throw Error(`Scene.use() expected a function.`)
         }
     }
 
