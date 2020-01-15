@@ -350,7 +350,8 @@ var defaultConfigure = {
     backgroundColor: 0x000000,
     autoResize: true,
     width: window.screen.width,
-    height: window.screen.height
+    height: window.screen.height,
+    resolution: devicePixelRatio
 };
 
 function extendGame(_a, _b) {

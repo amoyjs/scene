@@ -3,4 +3,5 @@ export default {
     autoResize: true,
     width: window.screen.width,
     height: window.screen.height,
+    resolution: devicePixelRatio,
 }
