@@ -10,13 +10,10 @@ export function extendGame({ Loader }, { game }) {
 
     const { UIWidth, UIHeight, width, height } = game.configure
 
-    if (UIWidth && UIHeight) {
-        game.UI_DESIGN_RATIO = width! / UIWidth
-        game.PIXEL_RATIO = {
-            x: width! / UIWidth,
-            y: height! / UIHeight,
-        }
-    } else {
-        console.warn(`must specified both "options.UIWidth" and "options.UIHeight" in createGame(options), or you can not use "game.PIXEL_RATIO" correctly.`)
+    // 竖屏应用，以宽为准；横屏应用，以高为准
+    game.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight
+    game.PIXEL_RATIOS = {
+        x: width / UIWidth,
+        y: height / UIHeight,
     }
 }

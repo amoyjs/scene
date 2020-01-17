@@ -3,5 +3,7 @@ export default {
     autoResize: true,
     width: window.innerWidth,
     height: window.innerHeight,
+    UIWidth: window.innerWidth,
+    UIHeight: window.innerHeight,
     resolution: devicePixelRatio,
 }

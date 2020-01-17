@@ -95,11 +95,11 @@ declare namespace SCENE {
     }
 
     interface IGame extends PIXI.Application {
-        PIXEL_RATIO: {
+        PIXEL_RATIO: number
+        PIXEL_RATIOS: {
             x: number
             y: number
         }
-        UI_DESIGN_RATIO: number
         resources: any
         Loader: typeof PIXI.Loader
         configure: SCENE.IConfigure

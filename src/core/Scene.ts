@@ -18,8 +18,8 @@ export class Scene {
     constructor(name: string) {
         this.name = name
         this.canUpdate = false
-        this.ratio = this.game.PIXEL_RATIO.x
-        this.ratios = this.game.PIXEL_RATIO
+        this.ratio = this.game.PIXEL_RATIO
+        this.ratios = this.game.PIXEL_RATIOS
         this.stage = new Stage(name)
         // @ts-ignore
         this.route.push(this)

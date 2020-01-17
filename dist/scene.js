@@ -201,8 +201,8 @@
             this.Loader = ResourceLoader;
             this.name = name;
             this.canUpdate = false;
-            this.ratio = this.game.PIXEL_RATIO.x;
-            this.ratios = this.game.PIXEL_RATIO;
+            this.ratio = this.game.PIXEL_RATIO;
+            this.ratios = this.game.PIXEL_RATIOS;
             this.stage = new Stage(name);
             // @ts-ignore
             this.route.push(this);
@@ -268,8 +268,8 @@
             _this.game = getGame();
             _this.stage = getStage();
             _this.stage.addChild(_this);
-            _this.ratio = _this.game.PIXEL_RATIO.x;
-            _this.ratios = _this.game.PIXEL_RATIO;
+            _this.ratio = _this.game.PIXEL_RATIO;
+            _this.ratios = _this.game.PIXEL_RATIOS;
             return _this;
         }
         return Component;
@@ -297,8 +297,8 @@
                 radius: 0
             };
             _this.stage.addChild(_this);
-            _this.ratio = _this.game.PIXEL_RATIO.x;
-            _this.ratios = _this.game.PIXEL_RATIO;
+            _this.ratio = _this.game.PIXEL_RATIO;
+            _this.ratios = _this.game.PIXEL_RATIOS;
             _this.color = color;
             _this.opacity = opacity;
             _this.frame = { x: x, y: y, width: width, height: height, radius: radius };
@@ -354,6 +354,8 @@
         autoResize: true,
         width: window.innerWidth,
         height: window.innerHeight,
+        UIWidth: window.innerWidth,
+        UIHeight: window.innerHeight,
         resolution: devicePixelRatio
     };
 
@@ -365,16 +367,12 @@
         Scene.prototype.game = game;
         Scene.prototype.route = Route.create(game);
         var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight, width = _c.width, height = _c.height;
-        if (UIWidth && UIHeight) {
-            game.UI_DESIGN_RATIO = width / UIWidth;
-            game.PIXEL_RATIO = {
-                x: width / UIWidth,
-                y: height / UIHeight
-            };
-        }
-        else {
-            console.warn("must specified both \"options.UIWidth\" and \"options.UIHeight\" in createGame(options), or you can not use \"game.PIXEL_RATIO\" correctly.");
-        }
+        // 竖屏应用，以宽为准；横屏应用，以高为准
+        game.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight;
+        game.PIXEL_RATIOS = {
+            x: width / UIWidth,
+            y: height / UIHeight
+        };
     }
 
     var Game = PIXI.Application;

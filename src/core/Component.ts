@@ -21,8 +21,8 @@ export class Component extends Container {
     constructor() {
         super()
         this.stage.addChild(this)
-        this.ratio = this.game.PIXEL_RATIO.x
-        this.ratios = this.game.PIXEL_RATIO
+        this.ratio = this.game.PIXEL_RATIO
+        this.ratios = this.game.PIXEL_RATIOS
     }
 }
 
@@ -46,8 +46,8 @@ export class SizeComponent extends Graphics {
     constructor(x: number = 0, y: number = 0, width: number = window.innerWidth, height: number = window.innerHeight, radius: number = 0, color: number = 0xffffff, opacity: number = 0) {
         super()
         this.stage.addChild(this)
-        this.ratio = this.game.PIXEL_RATIO.x
-        this.ratios = this.game.PIXEL_RATIO
+        this.ratio = this.game.PIXEL_RATIO
+        this.ratios = this.game.PIXEL_RATIOS
 
         this.color = color
         this.opacity = opacity
