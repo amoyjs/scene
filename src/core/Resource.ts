@@ -13,14 +13,16 @@ export const ResourceLoader = {
 }
 
 export class Resource {
-    public static resourceGetters: Array<() => void> = []
+    public static resourceGetters: SCENE.ResourceGetter[] = []
 
-    public static useLoad(cb: () => void) {
-        this.resourceGetters.push(cb)
+    public static useLoad(resourceGetter: SCENE.ResourceGetter) {
+        this.resourceGetters.push(resourceGetter)
     }
 
     public static getLoad() {
-        return this.resourceGetters.reduce((prev: any, current: any) => Object.assign(prev, current()), {})
+        const fromObject = this.resourceGetters.filter((getter) => typeof getter === 'object').reduce((prev: any, current: any) => Object.assign(prev, current), {})
+        const fromClosure = this.resourceGetters.filter((getter) => typeof getter === 'function').reduce((prev: any, current: any) => Object.assign(prev, current()), {})
+        return Object.assign(fromObject, fromClosure)
     }
 
     public static Load(onLoaded: (resources: any) => void = () => { }) {

@@ -11,7 +11,7 @@ declare namespace SCENE {
 
     interface Resource {
         resourceGetters: Array<() => void>
-        useLoad(cb: () => void): void
+        useLoad(resourceGetter: ResourceGetter): void
         getLoad(): object
         Load(onLoaded?: (resources: any) => void): void
         onLoading(onLoading?: (percent: number, name: string, url: string) => void): void
@@ -107,6 +107,7 @@ declare namespace SCENE {
 
     type EXTENSION = (PIXI: any, options: any) => void
     type EXTENSIONS = EXTENSION | EXTENSION[]
+    type ResourceGetter = { [key: string]: string } | Function
 }
 
 

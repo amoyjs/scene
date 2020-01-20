@@ -1,4 +1,3 @@
-import alias from 'rollup-plugin-alias'
 import minify from 'rollup-plugin-babel-minify'
 import resolve from 'rollup-plugin-node-resolve'
 import typescript from 'rollup-plugin-typescript'
@@ -14,7 +13,6 @@ const output = options => ({
     ...options,
     globals: {
         'pixi.js': 'PIXI',
-        '@pixi/unsafe-eval': 'UNSAFE_EVAL',
     },
 })
 
@@ -28,9 +26,6 @@ const configure = {
         format: 'es',
     })],
     plugins: [
-        alias({
-            common: './common',
-        }),
         typescript(),
         commonjs(),
         resolve(),

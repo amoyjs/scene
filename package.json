@@ -1,7 +1,7 @@
 {
   "name": "@amoy/scene",
   "moduleName": "SceneKit",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Scene for pixi.js.",
   "main": "dist/scene.js",
   "module": "dist/scene.es.js",
@@ -19,14 +19,12 @@
   "author": "大板栗 <576839360@qq.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/webfontloader": "^1.6.29",
-    "rollup-plugin-alias": "^1.5.2",
-    "rollup-plugin-babel-minify": "^9.0.0",
-    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-babel-minify": "^9.1.1",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.2"
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
     "pixi.js": "^5.1.5"

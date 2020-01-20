@@ -92,16 +92,18 @@ var ResourceLoader = {
     onLoaded: function (onLoaded) {
         if (onLoaded === void 0) { onLoaded = function () { }; }
         Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
-    }
+    },
 };
 var Resource = /** @class */ (function () {
     function Resource() {
     }
-    Resource.useLoad = function (cb) {
-        this.resourceGetters.push(cb);
+    Resource.useLoad = function (resourceGetter) {
+        this.resourceGetters.push(resourceGetter);
     };
     Resource.getLoad = function () {
-        return this.resourceGetters.reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
+        var fromObject = this.resourceGetters.filter(function (getter) { return typeof getter === 'object'; }).reduce(function (prev, current) { return Object.assign(prev, current); }, {});
+        var fromClosure = this.resourceGetters.filter(function (getter) { return typeof getter === 'function'; }).reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
+        return Object.assign(fromObject, fromClosure);
     };
     Resource.Load = function (onLoaded) {
         if (onLoaded === void 0) { onLoaded = function () { }; }
@@ -161,7 +163,7 @@ function remove(display) {
 }
 var ScreenSize = {
     width: window.screen.width,
-    height: window.screen.height
+    height: window.screen.height,
 };
 
 var Stage = /** @class */ (function (_super) {
@@ -291,7 +293,7 @@ var SizeComponent = /** @class */ (function (_super) {
             y: 0,
             width: 0,
             height: 0,
-            radius: 0
+            radius: 0,
         };
         _this.stage.addChild(_this);
         _this.ratio = _this.game.PIXEL_RATIO;
@@ -353,7 +355,7 @@ var defaultConfigure = {
     height: window.innerHeight,
     UIWidth: window.innerWidth,
     UIHeight: window.innerHeight,
-    resolution: devicePixelRatio
+    resolution: devicePixelRatio,
 };
 
 function extendGame(_a, _b) {
@@ -368,7 +370,7 @@ function extendGame(_a, _b) {
     game.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight;
     game.PIXEL_RATIOS = {
         x: width / UIWidth,
-        y: height / UIHeight
+        y: height / UIHeight,
     };
 }
 
