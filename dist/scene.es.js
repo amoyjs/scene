@@ -375,13 +375,14 @@ function extendGame(_a, _b) {
 }
 
 var Game = Application;
-use(extendGame);
 function createGame(configure) {
     var view = configure.view;
     configure = Object.assign(defaultConfigure, configure);
     configure.view = view || getView();
+    extensions.map(function (extension) { return extension(PIXI, { Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route }); });
     var game = new Game(configure);
     game.configure = configure;
+    extendGame(PIXI, { game: game });
     createScene(game, configure.scenes);
     return game;
 }
