@@ -7,8 +7,8 @@
     var Route = /** @class */ (function () {
         function Route(game) {
             this.game = game;
-            this.scenes = {};
-            this.query = {};
+            Route.scenes = {};
+            Route.query = {};
         }
         Route.create = function (game) {
             if (!this.instance)
@@ -16,31 +16,40 @@
             return this.instance;
         };
         Route.prototype.push = function (scene) {
-            this.scenes[scene.name] = scene;
+            Route.scenes[scene.name] = scene;
         };
-        Route.prototype.to = function (sceneName, query) {
+        Route.to = function (sceneName, query) {
             if (query === void 0) { query = {}; }
-            if (this.currentSceneName === sceneName)
+            if (Route.currentSceneName === sceneName)
                 return false;
             if (this.isScene(sceneName)) {
-                this.pendingSceneName = sceneName;
+                Route.pendingSceneName = sceneName;
                 this.query = query;
             }
         };
+        Route.prototype.to = function (sceneName, query) {
+            if (query === void 0) { query = {}; }
+            if (Route.currentSceneName === sceneName)
+                return false;
+            if (Route.isScene(sceneName)) {
+                Route.pendingSceneName = sceneName;
+                Route.query = query;
+            }
+        };
         Route.prototype.update = function () {
-            if (this.pendingSceneName)
-                this.setCurrentScene(this.pendingSceneName);
-            if (this.currentScene && this.currentScene.canUpdate) {
-                this.currentScene.update && this.currentScene.update();
+            if (Route.pendingSceneName)
+                this.setCurrentScene(Route.pendingSceneName);
+            if (Route.currentScene && Route.currentScene.canUpdate) {
+                Route.currentScene.update && Route.currentScene.update();
             }
         };
         Route.prototype.setCurrentScene = function (pendingSceneName) {
-            if (!this.isScene(pendingSceneName)) {
+            if (!Route.isScene(pendingSceneName)) {
                 console.warn("\u573A\u666F " + pendingSceneName + " \u4E0D\u5B58\u5728");
                 return false;
             }
-            if (this.currentSceneName !== this.pendingSceneName) {
-                this.currentScene = this.scenes[pendingSceneName];
+            if (Route.currentSceneName !== Route.pendingSceneName) {
+                Route.currentScene = Route.scenes[pendingSceneName];
                 this.cleanStage();
                 this.fetchNextScene();
                 this.stateUpdate();
@@ -51,28 +60,27 @@
             this.game.stage.removeChildren();
         };
         Route.prototype.fetchNextScene = function () {
-            var _this = this;
-            this.game.stage.addChild(this.currentScene.stage);
-            this.currentScene.Load();
-            PIXI.Loader.shared.load(function () { return _this.currentScene.create(); });
-            PIXI.Loader.shared.on('progress', function (_, resource) { return _this.currentScene.onLoading(_.progress, resource.name, resource.url); });
-            this.pendingSceneName = null;
+            this.game.stage.addChild(Route.currentScene.stage);
+            Route.currentScene.Load();
+            PIXI.Loader.shared.load(function () { return Route.currentScene.create(); });
+            PIXI.Loader.shared.on('progress', function (_, resource) { return Route.currentScene.onLoading(_.progress, resource.name, resource.url); });
+            Route.pendingSceneName = null;
         };
         Route.prototype.stateUpdate = function () {
-            this.prevSceneName = this.currentSceneName;
-            this.currentSceneName = this.currentScene.name;
+            Route.prevSceneName = Route.currentSceneName;
+            Route.currentSceneName = Route.currentScene.name;
         };
         Route.prototype.onSceneChange = function () {
-            if (this.prevSceneName) {
-                var preScene = this.scenes[this.prevSceneName];
+            if (Route.prevSceneName) {
+                var preScene = Route.scenes[Route.prevSceneName];
                 preScene.shutdown();
                 this.game.stage.removeChild(preScene.stage);
             }
-            this.currentScene.stage.onSceneChange();
+            Route.currentScene.stage.onSceneChange();
         };
-        Route.prototype.isScene = function (scene) {
+        Route.isScene = function (scene) {
             if (scene === void 0) { scene = ''; }
-            var hasScene = this.scenes[scene] !== undefined;
+            var hasScene = Route.scenes[scene] !== undefined;
             return hasScene;
         };
         return Route;
@@ -261,7 +269,7 @@
         return Scene.prototype.game;
     }
     function getStage() {
-        return getGame().stage.children.find(function (stage) { return stage.name === Route.create(getGame()).currentScene.name; });
+        return getGame().stage.children.find(function (stage) { return stage.name === Route.currentScene.name; });
     }
     var Component = /** @class */ (function (_super) {
         __extends(Component, _super);

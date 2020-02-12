@@ -62,9 +62,10 @@ declare namespace SCENE {
         setSize(width?: number, height?: number, radius?: number): void
     }
 
-    interface Route {
+    class Route {
         query: any
         to(sceneName: string, query?: object): void
+        static to(sceneName: string, query?: object): void
         push(scene: SCENE.Scene): void
     }
 
@@ -113,6 +114,7 @@ declare namespace SCENE {
 
 declare module '@amoy/scene' {
     const Scene: SCENE.Scene
+    const Route: SCENE.Route
     const Resource: SCENE.Resource
     class Component extends SCENE.Component { }
     class SizeComponent extends SCENE.SizeComponent { }

@@ -1,20 +1,20 @@
 import { Loader } from 'pixi.js'
 
 export class Route {
-    public scenes: {}
-    public prevSceneName: string
-    public currentSceneName: string
-    public pendingSceneName: string
-    public currentScene: SCENE.Scene
+    public static scenes: {}
+    public static prevSceneName: string
+    public static currentSceneName: string
+    public static pendingSceneName: string
+    public static currentScene: SCENE.Scene
     public instance: Route
-    public query: any
+    public static query: any
     public game: SCENE.IGame
     public static instance: Route
 
     constructor(game: SCENE.IGame) {
         this.game = game
-        this.scenes = {}
-        this.query = {}
+        Route.scenes = {}
+        Route.query = {}
     }
 
     public static create(game: any) {
@@ -23,31 +23,39 @@ export class Route {
     }
 
     public push(scene: SCENE.Scene) {
-        this.scenes[scene.name] = scene
+        Route.scenes[scene.name] = scene
     }
 
-    public to(sceneName: string, query: object = {}) {
-        if (this.currentSceneName === sceneName) return false
+    public static to(sceneName: string, query: object = {}) {
+        if (Route.currentSceneName === sceneName) return false
         if (this.isScene(sceneName)) {
-            this.pendingSceneName = sceneName
+            Route.pendingSceneName = sceneName
             this.query = query
         }
     }
 
+    public to(sceneName: string, query: object = {}) {
+        if (Route.currentSceneName === sceneName) return false
+        if (Route.isScene(sceneName)) {
+            Route.pendingSceneName = sceneName
+            Route.query = query
+        }
+    }
+
     public update() {
-        if (this.pendingSceneName) this.setCurrentScene(this.pendingSceneName)
-        if (this.currentScene && this.currentScene.canUpdate) {
-            this.currentScene.update && this.currentScene.update()
+        if (Route.pendingSceneName) this.setCurrentScene(Route.pendingSceneName)
+        if (Route.currentScene && Route.currentScene.canUpdate) {
+            Route.currentScene.update && Route.currentScene.update()
         }
     }
 
     private setCurrentScene(pendingSceneName: string) {
-        if (!this.isScene(pendingSceneName)) {
+        if (!Route.isScene(pendingSceneName)) {
             console.warn(`场景 ${pendingSceneName} 不存在`)
             return false
         }
-        if (this.currentSceneName !== this.pendingSceneName) {
-            this.currentScene = this.scenes[pendingSceneName]
+        if (Route.currentSceneName !== Route.pendingSceneName) {
+            Route.currentScene = Route.scenes[pendingSceneName]
             this.cleanStage()
             this.fetchNextScene()
             this.stateUpdate()
@@ -60,29 +68,29 @@ export class Route {
     }
 
     private fetchNextScene() {
-        this.game.stage.addChild(this.currentScene.stage)
-        this.currentScene.Load()
-        Loader.shared.load(() => this.currentScene.create())
-        Loader.shared.on('progress', (_, resource) => this.currentScene.onLoading(_.progress, resource.name, resource.url))
-        this.pendingSceneName = null
+        this.game.stage.addChild(Route.currentScene.stage)
+        Route.currentScene.Load()
+        Loader.shared.load(() => Route.currentScene.create())
+        Loader.shared.on('progress', (_, resource) => Route.currentScene.onLoading(_.progress, resource.name, resource.url))
+        Route.pendingSceneName = null
     }
 
     private stateUpdate() {
-        this.prevSceneName = this.currentSceneName
-        this.currentSceneName = this.currentScene.name
+        Route.prevSceneName = Route.currentSceneName
+        Route.currentSceneName = Route.currentScene.name
     }
 
     private onSceneChange() {
-        if (this.prevSceneName) {
-            const preScene = this.scenes[this.prevSceneName]
+        if (Route.prevSceneName) {
+            const preScene = Route.scenes[Route.prevSceneName]
             preScene.shutdown()
             this.game.stage.removeChild(preScene.stage)
         }
-        this.currentScene.stage.onSceneChange()
+        Route.currentScene.stage.onSceneChange()
     }
 
-    private isScene(scene: string = '') {
-        const hasScene = this.scenes[scene] !== undefined
+    public static isScene(scene: string = '') {
+        const hasScene = Route.scenes[scene] !== undefined
         return hasScene
     }
 }

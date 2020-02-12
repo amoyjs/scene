@@ -7,7 +7,7 @@ export function getGame() {
 }
 
 export function getStage(): SCENE.Stage {
-    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.create(getGame()).currentScene.name) as SCENE.Stage
+    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.currentScene.name) as SCENE.Stage
 }
 
 export class Component extends Container {
