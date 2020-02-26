@@ -63,10 +63,11 @@ declare namespace SCENE {
     }
 
     class Route {
-        query: any
+        static query: any
+        static game: IGame
         to(sceneName: string, query?: object): void
         static to(sceneName: string, query?: object): void
-        push(scene: SCENE.Scene): void
+        static push(scene: SCENE.Scene): void
     }
 
     interface IConfigure {
@@ -106,6 +107,14 @@ declare namespace SCENE {
         configure: SCENE.IConfigure
     }
 
+    interface Shared {
+        PIXEL_RATIO?: number
+        PIXEL_RATIOS?: {
+            x: number,
+            y: number,
+        }
+    }
+
     type EXTENSION = (PIXI: any, options: any) => void
     type EXTENSIONS = EXTENSION | EXTENSION[]
     type ResourceGetter = { [key: string]: string } | Function
@@ -113,6 +122,7 @@ declare namespace SCENE {
 
 
 declare module '@amoy/scene' {
+    const shared: SCENE.Shared
     const Scene: SCENE.Scene
     const Route: SCENE.Route
     const Resource: SCENE.Resource

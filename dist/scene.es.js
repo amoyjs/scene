@@ -3,16 +3,14 @@ import { Loader, Graphics, Container, Application } from 'pixi.js';
 
 var Route = /** @class */ (function () {
     function Route(game) {
-        this.game = game;
-        Route.scenes = {};
-        Route.query = {};
+        Route.game = game;
     }
     Route.create = function (game) {
         if (!this.instance)
             this.instance = new Route(game);
         return this.instance;
     };
-    Route.prototype.push = function (scene) {
+    Route.push = function (scene) {
         Route.scenes[scene.name] = scene;
     };
     Route.to = function (sceneName, query) {
@@ -54,10 +52,10 @@ var Route = /** @class */ (function () {
         }
     };
     Route.prototype.cleanStage = function () {
-        this.game.stage.removeChildren();
+        Route.game.stage.removeChildren();
     };
     Route.prototype.fetchNextScene = function () {
-        this.game.stage.addChild(Route.currentScene.stage);
+        Route.game.stage.addChild(Route.currentScene.stage);
         Route.currentScene.Load();
         Loader.shared.load(function () { return Route.currentScene.create(); });
         Loader.shared.on('progress', function (_, resource) { return Route.currentScene.onLoading(_.progress, resource.name, resource.url); });
@@ -71,7 +69,7 @@ var Route = /** @class */ (function () {
         if (Route.prevSceneName) {
             var preScene = Route.scenes[Route.prevSceneName];
             preScene.shutdown();
-            this.game.stage.removeChild(preScene.stage);
+            Route.game.stage.removeChild(preScene.stage);
         }
         Route.currentScene.stage.onSceneChange();
     };
@@ -80,6 +78,8 @@ var Route = /** @class */ (function () {
         var hasScene = Route.scenes[scene] !== undefined;
         return hasScene;
     };
+    Route.scenes = {};
+    Route.query = {};
     return Route;
 }());
 
@@ -173,6 +173,7 @@ var ScreenSize = {
     width: window.screen.width,
     height: window.screen.height,
 };
+var shared = {};
 
 var Stage = /** @class */ (function (_super) {
     __extends(Stage, _super);
@@ -212,7 +213,7 @@ var Scene = /** @class */ (function () {
         this.ratios = this.game.PIXEL_RATIOS;
         this.stage = new Stage(name);
         // @ts-ignore
-        this.route.push(this);
+        Route.push(this);
     }
     Scene.use = function (addons) {
         var _this = this;
@@ -236,12 +237,12 @@ var Scene = /** @class */ (function () {
     };
     Scene.prototype.switchTo = function (sceneName, query) {
         if (query === void 0) { query = {}; }
-        this.route.to(sceneName, query);
+        Route.to(sceneName, query);
     };
     Scene.prototype.getQuery = function (name) {
         if (name)
-            return this.route.query[name];
-        return this.route.query;
+            return Route.query[name];
+        return Route.query;
     };
     Scene.prototype.create = function () { };
     Scene.prototype.useUpdate = function () {
@@ -372,11 +373,10 @@ function extendGame(_a, _b) {
     game.Loader = Loader;
     game.resources = Loader.shared.resources;
     Scene.prototype.game = game;
-    Scene.prototype.route = Route.create(game);
     var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight, width = _c.width, height = _c.height;
     // 竖屏应用，以宽为准；横屏应用，以高为准
-    game.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight;
-    game.PIXEL_RATIOS = {
+    game.PIXEL_RATIO = shared.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight;
+    game.PIXEL_RATIOS = shared.PIXEL_RATIOS = {
         x: width / UIWidth,
         y: height / UIHeight,
     };
@@ -397,5 +397,5 @@ function createGame(configure) {
 
 window.PIXI = PIXI;
 
-export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, createScene, getGame, getStage, use };
+export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, createScene, getGame, getStage, shared, use };
 //# sourceMappingURL=scene.es.js.map

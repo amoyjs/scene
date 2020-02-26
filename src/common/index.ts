@@ -31,3 +31,5 @@ export const ScreenSize = {
     width: window.screen.width,
     height: window.screen.height,
 }
+
+export const shared: SCENE.Shared = {}

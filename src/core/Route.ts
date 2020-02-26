@@ -1,20 +1,18 @@
 import { Loader } from 'pixi.js'
 
 export class Route {
-    public static scenes: {}
+    public static scenes = {}
     public static prevSceneName: string
     public static currentSceneName: string
     public static pendingSceneName: string
     public static currentScene: SCENE.Scene
     public instance: Route
-    public static query: any
-    public game: SCENE.IGame
+    public static query = {}
+    public static game: SCENE.IGame
     public static instance: Route
 
     constructor(game: SCENE.IGame) {
-        this.game = game
-        Route.scenes = {}
-        Route.query = {}
+        Route.game = game
     }
 
     public static create(game: any) {
@@ -22,7 +20,7 @@ export class Route {
         return this.instance
     }
 
-    public push(scene: SCENE.Scene) {
+    public static push(scene: SCENE.Scene) {
         Route.scenes[scene.name] = scene
     }
 
@@ -64,11 +62,11 @@ export class Route {
     }
 
     private cleanStage() {
-        this.game.stage.removeChildren()
+        Route.game.stage.removeChildren()
     }
 
     private fetchNextScene() {
-        this.game.stage.addChild(Route.currentScene.stage)
+        Route.game.stage.addChild(Route.currentScene.stage)
         Route.currentScene.Load()
         Loader.shared.load(() => Route.currentScene.create())
         Loader.shared.on('progress', (_, resource) => Route.currentScene.onLoading(_.progress, resource.name, resource.url))
@@ -84,7 +82,7 @@ export class Route {
         if (Route.prevSceneName) {
             const preScene = Route.scenes[Route.prevSceneName]
             preScene.shutdown()
-            this.game.stage.removeChild(preScene.stage)
+            Route.game.stage.removeChild(preScene.stage)
         }
         Route.currentScene.stage.onSceneChange()
     }

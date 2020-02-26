@@ -1,5 +1,6 @@
 import { Resource, ResourceLoader } from './Resource'
 import { Stage } from './Stage'
+import { Route } from './Route'
 
 export class Scene {
     public name: string
@@ -22,7 +23,7 @@ export class Scene {
         this.ratios = this.game.PIXEL_RATIOS
         this.stage = new Stage(name)
         // @ts-ignore
-        this.route.push(this)
+        Route.push(this)
     }
 
     public static use(addons: () => void | Array<() => void>) {
@@ -47,12 +48,12 @@ export class Scene {
     }
 
     public switchTo(sceneName: string, query: object = {}) {
-        this.route.to(sceneName, query)
+        Route.to(sceneName, query)
     }
 
     public getQuery(name?: string) {
-        if (name) return this.route.query[name]
-        return this.route.query
+        if (name) return Route.query[name]
+        return Route.query
     }
 
     public create() {}
