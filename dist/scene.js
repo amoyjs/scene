@@ -71,7 +71,7 @@
         Route.prototype.onSceneChange = function () {
             if (Route.prevSceneName) {
                 var preScene = Route.scenes[Route.prevSceneName];
-                preScene.shutdown();
+                preScene.destory();
                 Route.game.stage.removeChild(preScene.stage);
             }
             Route.currentScene.stage.onSceneChange();
@@ -201,7 +201,7 @@
         Stage.prototype.onSceneChange = function () {
             this.init();
         };
-        Stage.prototype.shutdown = function () {
+        Stage.prototype.destory = function () {
             remove(this);
         };
         return Stage;
@@ -255,12 +255,9 @@
             if (!this.canUpdate)
                 return false;
         };
-        Scene.prototype.shutdown = function (cleanUp) {
-            if (cleanUp === void 0) { cleanUp = true; }
+        Scene.prototype.destory = function () {
             this.canUpdate = false;
-            if (cleanUp) {
-                this.stage.shutdown();
-            }
+            this.stage.destory();
         };
         Scene.addons = [];
         return Scene;

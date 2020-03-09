@@ -29,7 +29,7 @@ export class Stage extends Graphics {
         this.init()
     }
 
-    public shutdown() {
+    public destory() {
         remove(this)
     }
 }

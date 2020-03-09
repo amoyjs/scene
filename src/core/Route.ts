@@ -80,8 +80,8 @@ export class Route {
 
     private onSceneChange() {
         if (Route.prevSceneName) {
-            const preScene = Route.scenes[Route.prevSceneName]
-            preScene.shutdown()
+            const preScene: SCENE.Scene = Route.scenes[Route.prevSceneName]
+            preScene.destory()
             Route.game.stage.removeChild(preScene.stage)
         }
         Route.currentScene.stage.onSceneChange()

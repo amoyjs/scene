@@ -66,10 +66,8 @@ export class Scene {
         if (!this.canUpdate) return false
     }
 
-    public shutdown(cleanUp: boolean = true) {
+    public destory() {
         this.canUpdate = false
-        if (cleanUp) {
-            this.stage.shutdown()
-        }
+        this.stage.destory()
     }
 }

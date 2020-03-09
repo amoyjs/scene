@@ -36,14 +36,14 @@ declare namespace SCENE {
         create(): void
         useUpdate(): void
         update(): void
-        shutdown(cleanUp: boolean): void
+        destory(): void
     }
 
     class Stage extends PIXI.Container {
         isStage: boolean
         init(): void
         onSceneChange(): void
-        shutdown(): void
+        destory(): void
     }
 
     class Component extends PIXI.Container {
@@ -72,28 +72,33 @@ declare namespace SCENE {
 
     interface IConfigure {
         scenes: object
-        orientation?: 'landscape' | 'portrait'
         UIWidth?: number
         UIHeight?: number
-        view?: HTMLCanvasElement
-        backgroundColor?: number
+        // pixi options
         autoStart?: boolean
-        sharedTicker?: boolean
-        sharedLoader?: boolean
+        width?: number
+        height?: number
+        view?: HTMLCanvasElement
         transparent?: boolean
-        autoResize?: boolean
+        autoDensity?: boolean
         antialias?: boolean
         preserveDrawingBuffer?: boolean
         resolution?: number
         forceCanvas?: boolean
+        backgroundColor?: number
         clearBeforeRender?: boolean
-        roundPixels?: boolean
         forceFXAA?: boolean
+        powerPreference?: string
+        sharedTicker?: boolean
+        sharedLoader?: boolean
+        resizeTo?: Window | HTMLElement
+        // pixi deprecated options
+        autoResize?: boolean
+        roundPixels?: boolean
         legacy?: boolean
         showFPS?: boolean
-        width?: number
-        height?: number
         pf?: string
+
     }
 
     interface IGame extends PIXI.Application {
@@ -129,6 +134,8 @@ declare module '@amoy/scene' {
     class Component extends SCENE.Component { }
     class SizeComponent extends SCENE.SizeComponent { }
     function use(extension: SCENE.EXTENSIONS): any
+    function getGame(): SCENE.IGame
+    function getStage(): SCENE.Stage
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
     function createScene(game: PIXI.Application, scenes: Map<string, SCENE.Scene>): void
 }
