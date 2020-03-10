@@ -15,8 +15,13 @@ export const ResourceLoader = {
 export class Resource {
     public static resourceGetters: SCENE.ResourceGetter[] = []
 
+    public static use(resourceGetter: SCENE.ResourceGetter) {
+        this.resourceGetters.push(resourceGetter)
+    }
+
     public static useLoad(resourceGetter: SCENE.ResourceGetter) {
         this.resourceGetters.push(resourceGetter)
+        console.warn(`'Resource.useLoad()' will be deprecated in next major version, use 'Resource.use()' to instead.`)
     }
 
     public static getLoad() {

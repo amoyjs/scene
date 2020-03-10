@@ -11,6 +11,7 @@ declare namespace SCENE {
 
     interface Resource {
         resourceGetters: Array<() => void>
+        use(resourceGetter: ResourceGetter): void
         useLoad(resourceGetter: ResourceGetter): void
         getLoad(): object
         Load(onLoaded?: (resources: any) => void): void

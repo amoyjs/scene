@@ -108,8 +108,12 @@
     var Resource = /** @class */ (function () {
         function Resource() {
         }
+        Resource.use = function (resourceGetter) {
+            this.resourceGetters.push(resourceGetter);
+        };
         Resource.useLoad = function (resourceGetter) {
             this.resourceGetters.push(resourceGetter);
+            console.warn("'Resource.useLoad()' will be deprecated in next major version, use 'Resource.use()' to instead.");
         };
         Resource.getLoad = function () {
             var fromObject = this.resourceGetters.filter(function (getter) { return typeof getter === 'object'; }).reduce(function (prev, current) { return Object.assign(prev, current); }, {});
