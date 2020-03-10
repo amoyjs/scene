@@ -5,7 +5,7 @@ import { Stage } from './Stage'
 import { Resource, ResourceLoader } from './Resource'
 import { createScene } from './createScene'
 import defaultConfigure from '../configure'
-import { getView } from '../common'
+import { getView, ScreenSize } from '../common'
 import { extensions } from '../common/use'
 import { extendGame } from '../common/extendGame'
 
@@ -15,6 +15,9 @@ export function createGame(configure: SCENE.IConfigure) {
     const { view } = configure
 
     configure = Object.assign(defaultConfigure, configure)
+
+    ScreenSize.width = configure.width
+    ScreenSize.height = configure.height
 
     configure.view = view || getView()
 

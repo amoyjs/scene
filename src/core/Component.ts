@@ -1,6 +1,7 @@
 import { Container, Graphics } from 'pixi.js'
 import { Scene } from './Scene'
 import { Route } from './Route'
+import { ScreenSize } from '../common'
 
 export function getGame() {
     return Scene.prototype.game
@@ -43,7 +44,7 @@ export class SizeComponent extends Graphics {
         height: 0,
         radius: 0,
     }
-    constructor(x: number = 0, y: number = 0, width: number = window.innerWidth, height: number = window.innerHeight, radius: number = 0, color: number = 0xffffff, opacity: number = 0) {
+    constructor(x: number = 0, y: number = 0, width: number = ScreenSize.width, height: number = ScreenSize.height, radius: number = 0, color: number = 0xffffff, opacity: number = 0) {
         super()
         this.stage.addChild(this)
         this.ratio = this.game.PIXEL_RATIO

@@ -170,8 +170,8 @@ function remove(display) {
     display.removeChildren();
 }
 var ScreenSize = {
-    width: window.screen.width,
-    height: window.screen.height,
+    width: window.innerWidth,
+    height: window.innerHeight,
 };
 var shared = {};
 
@@ -284,8 +284,8 @@ var SizeComponent = /** @class */ (function (_super) {
     function SizeComponent(x, y, width, height, radius, color, opacity) {
         if (x === void 0) { x = 0; }
         if (y === void 0) { y = 0; }
-        if (width === void 0) { width = window.innerWidth; }
-        if (height === void 0) { height = window.innerHeight; }
+        if (width === void 0) { width = ScreenSize.width; }
+        if (height === void 0) { height = ScreenSize.height; }
         if (radius === void 0) { radius = 0; }
         if (color === void 0) { color = 0xffffff; }
         if (opacity === void 0) { opacity = 0; }
@@ -383,6 +383,8 @@ var Game = Application;
 function createGame(configure) {
     var view = configure.view;
     configure = Object.assign(defaultConfigure, configure);
+    ScreenSize.width = configure.width;
+    ScreenSize.height = configure.height;
     configure.view = view || getView();
     extensions.map(function (extension) { return extension(PIXI, { Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route }); });
     var game = new Game(configure);

@@ -28,8 +28,8 @@ export function remove(display: PIXI.Container) {
 }
 
 export const ScreenSize = {
-    width: window.screen.width,
-    height: window.screen.height,
+    width: window.innerWidth,
+    height: window.innerHeight,
 }
 
 export const shared: SCENE.Shared = {}
