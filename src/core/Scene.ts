@@ -14,6 +14,7 @@ export class Scene {
     public game: SCENE.IGame
     public route: SCENE.Route
     public Loader = ResourceLoader
+    public autoCreate = true
     public static addons: Array<() => void> = []
 
     constructor(name: string) {

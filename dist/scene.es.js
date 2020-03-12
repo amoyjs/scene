@@ -57,7 +57,7 @@ var Route = /** @class */ (function () {
     Route.prototype.fetchNextScene = function () {
         Route.game.stage.addChild(Route.currentScene.stage);
         Route.currentScene.Load();
-        Loader.shared.load(function () { return Route.currentScene.create(); });
+        Loader.shared.load(function () { return Route.currentScene.autoCreate && Route.currentScene.create(); });
         Loader.shared.on('progress', function (_, resource) { return Route.currentScene.onLoading(_.progress, resource.name, resource.url); });
         Route.pendingSceneName = null;
     };
@@ -120,6 +120,8 @@ var Resource = /** @class */ (function () {
     Resource.Load = function (onLoaded) {
         if (onLoaded === void 0) { onLoaded = function () { }; }
         ResourceLoader.Load(this.getLoad());
+        // clean resource getters
+        this.resourceGetters = [];
         Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
     };
     Resource.onLoading = function (onLoading) {
@@ -211,6 +213,7 @@ var Stage = /** @class */ (function (_super) {
 var Scene = /** @class */ (function () {
     function Scene(name) {
         this.Loader = ResourceLoader;
+        this.autoCreate = true;
         this.name = name;
         this.canUpdate = false;
         this.ratio = this.game.PIXEL_RATIO;

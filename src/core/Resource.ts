@@ -32,6 +32,8 @@ export class Resource {
 
     public static Load(onLoaded: (resources: any) => void = () => { }) {
         ResourceLoader.Load(this.getLoad())
+        // clean resource getters
+        this.resourceGetters = []
         Loader.shared.load(() => onLoaded(Loader.shared.resources))
     }
 

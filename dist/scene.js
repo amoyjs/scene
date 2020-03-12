@@ -60,7 +60,7 @@
         Route.prototype.fetchNextScene = function () {
             Route.game.stage.addChild(Route.currentScene.stage);
             Route.currentScene.Load();
-            PIXI.Loader.shared.load(function () { return Route.currentScene.create(); });
+            PIXI.Loader.shared.load(function () { return Route.currentScene.autoCreate && Route.currentScene.create(); });
             PIXI.Loader.shared.on('progress', function (_, resource) { return Route.currentScene.onLoading(_.progress, resource.name, resource.url); });
             Route.pendingSceneName = null;
         };
@@ -123,6 +123,8 @@
         Resource.Load = function (onLoaded) {
             if (onLoaded === void 0) { onLoaded = function () { }; }
             ResourceLoader.Load(this.getLoad());
+            // clean resource getters
+            this.resourceGetters = [];
             PIXI.Loader.shared.load(function () { return onLoaded(PIXI.Loader.shared.resources); });
         };
         Resource.onLoading = function (onLoading) {
@@ -214,6 +216,7 @@
     var Scene = /** @class */ (function () {
         function Scene(name) {
             this.Loader = ResourceLoader;
+            this.autoCreate = true;
             this.name = name;
             this.canUpdate = false;
             this.ratio = this.game.PIXEL_RATIO;

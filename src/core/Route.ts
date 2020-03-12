@@ -68,7 +68,7 @@ export class Route {
     private fetchNextScene() {
         Route.game.stage.addChild(Route.currentScene.stage)
         Route.currentScene.Load()
-        Loader.shared.load(() => Route.currentScene.create())
+        Loader.shared.load(() => Route.currentScene.autoCreate && Route.currentScene.create())
         Loader.shared.on('progress', (_, resource) => Route.currentScene.onLoading(_.progress, resource.name, resource.url))
         Route.pendingSceneName = null
     }
