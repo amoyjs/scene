@@ -31,8 +31,9 @@ declare namespace SCENE {
         Loader: SCENE.Loader
         canUpdate: boolean
         autoCreate: boolean
-        onLoading(percent: number, name: string, url: string): void
         Load(): void
+        onLoading(percent: number, name: string, url: string): void
+        onLoaded(resources: any): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
         create(): void

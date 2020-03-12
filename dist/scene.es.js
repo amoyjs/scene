@@ -57,7 +57,10 @@ var Route = /** @class */ (function () {
     Route.prototype.fetchNextScene = function () {
         Route.game.stage.addChild(Route.currentScene.stage);
         Route.currentScene.Load();
-        Loader.shared.load(function () { return Route.currentScene.autoCreate && Route.currentScene.create(); });
+        Loader.shared.load(function () {
+            Route.currentScene.onLoaded(Loader.shared.resources);
+            Route.currentScene.autoCreate && Route.currentScene.create();
+        });
         Loader.shared.on('progress', function (_, resource) { return Route.currentScene.onLoading(_.progress, resource.name, resource.url); });
         Route.pendingSceneName = null;
     };
@@ -238,6 +241,7 @@ var Scene = /** @class */ (function () {
         Resource.Load();
     };
     Scene.prototype.onLoading = function () { };
+    Scene.prototype.onLoaded = function () { };
     Scene.useLoad = function (cb) {
         console.warn("Scene.useLoad() will be deprecated, please update to version \"@amoy/scene@0.4.34\" or later and use \"Resource.useLoad()\" to instead.");
         Resource.useLoad(cb);

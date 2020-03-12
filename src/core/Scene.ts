@@ -43,6 +43,8 @@ export class Scene {
 
     public onLoading() {}
 
+    public onLoaded() {}
+
     public static useLoad(cb: () => void) {
         console.warn(`Scene.useLoad() will be deprecated, please update to version "@amoy/scene@0.4.34" or later and use "Resource.useLoad()" to instead.`)
         Resource.useLoad(cb)
