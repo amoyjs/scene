@@ -7,7 +7,9 @@ export function extendGame({ Loader }, { game }) {
 
     Scene.prototype.game = game
 
-    const { UIWidth, UIHeight, width, height } = game.configure
+    const { UIWidth, UIHeight } = game.configure
+    const width = game.view.width / game.configure.resolution
+    const height = game.view.height / game.configure.resolution
 
     // 竖屏应用，以宽为准；横屏应用，以高为准
     game.PIXEL_RATIO = shared.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight

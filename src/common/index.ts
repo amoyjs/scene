@@ -27,9 +27,13 @@ export function remove(display: PIXI.Container) {
     display.removeChildren()
 }
 
-export const ScreenSize = {
-    width: window.innerWidth,
-    height: window.innerHeight,
+export class ScreenSize {
+    static get width() {
+        return window.innerWidth
+    }
+    static get height() {
+        return window.innerHeight
+    }
 }
 
 export const shared: SCENE.Shared = {}

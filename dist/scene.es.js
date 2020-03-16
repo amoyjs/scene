@@ -175,10 +175,25 @@ function remove(display) {
     display.children.map(function (item) { return remove(item); });
     display.removeChildren();
 }
-var ScreenSize = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-};
+var ScreenSize = /** @class */ (function () {
+    function ScreenSize() {
+    }
+    Object.defineProperty(ScreenSize, "width", {
+        get: function () {
+            return window.innerWidth;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ScreenSize, "height", {
+        get: function () {
+            return window.innerHeight;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return ScreenSize;
+}());
 var shared = {};
 
 var Stage = /** @class */ (function (_super) {
@@ -364,10 +379,10 @@ function createScene(game, scenes) {
 var defaultConfigure = {
     backgroundColor: 0x000000,
     autoResize: true,
-    width: window.innerWidth,
-    height: window.innerHeight,
-    UIWidth: window.innerWidth,
-    UIHeight: window.innerHeight,
+    width: ScreenSize.width,
+    height: ScreenSize.height,
+    UIWidth: ScreenSize.width,
+    UIHeight: ScreenSize.height,
     resolution: devicePixelRatio,
 };
 
@@ -377,7 +392,9 @@ function extendGame(_a, _b) {
     game.Loader = Loader;
     game.resources = Loader.shared.resources;
     Scene.prototype.game = game;
-    var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight, width = _c.width, height = _c.height;
+    var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight;
+    var width = game.view.width / game.configure.resolution;
+    var height = game.view.height / game.configure.resolution;
     // 竖屏应用，以宽为准；横屏应用，以高为准
     game.PIXEL_RATIO = shared.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight;
     game.PIXEL_RATIOS = shared.PIXEL_RATIOS = {
@@ -390,10 +407,10 @@ var Game = Application;
 function createGame(configure) {
     var view = configure.view;
     configure = Object.assign(defaultConfigure, configure);
-    ScreenSize.width = configure.width;
-    ScreenSize.height = configure.height;
+    configure.width = ScreenSize.width;
+    configure.height = ScreenSize.height;
     configure.view = view || getView();
-    extensions.map(function (extension) { return extension(PIXI, { Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route }); });
+    extensions.map(function (extension) { return extension(PIXI, { Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route, Component: Component }); });
     var game = new Game(configure);
     game.configure = configure;
     extendGame(PIXI, { game: game });

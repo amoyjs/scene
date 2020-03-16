@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Scene } from './Scene'
 import { Route } from './Route'
 import { Stage } from './Stage'
+import { Component } from './Component'
 import { Resource, ResourceLoader } from './Resource'
 import { createScene } from './createScene'
 import defaultConfigure from '../configure'
@@ -16,12 +17,12 @@ export function createGame(configure: SCENE.IConfigure) {
 
     configure = Object.assign(defaultConfigure, configure)
 
-    ScreenSize.width = configure.width
-    ScreenSize.height = configure.height
+    configure.width = ScreenSize.width
+    configure.height = ScreenSize.height
 
     configure.view = view || getView()
 
-    extensions.map((extension) => extension(PIXI, { Scene, Resource, ResourceLoader, Stage, Route }))
+    extensions.map((extension) => extension(PIXI, { Scene, Resource, ResourceLoader, Stage, Route, Component }))
 
     const game = new Game(configure) as SCENE.IGame
 
