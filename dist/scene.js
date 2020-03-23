@@ -413,8 +413,6 @@
     var Game = PIXI.Application;
     function createGame(configure) {
         var view = configure.view;
-        configure.width = ScreenSize.width;
-        configure.height = ScreenSize.height;
         configure = Object.assign(defaultConfigure, configure);
         configure.view = view || getView();
         extensions.map(function (extension) { return extension(PIXI, { Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route, Component: Component }); });
