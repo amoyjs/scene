@@ -15,10 +15,10 @@ const { Application: Game } = PIXI
 export function createGame(configure: SCENE.IConfigure) {
     const { view } = configure
 
-    configure = Object.assign(defaultConfigure, configure)
-
     configure.width = ScreenSize.width
     configure.height = ScreenSize.height
+
+    configure = Object.assign(defaultConfigure, configure)
 
     configure.view = view || getView()
 
