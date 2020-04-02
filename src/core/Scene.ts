@@ -5,7 +5,6 @@ import { Route } from './Route'
 export class Scene {
     public name: string
     public canUpdate: boolean
-    public ratio: number
     public ratios: {
         x: number,
         y: number,
@@ -20,11 +19,14 @@ export class Scene {
     constructor(name: string) {
         this.name = name
         this.canUpdate = false
-        this.ratio = this.game.PIXEL_RATIO
         this.ratios = this.game.PIXEL_RATIOS
         this.stage = new Stage(name)
         // @ts-ignore
         Route.push(this)
+    }
+
+    public get ratio() {
+        return this.game.PIXEL_RATIO
     }
 
     public static use(addons: () => void | Array<() => void>) {

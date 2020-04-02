@@ -12,7 +12,6 @@ export function getStage(): SCENE.Stage {
 }
 
 export class Component extends Container {
-    public ratio: number
     public ratios: {
         x: number,
         y: number,
@@ -22,13 +21,15 @@ export class Component extends Container {
     constructor() {
         super()
         this.stage.addChild(this)
-        this.ratio = this.game.PIXEL_RATIO
         this.ratios = this.game.PIXEL_RATIOS
+    }
+
+    public get ratio() {
+        return this.game.PIXEL_RATIO
     }
 }
 
 export class SizeComponent extends Graphics {
-    public ratio: number
     public ratios: {
         x: number,
         y: number,
@@ -47,7 +48,6 @@ export class SizeComponent extends Graphics {
     constructor(x: number = 0, y: number = 0, width: number = ScreenSize.width, height: number = ScreenSize.height, radius: number = 0, color: number = 0xffffff, opacity: number = 0) {
         super()
         this.stage.addChild(this)
-        this.ratio = this.game.PIXEL_RATIO
         this.ratios = this.game.PIXEL_RATIOS
 
         this.color = color
@@ -56,6 +56,10 @@ export class SizeComponent extends Graphics {
         this.beginFill(this.color, this.opacity)
         this.drawRoundedRect(x, y, width, height, radius)
         this.endFill()
+    }
+
+    public get ratio() {
+        return this.game.PIXEL_RATIO
     }
 
     public setSize(width = 0, height = 0, radius = this.frame.radius) {

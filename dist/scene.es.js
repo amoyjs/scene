@@ -234,12 +234,18 @@ var Scene = /** @class */ (function () {
         this.autoCreate = true;
         this.name = name;
         this.canUpdate = false;
-        this.ratio = this.game.PIXEL_RATIO;
         this.ratios = this.game.PIXEL_RATIOS;
         this.stage = new Stage(name);
         // @ts-ignore
         Route.push(this);
     }
+    Object.defineProperty(Scene.prototype, "ratio", {
+        get: function () {
+            return this.game.PIXEL_RATIO;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Scene.use = function (addons) {
         var _this = this;
         if (Array.isArray(addons)) {
@@ -299,10 +305,16 @@ var Component = /** @class */ (function (_super) {
         _this.game = getGame();
         _this.stage = getStage();
         _this.stage.addChild(_this);
-        _this.ratio = _this.game.PIXEL_RATIO;
         _this.ratios = _this.game.PIXEL_RATIOS;
         return _this;
     }
+    Object.defineProperty(Component.prototype, "ratio", {
+        get: function () {
+            return this.game.PIXEL_RATIO;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Component;
 }(Container));
 var SizeComponent = /** @class */ (function (_super) {
@@ -328,7 +340,6 @@ var SizeComponent = /** @class */ (function (_super) {
             radius: 0,
         };
         _this.stage.addChild(_this);
-        _this.ratio = _this.game.PIXEL_RATIO;
         _this.ratios = _this.game.PIXEL_RATIOS;
         _this.color = color;
         _this.opacity = opacity;
@@ -338,6 +349,13 @@ var SizeComponent = /** @class */ (function (_super) {
         _this.endFill();
         return _this;
     }
+    Object.defineProperty(SizeComponent.prototype, "ratio", {
+        get: function () {
+            return this.game.PIXEL_RATIO;
+        },
+        enumerable: true,
+        configurable: true
+    });
     SizeComponent.prototype.setSize = function (width, height, radius) {
         if (width === void 0) { width = 0; }
         if (height === void 0) { height = 0; }
@@ -399,12 +417,13 @@ function extendGame(_a, _b) {
     var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight;
     var width = game.view.width / game.configure.resolution;
     var height = game.view.height / game.configure.resolution;
+    game.PIXEL_RATIOS = shared.PIXEL_RATIOS = { x: width / UIWidth, y: height / UIHeight };
     // 竖屏应用，以宽为准；横屏应用，以高为准
-    game.PIXEL_RATIO = shared.PIXEL_RATIO = UIWidth < UIHeight ? width / UIWidth : height / UIHeight;
-    game.PIXEL_RATIOS = shared.PIXEL_RATIOS = {
-        x: width / UIWidth,
-        y: height / UIHeight,
-    };
+    Object.defineProperty(game, 'PIXEL_RATIO', {
+        get: function () {
+            return UIWidth < UIHeight ? game.PIXEL_RATIOS.x : game.PIXEL_RATIOS.y;
+        },
+    });
 }
 
 var Game = Application;
