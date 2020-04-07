@@ -201,6 +201,23 @@
         return ScreenSize;
     }());
     var shared = {};
+    function getType(target) {
+        if (target['text']) {
+            return 'Text';
+        }
+        else if (target['fill']) {
+            return 'Graphics';
+        }
+        else if (target['animationSpeed']) {
+            return 'AnimatedSprite';
+        }
+        else if (target['isSprite']) {
+            return 'Sprite';
+        }
+        else {
+            return 'Container';
+        }
+    }
 
     var Stage = /** @class */ (function (_super) {
         __extends(Stage, _super);
@@ -454,6 +471,7 @@
     exports.createScene = createScene;
     exports.getGame = getGame;
     exports.getStage = getStage;
+    exports.getType = getType;
     exports.shared = shared;
     exports.use = use;
 

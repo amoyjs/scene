@@ -198,6 +198,23 @@ var ScreenSize = /** @class */ (function () {
     return ScreenSize;
 }());
 var shared = {};
+function getType(target) {
+    if (target['text']) {
+        return 'Text';
+    }
+    else if (target['fill']) {
+        return 'Graphics';
+    }
+    else if (target['animationSpeed']) {
+        return 'AnimatedSprite';
+    }
+    else if (target['isSprite']) {
+        return 'Sprite';
+    }
+    else {
+        return 'Container';
+    }
+}
 
 var Stage = /** @class */ (function (_super) {
     __extends(Stage, _super);
@@ -441,5 +458,5 @@ function createGame(configure) {
 
 window.PIXI = PIXI;
 
-export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, createScene, getGame, getStage, shared, use };
+export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, createScene, getGame, getStage, getType, shared, use };
 //# sourceMappingURL=scene.es.js.map

@@ -37,3 +37,17 @@ export class ScreenSize {
 }
 
 export const shared: SCENE.Shared = {}
+
+export function getType(target: any) {
+    if (target['text']) {
+        return 'Text'
+    } else if (target['fill']) {
+        return 'Graphics'
+    } else if (target['animationSpeed']) {
+        return 'AnimatedSprite'
+    } else if (target['isSprite']) {
+        return 'Sprite'
+    } else {
+        return 'Container'
+    }
+}

@@ -139,6 +139,7 @@ declare module '@amoy/scene' {
     function use(extension: SCENE.EXTENSIONS): any
     function getGame(): SCENE.IGame
     function getStage(): SCENE.Stage
+    function getType(target: any): string
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
     function createScene(game: PIXI.Application, scenes: Map<string, SCENE.Scene>): void
 }
