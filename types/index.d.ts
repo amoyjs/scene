@@ -66,13 +66,20 @@ declare namespace SCENE {
     }
 
     class Route {
-        static query: any
-        static game: IGame
+        // static game: IGame
+        // static query: any
+        // static history: string[]
+        // static to(sceneName: string, query?: object): void
+        // static push(scene: SCENE.Scene): void
+        // static back(query?: object): void
+        // static getQuery(name?: string): string | object
+        game: IGame
+        query: any
+        history: string[]
         to(sceneName: string, query?: object): void
-        static to(sceneName: string, query?: object): void
-        static push(scene: SCENE.Scene): void
-        static back(query?: object): void
-        static getQuery(name?: string): string | object
+        push(scene: SCENE.Scene): void
+        back(query?: object): void
+        getQuery(name?: string): string | object
     }
 
     interface IConfigure {
