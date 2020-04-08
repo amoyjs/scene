@@ -57,8 +57,7 @@ export class Scene {
     }
 
     public getQuery(name?: string) {
-        if (name) return Route.query[name]
-        return Route.query
+        return Route.getQuery(name)
     }
 
     public create() {}

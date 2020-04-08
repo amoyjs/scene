@@ -16,20 +16,28 @@ var Route = /** @class */ (function () {
     Route.to = function (sceneName, query) {
         if (query === void 0) { query = {}; }
         if (Route.currentSceneName === sceneName)
-            return false;
-        if (this.isScene(sceneName)) {
-            Route.pendingSceneName = sceneName;
-            this.query = query;
-        }
-    };
-    Route.prototype.to = function (sceneName, query) {
-        if (query === void 0) { query = {}; }
-        if (Route.currentSceneName === sceneName)
-            return false;
+            return;
         if (Route.isScene(sceneName)) {
             Route.pendingSceneName = sceneName;
             Route.query = query;
+            Route.history.push(sceneName);
         }
+    };
+    Route.back = function (query) {
+        if (query === void 0) { query = {}; }
+        if (Route.history.length <= 1)
+            return;
+        Route.history.pop();
+        Route.to(Route.history.pop(), query);
+    };
+    Route.getQuery = function (name) {
+        if (name)
+            return Route.query[name];
+        return Route.query;
+    };
+    Route.prototype.to = function (sceneName, query) {
+        if (query === void 0) { query = {}; }
+        Route.to(sceneName, query);
     };
     Route.prototype.update = function () {
         if (Route.pendingSceneName)
@@ -83,6 +91,7 @@ var Route = /** @class */ (function () {
     };
     Route.scenes = {};
     Route.query = {};
+    Route.history = [];
     return Route;
 }());
 
@@ -289,9 +298,7 @@ var Scene = /** @class */ (function () {
         Route.to(sceneName, query);
     };
     Scene.prototype.getQuery = function (name) {
-        if (name)
-            return Route.query[name];
-        return Route.query;
+        return Route.getQuery(name);
     };
     Scene.prototype.create = function () { };
     Scene.prototype.useUpdate = function () {

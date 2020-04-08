@@ -8,6 +8,7 @@ export class Route {
     public static currentScene: SCENE.Scene
     public instance: Route
     public static query = {}
+    public static history: string[] = []
     public static game: SCENE.IGame
     public static instance: Route
 
@@ -25,19 +26,27 @@ export class Route {
     }
 
     public static to(sceneName: string, query: object = {}) {
-        if (Route.currentSceneName === sceneName) return false
-        if (this.isScene(sceneName)) {
-            Route.pendingSceneName = sceneName
-            this.query = query
-        }
-    }
-
-    public to(sceneName: string, query: object = {}) {
-        if (Route.currentSceneName === sceneName) return false
+        if (Route.currentSceneName === sceneName) return
         if (Route.isScene(sceneName)) {
             Route.pendingSceneName = sceneName
             Route.query = query
+            Route.history.push(sceneName)
         }
+    }
+
+    public static back(query: object = {}) {
+        if (Route.history.length <= 1) return
+        Route.history.pop()
+        Route.to(Route.history.pop(), query)
+    }
+
+    public static getQuery(name?: string) {
+        if (name) return Route.query[name]
+        return Route.query
+    }
+
+    public to(sceneName: string, query: object = {}) {
+        Route.to(sceneName, query)
     }
 
     public update() {

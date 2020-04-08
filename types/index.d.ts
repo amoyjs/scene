@@ -71,6 +71,8 @@ declare namespace SCENE {
         to(sceneName: string, query?: object): void
         static to(sceneName: string, query?: object): void
         static push(scene: SCENE.Scene): void
+        static back(query?: object): void
+        static getQuery(name?: string): string | object
     }
 
     interface IConfigure {
