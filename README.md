@@ -79,7 +79,7 @@ createGame({
 ```ts
 // @scenes/home/index.ts
 import { Sprite } from 'pixi.js'
-import { Scene, Resource } from '@amoy/scene'
+import { Scene, Resource, Route } from '@amoy/scene'
 
 // Resource.use 接受一个对象为参数，对象的 key 值为资源的 key 值（该 key 值可直接用于 Sprite.from, Texture.from 等 api），value 值为资源的 path
 // eg: src/images/key.png
@@ -130,7 +130,7 @@ export default class Home extends Scene {
 
 // @scenes/game/index.ts
 import { Sprite } from 'pixi.js'
-import { Scene } from '@amoy/scene'
+import { Scene, Route } from '@amoy/scene'
 
 export default class Game extends Scene {
     public create() {
