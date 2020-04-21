@@ -48,24 +48,31 @@ var Route = /** @class */ (function () {
     Route.fetchNextScene = function () {
         var _this = this;
         var isExist = this.game.stage.children.find(function (stage) { return stage === _this.currentScene.stage; });
-        if (!isExist) {
+        if (isExist) {
+            this.currentScene.onShow();
+        }
+        else {
             this.currentScene.stage.visible = true;
             this.game.stage.addChild(this.currentScene.stage);
             this.currentScene.Load();
             Loader.shared.load(function () {
                 _this.currentScene.onLoaded(Loader.shared.resources);
                 _this.currentScene.autoCreate && _this.currentScene.create();
+                _this.currentScene.onShow();
             });
             Loader.shared.on('progress', function (_, resource) { return _this.currentScene.onLoading(_.progress, resource.name, resource.url); });
             this.pendingSceneName = null;
         }
     };
     Route.onSceneChange = function () {
-        if (this.prevSceneName) {
-            var preScene = this.scenes[this.prevSceneName];
+        var preScene = this.scenes[this.prevSceneName];
+        if (preScene) {
             if (preScene.cleanStage) {
                 preScene.destory();
                 this.game.stage.removeChild(preScene.stage);
+            }
+            else {
+                preScene.onHide();
             }
         }
     };
@@ -266,6 +273,8 @@ var Scene = /** @class */ (function () {
     Scene.prototype.onLoading = function () { };
     Scene.prototype.onLoaded = function () { };
     Scene.prototype.create = function () { };
+    Scene.prototype.onShow = function () { };
+    Scene.prototype.onHide = function () { };
     Scene.prototype.switchTo = function (sceneName, query) {
         if (query === void 0) { query = {}; }
         Route.to(sceneName, query);

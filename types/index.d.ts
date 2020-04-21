@@ -40,6 +40,8 @@ declare namespace SCENE {
         useUpdate(): void
         update(): void
         destory(): void
+        onShow(): void
+        onHide(): void
     }
 
     class Stage extends PIXI.Container {

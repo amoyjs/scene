@@ -37,6 +37,9 @@ export class Scene {
 
     public create() { }
 
+    public onShow() { }
+    public onHide() { }
+
     public switchTo(sceneName: string, query: object = {}) {
         Route.to(sceneName, query)
     }

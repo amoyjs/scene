@@ -55,13 +55,16 @@ export class Route {
 
     public static fetchNextScene() {
         const isExist = this.game.stage.children.find((stage: SCENE.Stage) => stage === this.currentScene.stage)
-        if (!isExist) {
+        if (isExist) {
+            this.currentScene.onShow()
+        } else {
             this.currentScene.stage.visible = true
             this.game.stage.addChild(this.currentScene.stage)
             this.currentScene.Load()
             Loader.shared.load(() => {
                 this.currentScene.onLoaded(Loader.shared.resources)
                 this.currentScene.autoCreate && this.currentScene.create()
+                this.currentScene.onShow()
             })
             Loader.shared.on('progress', (_, resource) => this.currentScene.onLoading(_.progress, resource.name, resource.url))
             this.pendingSceneName = null
@@ -69,11 +72,13 @@ export class Route {
     }
 
     public static onSceneChange() {
-        if (this.prevSceneName) {
-            const preScene = this.scenes[this.prevSceneName]
+        const preScene = this.scenes[this.prevSceneName]
+        if (preScene) {
             if (preScene.cleanStage) {
                 preScene.destory()
                 this.game.stage.removeChild(preScene.stage)
+            } else {
+                preScene.onHide()
             }
         }
     }
