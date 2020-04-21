@@ -1,99 +1,88 @@
 import * as PIXI from 'pixi.js';
-import { Loader, Graphics, Container, Application } from 'pixi.js';
+import { Ticker, Loader, Graphics, Container, Application } from 'pixi.js';
 
 var Route = /** @class */ (function () {
-    function Route(game) {
-        Route.game = game;
+    function Route() {
     }
-    Route.create = function (game) {
-        if (!this.instance)
-            this.instance = new Route(game);
-        return this.instance;
-    };
     Route.push = function (scene) {
-        Route.scenes[scene.name] = scene;
+        this.scenes[scene.name] = scene;
     };
     Route.to = function (sceneName, query) {
         if (query === void 0) { query = {}; }
-        if (Route.currentSceneName === sceneName)
+        if (!this.isScene(sceneName) || this.currentSceneName === sceneName)
             return;
-        if (Route.isScene(sceneName)) {
-            Route.pendingSceneName = sceneName;
-            Route.query = query;
-            Route.history.push(sceneName);
-        }
+        this.pendingSceneName = sceneName;
+        this.query = query;
+        this.history.push(sceneName);
+        this.setCurrentScene(this.pendingSceneName);
     };
     Route.back = function (query) {
         if (query === void 0) { query = {}; }
-        if (Route.history.length <= 1)
+        if (this.history.length <= 1)
             return;
-        Route.history.pop();
-        Route.to(Route.history.pop(), query);
+        this.history.pop();
+        this.to(this.history.pop(), query);
     };
     Route.getQuery = function (name) {
         if (name)
-            return Route.query[name];
-        return Route.query;
+            return this.query[name];
+        return this.query;
     };
-    Route.prototype.to = function (sceneName, query) {
-        if (query === void 0) { query = {}; }
-        Route.to(sceneName, query);
-    };
-    Route.prototype.update = function () {
-        if (Route.pendingSceneName)
-            this.setCurrentScene(Route.pendingSceneName);
-        if (Route.currentScene && Route.currentScene.canUpdate) {
-            Route.currentScene.update && Route.currentScene.update();
+    Route.update = function () {
+        if (this.currentScene && this.currentScene.canUpdate) {
+            this.currentScene.update();
         }
     };
-    Route.prototype.setCurrentScene = function (pendingSceneName) {
-        if (!Route.isScene(pendingSceneName)) {
-            console.warn("\u573A\u666F " + pendingSceneName + " \u4E0D\u5B58\u5728");
-            return false;
+    Route.setCurrentScene = function (pendingSceneName) {
+        if (!this.isScene(pendingSceneName))
+            return console.warn("Scene " + pendingSceneName + " is not exist.");
+        // hide all scenes
+        this.game.stage.children.map(function (stage) { return stage.visible = false; });
+        // set current scene
+        this.currentScene = this.scenes[pendingSceneName];
+        this.currentScene.stage.visible = true;
+        this.fetchNextScene();
+        this.stateUpdate();
+        this.onSceneChange();
+    };
+    Route.fetchNextScene = function () {
+        var _this = this;
+        var isExist = this.game.stage.children.find(function (stage) { return stage === _this.currentScene.stage; });
+        if (!isExist) {
+            this.currentScene.stage.visible = true;
+            this.game.stage.addChild(this.currentScene.stage);
+            this.currentScene.Load();
+            Loader.shared.load(function () {
+                _this.currentScene.onLoaded(Loader.shared.resources);
+                _this.currentScene.autoCreate && _this.currentScene.create();
+            });
+            Loader.shared.on('progress', function (_, resource) { return _this.currentScene.onLoading(_.progress, resource.name, resource.url); });
+            this.pendingSceneName = null;
         }
-        if (Route.currentSceneName !== Route.pendingSceneName) {
-            Route.currentScene = Route.scenes[pendingSceneName];
-            this.cleanStage();
-            this.fetchNextScene();
-            this.stateUpdate();
-            this.onSceneChange();
+    };
+    Route.onSceneChange = function () {
+        if (this.prevSceneName) {
+            var preScene = this.scenes[this.prevSceneName];
+            if (preScene.cleanStage) {
+                preScene.destory();
+                this.game.stage.removeChild(preScene.stage);
+            }
         }
     };
-    Route.prototype.cleanStage = function () {
-        Route.game.stage.removeChildren();
-    };
-    Route.prototype.fetchNextScene = function () {
-        Route.game.stage.addChild(Route.currentScene.stage);
-        Route.currentScene.Load();
-        Loader.shared.load(function () {
-            Route.currentScene.onLoaded(Loader.shared.resources);
-            Route.currentScene.autoCreate && Route.currentScene.create();
-        });
-        Loader.shared.on('progress', function (_, resource) { return Route.currentScene.onLoading(_.progress, resource.name, resource.url); });
-        Route.pendingSceneName = null;
-    };
-    Route.prototype.stateUpdate = function () {
-        Route.prevSceneName = Route.currentSceneName;
-        Route.currentSceneName = Route.currentScene.name;
-    };
-    Route.prototype.onSceneChange = function () {
-        if (Route.prevSceneName) {
-            var preScene = Route.scenes[Route.prevSceneName];
-            preScene.destory();
-            Route.game.stage.removeChild(preScene.stage);
-        }
-        Route.currentScene.stage.onSceneChange();
+    Route.stateUpdate = function () {
+        this.prevSceneName = this.currentSceneName;
+        this.currentSceneName = this.currentScene.name;
     };
     Route.isScene = function (scene) {
         if (scene === void 0) { scene = ''; }
-        var hasScene = Route.scenes[scene] !== undefined;
-        return hasScene;
+        return this.scenes[scene] !== undefined;
     };
     Route.scenes = {};
     Route.query = {};
     Route.history = [];
     return Route;
 }());
+Ticker.shared.add(function () { return Route.update(); });
 
 var ResourceLoader = {
     add: function () {
@@ -262,7 +251,6 @@ var Scene = /** @class */ (function () {
         this.canUpdate = false;
         this.ratios = this.game.PIXEL_RATIOS;
         this.stage = new Stage(name);
-        // @ts-ignore
         Route.push(this);
     }
     Object.defineProperty(Scene.prototype, "ratio", {
@@ -272,27 +260,12 @@ var Scene = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Scene.use = function (addons) {
-        var _this = this;
-        if (Array.isArray(addons)) {
-            addons.map(function (addon) { return _this.use(addon); });
-        }
-        else if (typeof addons === 'function') {
-            this.addons.push(addons);
-        }
-        else {
-            throw Error("Scene.use() expected a function.");
-        }
-    };
     Scene.prototype.Load = function () {
         Resource.Load();
     };
     Scene.prototype.onLoading = function () { };
     Scene.prototype.onLoaded = function () { };
-    Scene.useLoad = function (cb) {
-        console.warn("Scene.useLoad() will be deprecated, please update to version \"@amoy/scene@0.4.34\" or later and use \"Resource.useLoad()\" to instead.");
-        Resource.useLoad(cb);
-    };
+    Scene.prototype.create = function () { };
     Scene.prototype.switchTo = function (sceneName, query) {
         if (query === void 0) { query = {}; }
         Route.to(sceneName, query);
@@ -300,7 +273,6 @@ var Scene = /** @class */ (function () {
     Scene.prototype.getQuery = function (name) {
         return Route.getQuery(name);
     };
-    Scene.prototype.create = function () { };
     Scene.prototype.useUpdate = function () {
         this.canUpdate = true;
     };
@@ -312,7 +284,6 @@ var Scene = /** @class */ (function () {
         this.canUpdate = false;
         this.stage.destory();
     };
-    Scene.addons = [];
     return Scene;
 }());
 
@@ -416,10 +387,8 @@ function createScene(game, scenes) {
     var values = Object.values(scenes);
     extensions.map(function (extension) { return extension(PIXI, { game: game, Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route }); });
     values.map(function (Scene, index) { return new Scene(keys[index]); });
-    var route = Route.create(game);
-    var name = keys[0];
-    route.to(name);
-    game.ticker.add(function () { return route.update(); });
+    Route.game = game;
+    Route.to(keys[0]);
 }
 
 var defaultConfigure = {

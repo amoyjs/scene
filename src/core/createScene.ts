@@ -13,8 +13,6 @@ export function createScene(game: any, scenes: object) {
 
     values.map((Scene, index) => new Scene(keys[index]))
 
-    const route = Route.create(game)
-    const [name] = keys
-    route.to(name)
-    game.ticker.add(() => route.update())
+    Route.game = game
+    Route.to(keys[0])
 }

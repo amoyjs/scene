@@ -1,7 +1,7 @@
 {
   "name": "@amoy/scene",
   "moduleName": "SceneKit",
-  "version": "0.5.21",
+  "version": "0.6.0",
   "description": "Scene for pixi.js.",
   "main": "dist/scene.js",
   "module": "dist/scene.es.js",
@@ -10,7 +10,7 @@
     "start": "NODE_ENV=development rollup -w -c rollup.config.js",
     "dev": "NODE_ENV=development rollup -c rollup.config.js",
     "prod": "NODE_ENV=production rollup -c rollup.config.js",
-    "publish": "rm -rf dist && npm run dev && npm run prod"
+    "build": "rm -rf dist && npm run dev && npm run prod"
   },
   "repository": {
     "url": "https://github.com/amoyjs/scene.git",
