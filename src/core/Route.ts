@@ -61,7 +61,6 @@ export class Route {
         } else {
             this.currentScene.stage.visible = true
             this.game.stage.addChild(this.currentScene.stage)
-            this.currentScene.Load()
             Resource.Load(() => {
                 this.currentScene.onLoaded(Loader.shared.resources)
                 this.currentScene.autoCreate && this.currentScene.create()

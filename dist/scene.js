@@ -80,9 +80,9 @@
             if (!PIXI.Loader.shared.resources[args[0]])
                 (_a = PIXI.Loader.shared).add.apply(_a, args);
         },
-        Load: function (images) {
+        Load: function (images, options) {
             var _this = this;
-            Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
+            Object.keys(images).map(function (key) { return _this.add(key, images[key], options); });
         },
         onLoaded: function (onLoaded) {
             if (onLoaded === void 0) { onLoaded = function () { }; }
@@ -113,31 +113,46 @@
                 this.asyncs.push(promise);
             }
         };
+        Resource.optionSetting = function (options) {
+            this.options = options;
+        };
         Resource.Load = function (onLoaded) {
             if (onLoaded === void 0) { onLoaded = function () { }; }
             return __awaiter(this, void 0, void 0, function () {
                 var asyncs;
+                var _this = this;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            ResourceLoader.Load(this.getLoad());
-                            // clean resource getters
+                            ResourceLoader.Load(this.getLoad(), this.options);
                             this.resourceGetters = [];
                             return [4 /*yield*/, Promise.all(this.asyncs)];
                         case 1:
                             asyncs = _a.sent();
+                            this._onAsyncLoaded(asyncs);
                             return [2 /*return*/, new Promise(function (resolve) { return PIXI.Loader.shared.load(function () {
                                     resolve(PIXI.Loader.shared.resources);
                                     onLoaded(PIXI.Loader.shared.resources, asyncs);
+                                    _this._onLoaded(PIXI.Loader.shared.resources);
                                 }); })];
                     }
                 });
             });
         };
+        Resource.onAsyncLoaded = function (onAsyncLoaded) {
+            if (onAsyncLoaded === void 0) { onAsyncLoaded = function (asyncs) { }; }
+            this._onAsyncLoaded = onAsyncLoaded;
+        };
         Resource.onLoading = function (onLoading) {
             if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
             PIXI.Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
         };
+        Resource.onLoaded = function (onLoaded) {
+            if (onLoaded === void 0) { onLoaded = function (resources) { }; }
+            this._onLoaded = onLoaded;
+        };
+        Resource._onAsyncLoaded = function (asyncs) { };
+        Resource._onLoaded = function (resources) { };
         Resource.asyncs = [];
         Resource.resourceGetters = [];
         return Resource;
@@ -196,7 +211,6 @@
             else {
                 this.currentScene.stage.visible = true;
                 this.game.stage.addChild(this.currentScene.stage);
-                this.currentScene.Load();
                 Resource.Load(function () {
                     _this.currentScene.onLoaded(PIXI.Loader.shared.resources);
                     _this.currentScene.autoCreate && _this.currentScene.create();
