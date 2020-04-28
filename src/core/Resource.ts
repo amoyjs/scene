@@ -13,6 +13,7 @@ export const ResourceLoader = {
 }
 
 export class Resource {
+    public static asyncs: Array<Promise<any>> = []
     public static resourceGetters: SCENE.ResourceGetter[] = []
 
     public static use(resourceGetter: SCENE.ResourceGetter) {
@@ -30,11 +31,23 @@ export class Resource {
         return Object.assign(fromObject, fromClosure)
     }
 
-    public static Load(onLoaded: (resources: any) => void = () => { }) {
+    public static useAsync(promise: Promise<any> | Array<Promise<any>>) {
+        if (Array.isArray(promise)) {
+            promise.map((item) => this.asyncs.push(item))
+        } else {
+            this.asyncs.push(promise)
+        }
+    }
+
+    public static async Load(onLoaded: (resources: any, asyncs: any[]) => void = () => { }) {
         ResourceLoader.Load(this.getLoad())
         // clean resource getters
         this.resourceGetters = []
-        Loader.shared.load(() => onLoaded(Loader.shared.resources))
+        const asyncs = await Promise.all(this.asyncs)
+        return new Promise((resolve) => Loader.shared.load(() => {
+            resolve(Loader.shared.resources)
+            onLoaded(Loader.shared.resources, asyncs)
+        }))
     }
 
     public static onLoading(onLoading = (percent: number, name: string, url: string) => {}) {

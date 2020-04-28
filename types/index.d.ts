@@ -14,7 +14,8 @@ declare namespace SCENE {
         use(resourceGetter: ResourceGetter): void
         useLoad(resourceGetter: ResourceGetter): void
         getLoad(): object
-        Load(onLoaded?: (resources: any) => void): void
+        useAsync(promise: Promise<any> | Array<Promise<any>>): void
+        Load(onLoaded?: (resources: any, asyncs: any[]) => void): Promise<any>
         onLoading(onLoading?: (percent: number, name: string, url: string) => void): void
     }
 

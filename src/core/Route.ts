@@ -1,4 +1,5 @@
 import { Loader, Ticker } from 'pixi.js'
+import { Resource } from './Resource'
 
 export class Route {
     public static scenes = {}
@@ -61,12 +62,12 @@ export class Route {
             this.currentScene.stage.visible = true
             this.game.stage.addChild(this.currentScene.stage)
             this.currentScene.Load()
-            Loader.shared.load(() => {
+            Resource.Load(() => {
                 this.currentScene.onLoaded(Loader.shared.resources)
                 this.currentScene.autoCreate && this.currentScene.create()
                 this.currentScene.onShow()
             })
-            Loader.shared.on('progress', (_, resource) => this.currentScene.onLoading(_.progress, resource.name, resource.url))
+            Resource.onLoading((percent: number, name: string, url: string) => this.currentScene.onLoading(percent, name, url))
             this.pendingSceneName = null
         }
     }

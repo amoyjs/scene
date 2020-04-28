@@ -1,5 +1,144 @@
 import * as PIXI from 'pixi.js';
-import { Ticker, Loader, Graphics, Container, Application } from 'pixi.js';
+import { Loader, Ticker, Graphics, Container, Application } from 'pixi.js';
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var ResourceLoader = {
+    add: function () {
+        var _a;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if (!Loader.shared.resources[args[0]])
+            (_a = Loader.shared).add.apply(_a, args);
+    },
+    Load: function (images) {
+        var _this = this;
+        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
+    },
+    onLoaded: function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
+    },
+};
+var Resource = /** @class */ (function () {
+    function Resource() {
+    }
+    Resource.use = function (resourceGetter) {
+        this.resourceGetters.push(resourceGetter);
+    };
+    Resource.useLoad = function (resourceGetter) {
+        this.resourceGetters.push(resourceGetter);
+        console.warn("'Resource.useLoad()' will be deprecated in next major version, use 'Resource.use()' to instead.");
+    };
+    Resource.getLoad = function () {
+        var fromObject = this.resourceGetters.filter(function (getter) { return typeof getter === 'object'; }).reduce(function (prev, current) { return Object.assign(prev, current); }, {});
+        var fromClosure = this.resourceGetters.filter(function (getter) { return typeof getter === 'function'; }).reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
+        return Object.assign(fromObject, fromClosure);
+    };
+    Resource.useAsync = function (promise) {
+        var _this = this;
+        if (Array.isArray(promise)) {
+            promise.map(function (item) { return _this.asyncs.push(item); });
+        }
+        else {
+            this.asyncs.push(promise);
+        }
+    };
+    Resource.Load = function (onLoaded) {
+        if (onLoaded === void 0) { onLoaded = function () { }; }
+        return __awaiter(this, void 0, void 0, function () {
+            var asyncs;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        ResourceLoader.Load(this.getLoad());
+                        // clean resource getters
+                        this.resourceGetters = [];
+                        return [4 /*yield*/, Promise.all(this.asyncs)];
+                    case 1:
+                        asyncs = _a.sent();
+                        return [2 /*return*/, new Promise(function (resolve) { return Loader.shared.load(function () {
+                                resolve(Loader.shared.resources);
+                                onLoaded(Loader.shared.resources, asyncs);
+                            }); })];
+                }
+            });
+        });
+    };
+    Resource.onLoading = function (onLoading) {
+        if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
+        Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
+    };
+    Resource.asyncs = [];
+    Resource.resourceGetters = [];
+    return Resource;
+}());
 
 var Route = /** @class */ (function () {
     function Route() {
@@ -55,12 +194,12 @@ var Route = /** @class */ (function () {
             this.currentScene.stage.visible = true;
             this.game.stage.addChild(this.currentScene.stage);
             this.currentScene.Load();
-            Loader.shared.load(function () {
+            Resource.Load(function () {
                 _this.currentScene.onLoaded(Loader.shared.resources);
                 _this.currentScene.autoCreate && _this.currentScene.create();
                 _this.currentScene.onShow();
             });
-            Loader.shared.on('progress', function (_, resource) { return _this.currentScene.onLoading(_.progress, resource.name, resource.url); });
+            Resource.onLoading(function (percent, name, url) { return _this.currentScene.onLoading(percent, name, url); });
             this.pendingSceneName = null;
         }
     };
@@ -90,84 +229,6 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 Ticker.shared.add(function () { return Route.update(); });
-
-var ResourceLoader = {
-    add: function () {
-        var _a;
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (!Loader.shared.resources[args[0]])
-            (_a = Loader.shared).add.apply(_a, args);
-    },
-    Load: function (images) {
-        var _this = this;
-        Object.keys(images).map(function (key) { return _this.add(key, images[key]); });
-    },
-    onLoaded: function (onLoaded) {
-        if (onLoaded === void 0) { onLoaded = function () { }; }
-        Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
-    },
-};
-var Resource = /** @class */ (function () {
-    function Resource() {
-    }
-    Resource.use = function (resourceGetter) {
-        this.resourceGetters.push(resourceGetter);
-    };
-    Resource.useLoad = function (resourceGetter) {
-        this.resourceGetters.push(resourceGetter);
-        console.warn("'Resource.useLoad()' will be deprecated in next major version, use 'Resource.use()' to instead.");
-    };
-    Resource.getLoad = function () {
-        var fromObject = this.resourceGetters.filter(function (getter) { return typeof getter === 'object'; }).reduce(function (prev, current) { return Object.assign(prev, current); }, {});
-        var fromClosure = this.resourceGetters.filter(function (getter) { return typeof getter === 'function'; }).reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
-        return Object.assign(fromObject, fromClosure);
-    };
-    Resource.Load = function (onLoaded) {
-        if (onLoaded === void 0) { onLoaded = function () { }; }
-        ResourceLoader.Load(this.getLoad());
-        // clean resource getters
-        this.resourceGetters = [];
-        Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
-    };
-    Resource.onLoading = function (onLoading) {
-        if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
-        Loader.shared.on('progress', function (_, resource) { return onLoading(_.progress, resource.name, resource.url); });
-    };
-    Resource.resourceGetters = [];
-    return Resource;
-}());
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
 
 function getView() {
     if (typeof canvas !== 'undefined') {
