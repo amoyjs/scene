@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "sourceMap": true,
+        "allowJs": true,
+        "outDir": "./dist",
+        "removeComments": true,
+        "target": "es5",
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "importHelpers": true,
+        "strictNullChecks": true,
+        "lib": ["ESNext.Array", "DOM"],
+        "suppressImplicitAnyIndexErrors": true,
+        "allowSyntheticDefaultImports": true,
+    },
+    "include": [
+        "src",
+        "types",
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ],
+}

@@ -1,4 +1,5 @@
 import { Loader } from 'pixi.js'
+import { SCENE } from 'types'
 
 export const ResourceLoader = {
     add: (...args: any) => {

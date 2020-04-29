@@ -2,10 +2,10 @@
 
 declare const canvas: any
 
-declare namespace SCENE {
+export declare namespace SCENE {
     interface Loader {
         add(...args: string[]): void
-        Load(images: object): void
+        Load(images: object, options: any): void
         onLoaded(onLoaded: (resources: any) => void): void
     }
 

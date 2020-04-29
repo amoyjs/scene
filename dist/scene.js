@@ -157,6 +157,7 @@
         Resource.resourceGetters = [];
         return Resource;
     }());
+    //# sourceMappingURL=Resource.js.map
 
     var Route = /** @class */ (function () {
         function Route() {
@@ -246,6 +247,7 @@
         return Route;
     }());
     PIXI.Ticker.shared.add(function () { return Route.update(); });
+    //# sourceMappingURL=Route.js.map
 
     function getView() {
         if (typeof canvas !== 'undefined') {
@@ -298,6 +300,7 @@
             return 'Container';
         }
     }
+    //# sourceMappingURL=index.js.map
 
     var Stage = /** @class */ (function (_super) {
         __extends(Stage, _super);
@@ -327,6 +330,7 @@
         };
         return Stage;
     }(PIXI.Graphics));
+    //# sourceMappingURL=Stage.js.map
 
     var Scene = /** @class */ (function () {
         function Scene(name) {
@@ -373,6 +377,7 @@
         };
         return Scene;
     }());
+    //# sourceMappingURL=Scene.js.map
 
     function getGame() {
         return Scene.prototype.game;
@@ -453,6 +458,7 @@
         };
         return SizeComponent;
     }(PIXI.Graphics));
+    //# sourceMappingURL=Component.js.map
 
     var extensions = [];
     function use(extendsions) {
@@ -468,6 +474,7 @@
             }
         }
     }
+    //# sourceMappingURL=use.js.map
 
     function createScene(game, scenes) {
         var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
@@ -477,6 +484,7 @@
         Route.game = game;
         Route.to(keys[0]);
     }
+    //# sourceMappingURL=createScene.js.map
 
     var defaultConfigure = {
         backgroundColor: 0x000000,
@@ -487,6 +495,7 @@
         UIHeight: ScreenSize.height,
         resolution: devicePixelRatio,
     };
+    //# sourceMappingURL=configure.js.map
 
     function extendGame(_a, _b) {
         var Loader = _a.Loader;
@@ -505,6 +514,7 @@
             },
         });
     }
+    //# sourceMappingURL=extendGame.js.map
 
     var Game = PIXI.Application;
     function createGame(configure) {
@@ -518,6 +528,7 @@
         createScene(game, configure.scenes);
         return game;
     }
+    //# sourceMappingURL=createGame.js.map
 
     window.PIXI = PIXI;
 

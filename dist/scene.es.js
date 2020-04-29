@@ -154,6 +154,7 @@ var Resource = /** @class */ (function () {
     Resource.resourceGetters = [];
     return Resource;
 }());
+//# sourceMappingURL=Resource.js.map
 
 var Route = /** @class */ (function () {
     function Route() {
@@ -243,6 +244,7 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 Ticker.shared.add(function () { return Route.update(); });
+//# sourceMappingURL=Route.js.map
 
 function getView() {
     if (typeof canvas !== 'undefined') {
@@ -295,6 +297,7 @@ function getType(target) {
         return 'Container';
     }
 }
+//# sourceMappingURL=index.js.map
 
 var Stage = /** @class */ (function (_super) {
     __extends(Stage, _super);
@@ -324,6 +327,7 @@ var Stage = /** @class */ (function (_super) {
     };
     return Stage;
 }(Graphics));
+//# sourceMappingURL=Stage.js.map
 
 var Scene = /** @class */ (function () {
     function Scene(name) {
@@ -370,6 +374,7 @@ var Scene = /** @class */ (function () {
     };
     return Scene;
 }());
+//# sourceMappingURL=Scene.js.map
 
 function getGame() {
     return Scene.prototype.game;
@@ -450,6 +455,7 @@ var SizeComponent = /** @class */ (function (_super) {
     };
     return SizeComponent;
 }(Graphics));
+//# sourceMappingURL=Component.js.map
 
 var extensions = [];
 function use(extendsions) {
@@ -465,6 +471,7 @@ function use(extendsions) {
         }
     }
 }
+//# sourceMappingURL=use.js.map
 
 function createScene(game, scenes) {
     var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
@@ -474,6 +481,7 @@ function createScene(game, scenes) {
     Route.game = game;
     Route.to(keys[0]);
 }
+//# sourceMappingURL=createScene.js.map
 
 var defaultConfigure = {
     backgroundColor: 0x000000,
@@ -484,6 +492,7 @@ var defaultConfigure = {
     UIHeight: ScreenSize.height,
     resolution: devicePixelRatio,
 };
+//# sourceMappingURL=configure.js.map
 
 function extendGame(_a, _b) {
     var Loader = _a.Loader;
@@ -502,6 +511,7 @@ function extendGame(_a, _b) {
         },
     });
 }
+//# sourceMappingURL=extendGame.js.map
 
 var Game = Application;
 function createGame(configure) {
@@ -515,6 +525,7 @@ function createGame(configure) {
     createScene(game, configure.scenes);
     return game;
 }
+//# sourceMappingURL=createGame.js.map
 
 window.PIXI = PIXI;
 

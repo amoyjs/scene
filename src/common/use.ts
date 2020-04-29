@@ -1,3 +1,5 @@
+import { SCENE } from 'types'
+
 export const extensions: SCENE.EXTENSION[] = []
 
 export function use(extendsions: SCENE.EXTENSIONS): void {

@@ -1,5 +1,6 @@
 import { Loader, Ticker } from 'pixi.js'
 import { Resource } from './Resource'
+import { SCENE } from 'types'
 
 export class Route {
     public static scenes = {}
@@ -27,7 +28,7 @@ export class Route {
     public static back(query: object = {}) {
         if (this.history.length <= 1) return
         this.history.pop()
-        this.to(this.history.pop(), query)
+        this.to(this.history.pop()!, query)
     }
 
     public static getQuery(name?: string) {
@@ -67,7 +68,7 @@ export class Route {
                 this.currentScene.onShow()
             })
             Resource.onLoading((percent: number, name: string, url: string) => this.currentScene.onLoading(percent, name, url))
-            this.pendingSceneName = null
+            this.pendingSceneName = ''
         }
     }
 

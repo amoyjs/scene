@@ -1,7 +1,7 @@
 import { Scene } from '../core/Scene'
 import { shared } from '.'
 
-export function extendGame({ Loader }, { game }) {
+export function extendGame({ Loader }: any, { game }: any) {
     game.Loader = Loader
     game.resources = Loader.shared.resources
 

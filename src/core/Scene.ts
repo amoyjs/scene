@@ -1,6 +1,7 @@
 import { Resource, ResourceLoader } from './Resource'
 import { Stage } from './Stage'
 import { Route } from './Route'
+import { SCENE } from 'types'
 
 export class Scene {
     public name: string
@@ -20,6 +21,7 @@ export class Scene {
         this.canUpdate = false
         this.ratios = this.game.PIXEL_RATIOS
         this.stage = new Stage(name)
+        // @ts-ignore
         Route.push(this)
     }
 
@@ -53,7 +55,7 @@ export class Scene {
     }
 
     public update() {
-        if (!this.canUpdate) return false
+        if (!this.canUpdate) return
     }
 
     public destory() {
