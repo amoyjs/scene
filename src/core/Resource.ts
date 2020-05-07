@@ -6,7 +6,12 @@ export const ResourceLoader = {
         if (!Loader.shared.resources[args[0]]) Loader.shared.add(...args)
     },
     Load(images: object, options: any) {
-        Object.keys(images).map((key) => this.add(key, images[key], options))
+        Object.keys(images).map((key) => {
+            const isImage = !/\.json/.test(images[key])
+            const args = [key, images[key]]
+            if (isImage) args.push(options)
+            this.add(...args)
+        })
     },
     onLoaded: (onLoaded: (resources: any) => void = () => { }) => {
         Loader.shared.load(() => onLoaded(Loader.shared.resources))
@@ -14,10 +19,8 @@ export const ResourceLoader = {
 }
 
 export class Resource {
-    public static _onAsyncLoaded = (asyncs: any[]) => {}
     public static _onLoaded = (resources: any) => {}
     public static options: any
-    public static asyncs: Array<Promise<any>> = []
     public static resourceGetters: SCENE.ResourceGetter[] = []
 
     public static use(resourceGetter: SCENE.ResourceGetter) {
@@ -35,32 +38,18 @@ export class Resource {
         return Object.assign(fromObject, fromClosure)
     }
 
-    public static useAsync(promise: Promise<any> | Array<Promise<any>>) {
-        if (Array.isArray(promise)) {
-            promise.map((item) => this.asyncs.push(item))
-        } else {
-            this.asyncs.push(promise)
-        }
-    }
-
     public static optionSetting(options: any) {
         this.options = options
     }
 
-    public static async Load(onLoaded: (resources: any, asyncs: any[]) => void = () => { }) {
+    public static async Load(onLoaded: (resources: any) => void = () => { }) {
         ResourceLoader.Load(this.getLoad(), this.options)
         this.resourceGetters = []
-        const asyncs = await Promise.all(this.asyncs)
-        this._onAsyncLoaded(asyncs)
         return new Promise((resolve) => Loader.shared.load(() => {
             resolve(Loader.shared.resources)
-            onLoaded(Loader.shared.resources, asyncs)
+            onLoaded(Loader.shared.resources)
             this._onLoaded(Loader.shared.resources)
         }))
-    }
-
-    public static onAsyncLoaded(onAsyncLoaded = (asyncs: any[]) => {}) {
-        this._onAsyncLoaded = onAsyncLoaded
     }
 
     public static onLoading(onLoading = (percent: number, name: string, url: string) => {}) {

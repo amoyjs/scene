@@ -79,14 +79,20 @@ var ResourceLoader = {
     },
     Load: function (images, options) {
         var _this = this;
-        Object.keys(images).map(function (key) { return _this.add(key, images[key], options); });
+        Object.keys(images).map(function (key) {
+            var isImage = !/\.json/.test(images[key]);
+            var args = [key, images[key]];
+            if (isImage)
+                args.push(options);
+            _this.add.apply(_this, args);
+        });
     },
     onLoaded: function (onLoaded) {
         if (onLoaded === void 0) { onLoaded = function () { }; }
         Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
     },
 };
-var Resource = /** @class */ (function () {
+var Resource = (function () {
     function Resource() {
     }
     Resource.use = function (resourceGetter) {
@@ -101,44 +107,23 @@ var Resource = /** @class */ (function () {
         var fromClosure = this.resourceGetters.filter(function (getter) { return typeof getter === 'function'; }).reduce(function (prev, current) { return Object.assign(prev, current()); }, {});
         return Object.assign(fromObject, fromClosure);
     };
-    Resource.useAsync = function (promise) {
-        var _this = this;
-        if (Array.isArray(promise)) {
-            promise.map(function (item) { return _this.asyncs.push(item); });
-        }
-        else {
-            this.asyncs.push(promise);
-        }
-    };
     Resource.optionSetting = function (options) {
         this.options = options;
     };
     Resource.Load = function (onLoaded) {
         if (onLoaded === void 0) { onLoaded = function () { }; }
         return __awaiter(this, void 0, void 0, function () {
-            var asyncs;
             var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        ResourceLoader.Load(this.getLoad(), this.options);
-                        this.resourceGetters = [];
-                        return [4 /*yield*/, Promise.all(this.asyncs)];
-                    case 1:
-                        asyncs = _a.sent();
-                        this._onAsyncLoaded(asyncs);
-                        return [2 /*return*/, new Promise(function (resolve) { return Loader.shared.load(function () {
-                                resolve(Loader.shared.resources);
-                                onLoaded(Loader.shared.resources, asyncs);
-                                _this._onLoaded(Loader.shared.resources);
-                            }); })];
-                }
+                ResourceLoader.Load(this.getLoad(), this.options);
+                this.resourceGetters = [];
+                return [2, new Promise(function (resolve) { return Loader.shared.load(function () {
+                        resolve(Loader.shared.resources);
+                        onLoaded(Loader.shared.resources);
+                        _this._onLoaded(Loader.shared.resources);
+                    }); })];
             });
         });
-    };
-    Resource.onAsyncLoaded = function (onAsyncLoaded) {
-        if (onAsyncLoaded === void 0) { onAsyncLoaded = function (asyncs) { }; }
-        this._onAsyncLoaded = onAsyncLoaded;
     };
     Resource.onLoading = function (onLoading) {
         if (onLoading === void 0) { onLoading = function (percent, name, url) { }; }
@@ -148,15 +133,12 @@ var Resource = /** @class */ (function () {
         if (onLoaded === void 0) { onLoaded = function (resources) { }; }
         this._onLoaded = onLoaded;
     };
-    Resource._onAsyncLoaded = function (asyncs) { };
     Resource._onLoaded = function (resources) { };
-    Resource.asyncs = [];
     Resource.resourceGetters = [];
     return Resource;
 }());
-//# sourceMappingURL=Resource.js.map
 
-var Route = /** @class */ (function () {
+var Route = (function () {
     function Route() {
     }
     Route.push = function (scene) {
@@ -191,9 +173,7 @@ var Route = /** @class */ (function () {
     Route.setCurrentScene = function (pendingSceneName) {
         if (!this.isScene(pendingSceneName))
             return console.warn("Scene " + pendingSceneName + " is not exist.");
-        // hide all scenes
         this.game.stage.children.map(function (stage) { return stage.visible = false; });
-        // set current scene
         this.currentScene = this.scenes[pendingSceneName];
         this.currentScene.stage.visible = true;
         this.fetchNextScene();
@@ -215,7 +195,7 @@ var Route = /** @class */ (function () {
                 _this.currentScene.onShow();
             });
             Resource.onLoading(function (percent, name, url) { return _this.currentScene.onLoading(percent, name, url); });
-            this.pendingSceneName = null;
+            this.pendingSceneName = '';
         }
     };
     Route.onSceneChange = function () {
@@ -244,7 +224,6 @@ var Route = /** @class */ (function () {
     return Route;
 }());
 Ticker.shared.add(function () { return Route.update(); });
-//# sourceMappingURL=Route.js.map
 
 function getView() {
     if (typeof canvas !== 'undefined') {
@@ -260,7 +239,7 @@ function remove(display) {
     display.children.map(function (item) { return remove(item); });
     display.removeChildren();
 }
-var ScreenSize = /** @class */ (function () {
+var ScreenSize = (function () {
     function ScreenSize() {
     }
     Object.defineProperty(ScreenSize, "width", {
@@ -297,9 +276,8 @@ function getType(target) {
         return 'Container';
     }
 }
-//# sourceMappingURL=index.js.map
 
-var Stage = /** @class */ (function (_super) {
+var Stage = (function (_super) {
     __extends(Stage, _super);
     function Stage(name) {
         var _this = _super.call(this) || this;
@@ -327,9 +305,8 @@ var Stage = /** @class */ (function (_super) {
     };
     return Stage;
 }(Graphics));
-//# sourceMappingURL=Stage.js.map
 
-var Scene = /** @class */ (function () {
+var Scene = (function () {
     function Scene(name) {
         this.Loader = ResourceLoader;
         this.autoCreate = true;
@@ -366,7 +343,7 @@ var Scene = /** @class */ (function () {
     };
     Scene.prototype.update = function () {
         if (!this.canUpdate)
-            return false;
+            return;
     };
     Scene.prototype.destory = function () {
         this.canUpdate = false;
@@ -374,7 +351,6 @@ var Scene = /** @class */ (function () {
     };
     return Scene;
 }());
-//# sourceMappingURL=Scene.js.map
 
 function getGame() {
     return Scene.prototype.game;
@@ -382,7 +358,7 @@ function getGame() {
 function getStage() {
     return getGame().stage.children.find(function (stage) { return stage.name === Route.currentScene.name; });
 }
-var Component = /** @class */ (function (_super) {
+var Component = (function (_super) {
     __extends(Component, _super);
     function Component() {
         var _this = _super.call(this) || this;
@@ -401,7 +377,7 @@ var Component = /** @class */ (function (_super) {
     });
     return Component;
 }(Container));
-var SizeComponent = /** @class */ (function (_super) {
+var SizeComponent = (function (_super) {
     __extends(SizeComponent, _super);
     function SizeComponent(x, y, width, height, radius, color, opacity) {
         if (x === void 0) { x = 0; }
@@ -455,7 +431,6 @@ var SizeComponent = /** @class */ (function (_super) {
     };
     return SizeComponent;
 }(Graphics));
-//# sourceMappingURL=Component.js.map
 
 var extensions = [];
 function use(extendsions) {
@@ -471,7 +446,6 @@ function use(extendsions) {
         }
     }
 }
-//# sourceMappingURL=use.js.map
 
 function createScene(game, scenes) {
     var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
@@ -481,7 +455,6 @@ function createScene(game, scenes) {
     Route.game = game;
     Route.to(keys[0]);
 }
-//# sourceMappingURL=createScene.js.map
 
 var defaultConfigure = {
     backgroundColor: 0x000000,
@@ -492,7 +465,6 @@ var defaultConfigure = {
     UIHeight: ScreenSize.height,
     resolution: devicePixelRatio,
 };
-//# sourceMappingURL=configure.js.map
 
 function extendGame(_a, _b) {
     var Loader = _a.Loader;
@@ -504,14 +476,12 @@ function extendGame(_a, _b) {
     var width = game.view.width / game.configure.resolution;
     var height = game.view.height / game.configure.resolution;
     game.PIXEL_RATIOS = shared.PIXEL_RATIOS = { x: width / UIWidth, y: height / UIHeight };
-    // 竖屏应用，以宽为准；横屏应用，以高为准
     Object.defineProperty(game, 'PIXEL_RATIO', {
         get: function () {
             return UIWidth < UIHeight ? game.PIXEL_RATIOS.x : game.PIXEL_RATIOS.y;
         },
     });
 }
-//# sourceMappingURL=extendGame.js.map
 
 var Game = Application;
 function createGame(configure) {
@@ -525,7 +495,6 @@ function createGame(configure) {
     createScene(game, configure.scenes);
     return game;
 }
-//# sourceMappingURL=createGame.js.map
 
 window.PIXI = PIXI;
 

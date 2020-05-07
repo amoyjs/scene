@@ -15,8 +15,6 @@ export declare namespace SCENE {
         useLoad(resourceGetter: ResourceGetter): void
         getLoad(): object
         optionSetting(options?: any): void
-        useAsync(promise: Promise<any> | Array<Promise<any>>): void
-        onAsyncLoaded(onAsyncLoaded?: (asyncs: any[]) => void): void
         Load(onLoaded?: (resources: any, asyncs: any[]) => void): Promise<any>
         onLoading(onLoading?: (percent: number, name: string, url: string) => void): void
         onLoaded(onLoaded?: (resources: any) => void): void

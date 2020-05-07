@@ -6,7 +6,7 @@
         "outDir": "./dist",
         "removeComments": true,
         "target": "es5",
-        "resolveJsonModule": true,
+        "resolveJsonModule": false,
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
