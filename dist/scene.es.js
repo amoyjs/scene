@@ -80,7 +80,7 @@ var ResourceLoader = {
     Load: function (images, options) {
         var _this = this;
         Object.keys(images).map(function (key) {
-            var isImage = !/\.json/.test(images[key]);
+            var isImage = /\.(svg|png|gif|jpe?g)$/.test(images[key]);
             var args = [key, images[key]];
             if (isImage)
                 args.push(options);
