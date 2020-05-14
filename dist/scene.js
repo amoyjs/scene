@@ -83,9 +83,10 @@
         Load: function (images, options) {
             var _this = this;
             Object.keys(images).map(function (key) {
-                var isImage = /\.(svg|png|gif|jpe?g)$/.test(images[key]);
+                var isImage = /\.(svg|png|gif|jpe?g)/.test(images[key]);
+                var isJSON = /\.(json)/.test(images[key]);
                 var args = [key, images[key]];
-                if (isImage)
+                if (isImage || isJSON)
                     args.push(options);
                 _this.add.apply(_this, args);
             });

@@ -7,9 +7,10 @@ export const ResourceLoader = {
     },
     Load(images: object, options: any) {
         Object.keys(images).map((key) => {
-            const isImage = /\.(svg|png|gif|jpe?g)$/.test(images[key])
+            const isImage = /\.(svg|png|gif|jpe?g)/.test(images[key])
+            const isJSON = /\.(json)/.test(images[key])
             const args = [key, images[key]]
-            if (isImage) args.push(options)
+            if (isImage || isJSON) args.push(options)
             this.add(...args)
         })
     },
