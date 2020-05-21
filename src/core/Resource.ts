@@ -8,9 +8,21 @@ export const ResourceLoader = {
     Load(images: object, options: any) {
         Object.keys(images).map((key) => {
             const isImage = /\.(svg|png|gif|jpe?g)/.test(images[key])
-            const isJSON = /\.(json)/.test(images[key])
+            const isJSON = /\.(json)/.test(images[key]) || Array.isArray(images[key])
             const args = [key, images[key]]
-            if (isImage || isJSON) args.push(options)
+            const setting: any = { ...options }
+
+            if (Array.isArray(images[key])) {
+                const image = images[key].find((item: string) => /\.(svg|png|gif|jpe?g)/.test(item))
+                const json = images[key].find((item: string) => /\.(json)/.test(item))
+                if (image && json) {
+                    args[1] = json
+                    setting.metadata = {
+                        jsonImage: image,
+                    }
+                }
+            }
+            if (isImage || isJSON) args.push(setting)
             this.add(...args)
         })
     },

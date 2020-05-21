@@ -138,7 +138,7 @@ export declare namespace SCENE {
 
     type EXTENSION = (PIXI: any, options: any) => void
     type EXTENSIONS = EXTENSION | EXTENSION[]
-    type ResourceGetter = { [key: string]: string } | Function
+    type ResourceGetter = { [key: string]: string | string[] } | Function
 }
 
 

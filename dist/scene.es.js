@@ -30,6 +30,17 @@ function __extends(d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 function __awaiter(thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -81,10 +92,21 @@ var ResourceLoader = {
         var _this = this;
         Object.keys(images).map(function (key) {
             var isImage = /\.(svg|png|gif|jpe?g)/.test(images[key]);
-            var isJSON = /\.(json)/.test(images[key]);
+            var isJSON = /\.(json)/.test(images[key]) || Array.isArray(images[key]);
             var args = [key, images[key]];
+            var setting = __assign({}, options);
+            if (Array.isArray(images[key])) {
+                var image = images[key].find(function (item) { return /\.(svg|png|gif|jpe?g)/.test(item); });
+                var json = images[key].find(function (item) { return /\.(json)/.test(item); });
+                if (image && json) {
+                    args[1] = json;
+                    setting.metadata = {
+                        jsonImage: image,
+                    };
+                }
+            }
             if (isImage || isJSON)
-                args.push(options);
+                args.push(setting);
             _this.add.apply(_this, args);
         });
     },
