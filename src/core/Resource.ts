@@ -33,6 +33,7 @@ export const ResourceLoader = {
 
 export class Resource {
     public static _onLoaded = (resources: any) => {}
+    public static state: 'Loading' | 'Loaded' = 'Loading'
     public static options: any
     public static resourceGetters: SCENE.ResourceGetter[] = []
 
@@ -58,7 +59,9 @@ export class Resource {
     public static async Load(onLoaded: (resources: any) => void = () => { }) {
         ResourceLoader.Load(this.getLoad(), this.options)
         this.resourceGetters = []
+        this.state = 'Loading'
         return new Promise((resolve) => Loader.shared.load(() => {
+            this.state = 'Loaded'
             resolve(Loader.shared.resources)
             onLoaded(Loader.shared.resources)
             this._onLoaded(Loader.shared.resources)

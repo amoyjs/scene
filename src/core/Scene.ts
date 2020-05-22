@@ -14,7 +14,6 @@ export class Scene {
     public game: SCENE.IGame
     public route: SCENE.Route
     public Loader = ResourceLoader
-    public autoCreate = true
 
     constructor(name: string) {
         this.name = name
@@ -37,6 +36,7 @@ export class Scene {
 
     public onLoaded() { }
 
+    public beforeCreate() { }
     public create() { }
 
     public onShow() { }

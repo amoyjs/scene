@@ -140,7 +140,9 @@ var Resource = (function () {
             return __generator(this, function (_a) {
                 ResourceLoader.Load(this.getLoad(), this.options);
                 this.resourceGetters = [];
+                this.state = 'Loading';
                 return [2, new Promise(function (resolve) { return Loader.shared.load(function () {
+                        _this.state = 'Loaded';
                         resolve(Loader.shared.resources);
                         onLoaded(Loader.shared.resources);
                         _this._onLoaded(Loader.shared.resources);
@@ -157,6 +159,7 @@ var Resource = (function () {
         this._onLoaded = onLoaded;
     };
     Resource._onLoaded = function (resources) { };
+    Resource.state = 'Loading';
     Resource.resourceGetters = [];
     return Resource;
 }());
@@ -210,11 +213,23 @@ var Route = (function () {
             this.currentScene.onShow();
         }
         else {
+            var beforeCreate = this.currentScene.beforeCreate();
+            var isPromise_1 = beforeCreate instanceof Promise;
+            if (isPromise_1) {
+                this.beforeCreated = false;
+                beforeCreate.then(function () {
+                    _this.beforeCreated = true;
+                    if (Resource.state === 'Loaded')
+                        _this.currentScene.create();
+                });
+            }
             this.currentScene.stage.visible = true;
             this.game.stage.addChild(this.currentScene.stage);
             Resource.Load(function () {
                 _this.currentScene.onLoaded(Loader.shared.resources);
-                _this.currentScene.autoCreate && _this.currentScene.create();
+                var canCreate = !isPromise_1 || (isPromise_1 && _this.beforeCreated);
+                if (canCreate)
+                    _this.currentScene.create();
                 _this.currentScene.onShow();
             });
             Resource.onLoading(function (percent, name, url) { return _this.currentScene.onLoading(percent, name, url); });
@@ -244,6 +259,7 @@ var Route = (function () {
     Route.scenes = {};
     Route.query = {};
     Route.history = [];
+    Route.beforeCreated = false;
     return Route;
 }());
 Ticker.shared.add(function () { return Route.update(); });
@@ -332,7 +348,6 @@ var Stage = (function (_super) {
 var Scene = (function () {
     function Scene(name) {
         this.Loader = ResourceLoader;
-        this.autoCreate = true;
         this.name = name;
         this.canUpdate = false;
         this.ratios = this.game.PIXEL_RATIOS;
@@ -351,6 +366,7 @@ var Scene = (function () {
     };
     Scene.prototype.onLoading = function () { };
     Scene.prototype.onLoaded = function () { };
+    Scene.prototype.beforeCreate = function () { };
     Scene.prototype.create = function () { };
     Scene.prototype.onShow = function () { };
     Scene.prototype.onHide = function () { };

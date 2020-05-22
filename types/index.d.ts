@@ -32,12 +32,12 @@ export declare namespace SCENE {
         }
         Loader: SCENE.Loader
         canUpdate: boolean
-        autoCreate: boolean
         Load(): void
         onLoading(percent: number, name: string, url: string): void
         onLoaded(resources: any): void
         getQuery(name?: string): object | string
         switchTo(sceneName: string, query?: object): void
+        beforeCreate(): Promise<any>
         create(): void
         useUpdate(): void
         update(): void

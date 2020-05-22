@@ -11,6 +11,7 @@ export class Route {
     public static query = {}
     public static history: string[] = []
     public static game: SCENE.IGame
+    public static beforeCreated: boolean = false
 
     public static push(scene: SCENE.Scene) {
         this.scenes[scene.name] = scene
@@ -60,11 +61,21 @@ export class Route {
         if (isExist) {
             this.currentScene.onShow()
         } else {
+            const beforeCreate = this.currentScene.beforeCreate()
+            const isPromise = beforeCreate instanceof Promise
+            if (isPromise) {
+                this.beforeCreated = false
+                beforeCreate.then(() => {
+                    this.beforeCreated = true
+                    if (Resource.state === 'Loaded') this.currentScene.create()
+                })
+            }
             this.currentScene.stage.visible = true
             this.game.stage.addChild(this.currentScene.stage)
             Resource.Load(() => {
                 this.currentScene.onLoaded(Loader.shared.resources)
-                this.currentScene.autoCreate && this.currentScene.create()
+                const canCreate = !isPromise || (isPromise && this.beforeCreated)
+                if (canCreate) this.currentScene.create()
                 this.currentScene.onShow()
             })
             Resource.onLoading((percent: number, name: string, url: string) => this.currentScene.onLoading(percent, name, url))
