@@ -1,5 +1,3 @@
-import { SCENE } from 'types'
-
 export function getView() {
     // @ts-ignore
     if (typeof canvas !== 'undefined') {

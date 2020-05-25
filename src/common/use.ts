@@ -1,13 +1,11 @@
-import { SCENE } from 'types'
-
-export const extensions: SCENE.EXTENSION[] = []
+import { event } from './event'
 
 export function use(extendsions: SCENE.EXTENSIONS): void {
     if (Array.isArray(extendsions)) {
-        extendsions.map((extendsion) => extensions.push(extendsion))
+        extendsions.map((extendsion) => extendsion(event))
     } else {
         if (typeof extendsions === 'function') {
-            extensions.push(extendsions)
+            extendsions(event)
         } else {
             console.error(`extendsion ${extendsions} must be a function`)
         }

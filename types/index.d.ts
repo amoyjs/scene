@@ -136,16 +136,39 @@ declare namespace SCENE {
         }
     }
 
-    type EXTENSION = (PIXI: any, options: any) => void
+    type EXTENSION = (event: EventEmitter) => void
     type EXTENSIONS = EXTENSION | EXTENSION[]
     type ResourceGetter = { [key: string]: string | string[] } | Function
 }
+declare class EventEmitter<EventTypes extends string | symbol = string | symbol> {
+    static prefixed: string | boolean;
+    eventNames(): Array<EventTypes>;
+    listeners(event: EventTypes): Array<EventEmitter.ListenerFn>;
+    listenerCount(event: EventTypes): number;
+    emit(event: EventTypes, ...args: Array<any>): boolean;
+    on(event: EventTypes, fn: EventEmitter.ListenerFn, context?: any): this;
+    addListener(event: EventTypes, fn: EventEmitter.ListenerFn, context?: any): this;
+    once(event: EventTypes, fn: EventEmitter.ListenerFn, context?: any): this;
+    removeListener(event: EventTypes, fn?: EventEmitter.ListenerFn, context?: any, once?: boolean): this;
+    off(event: EventTypes, fn?: EventEmitter.ListenerFn, context?: any, once?: boolean): this;
+    removeAllListeners(event?: EventTypes): this;
+}
 
+declare namespace EventEmitter {
+    interface ListenerFn {
+        (...args: Array<any>): void;
+    }
+    interface EventEmitterStatic {
+        new <EventTypes extends string | symbol = string | symbol>(): EventEmitter<EventTypes>;
+    }
+    const EventEmitter: EventEmitterStatic;
+}
 
 declare module '@amoy/scene' {
-    const shared: SCENE.Shared
+    const event: EventEmitter
     const Scene: SCENE.Scene
     const Route: SCENE.Route
+    const shared: SCENE.Shared
     const Resource: SCENE.Resource
     class Component extends SCENE.Component { }
     class SizeComponent extends SCENE.SizeComponent { }

@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import { Application as Game } from 'pixi.js'
 import { Scene } from './Scene'
 import { Route } from './Route'
 import { Stage } from './Stage'
@@ -6,11 +7,9 @@ import { Component } from './Component'
 import { Resource, ResourceLoader } from './Resource'
 import { createScene } from './createScene'
 import defaultConfigure from '../configure'
-import { getView, ScreenSize } from '../common'
-import { extensions } from '../common/use'
+import { getView } from '../common'
 import { extendGame } from '../common/extendGame'
-
-const { Application: Game } = PIXI
+import { event } from '../common/event'
 
 export function createGame(configure: SCENE.IConfigure) {
     const { view } = configure
@@ -18,7 +17,7 @@ export function createGame(configure: SCENE.IConfigure) {
     configure = Object.assign(defaultConfigure, configure)
     configure.view = view || getView()
 
-    extensions.map((extension) => extension(PIXI, { Scene, Resource, ResourceLoader, Stage, Route, Component }))
+    event.emit('beforeCreate', { PIXI, Scene, Resource, ResourceLoader, Stage, Route, Component })
 
     const game = new Game(configure) as SCENE.IGame
 
