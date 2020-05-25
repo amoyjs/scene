@@ -1,6 +1,5 @@
 import { Loader, Ticker } from 'pixi.js'
 import { Resource } from './Resource'
-import { SCENE } from 'types'
 
 export class Route {
     public static scenes = {}

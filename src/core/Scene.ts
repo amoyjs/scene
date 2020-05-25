@@ -1,7 +1,6 @@
 import { Resource, ResourceLoader } from './Resource'
 import { Stage } from './Stage'
 import { Route } from './Route'
-import { SCENE } from 'types'
 
 export class Scene {
     public name: string

@@ -9,7 +9,6 @@ import defaultConfigure from '../configure'
 import { getView, ScreenSize } from '../common'
 import { extensions } from '../common/use'
 import { extendGame } from '../common/extendGame'
-import { SCENE } from 'types'
 
 const { Application: Game } = PIXI
 

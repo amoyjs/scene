@@ -2,7 +2,6 @@ import { Container, Graphics } from 'pixi.js'
 import { Scene } from './Scene'
 import { Route } from './Route'
 import { ScreenSize } from '../common'
-import { SCENE } from 'types'
 
 export function getGame() {
     return Scene.prototype.game

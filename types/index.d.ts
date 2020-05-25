@@ -2,7 +2,7 @@
 
 declare const canvas: any
 
-export declare namespace SCENE {
+declare namespace SCENE {
     interface Loader {
         add(...args: string[]): void
         Load(images: object, options: any): void
