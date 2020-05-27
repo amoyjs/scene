@@ -13,6 +13,7 @@ const output = options => ({
     ...options,
     globals: {
         'pixi.js': 'PIXI',
+        'eventemitter3': 'EventEmitter',
     },
 })
 
@@ -30,7 +31,7 @@ const configure = {
         commonjs(),
         resolve(),
     ],
-    external: ['pixi.js'],
+    external: ['pixi.js', 'eventemitter3'],
 }
 
 if (isProd) {
