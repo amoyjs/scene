@@ -474,54 +474,6 @@ var SizeComponent = (function (_super) {
 
 var event = new Event();
 
-function createScene(game, scenes) {
-    var keys = Object.keys(scenes).map(function (key) { return key.toLowerCase(); });
-    var values = Object.values(scenes);
-    event.emit('created', { game: game });
-    values.map(function (Scene, index) { return new Scene(keys[index]); });
-    Route.game = game;
-    Route.to(keys[0]);
-}
-
-var defaultConfigure = {
-    backgroundColor: 0x000000,
-    autoResize: true,
-    width: ScreenSize.width,
-    height: ScreenSize.height,
-    UIWidth: ScreenSize.width,
-    UIHeight: ScreenSize.height,
-    resolution: devicePixelRatio,
-};
-
-function extendGame(_a, _b) {
-    var Loader = _a.Loader;
-    var game = _b.game;
-    game.Loader = Loader;
-    game.resources = Loader.shared.resources;
-    Scene.prototype.game = game;
-    var _c = game.configure, UIWidth = _c.UIWidth, UIHeight = _c.UIHeight;
-    var width = game.view.width / game.configure.resolution;
-    var height = game.view.height / game.configure.resolution;
-    game.PIXEL_RATIOS = shared.PIXEL_RATIOS = { x: width / UIWidth, y: height / UIHeight };
-    Object.defineProperty(game, 'PIXEL_RATIO', {
-        get: function () {
-            return UIWidth < UIHeight ? game.PIXEL_RATIOS.x : game.PIXEL_RATIOS.y;
-        },
-    });
-}
-
-function createGame(configure) {
-    var view = configure.view;
-    configure = Object.assign(defaultConfigure, configure);
-    configure.view = view || getView();
-    event.emit('beforeCreate', { PIXI: PIXI, Scene: Scene, Resource: Resource, ResourceLoader: ResourceLoader, Stage: Stage, Route: Route, Component: Component });
-    var game = new Application(configure);
-    game.configure = configure;
-    extendGame(PIXI, { game: game });
-    createScene(game, configure.scenes);
-    return game;
-}
-
 function use(extendsions) {
     if (Array.isArray(extendsions)) {
         extendsions.map(function (extendsion) { return extendsion(event); });
@@ -536,7 +488,83 @@ function use(extendsions) {
     }
 }
 
+var defaultConfigure = {
+    backgroundColor: 0x000000,
+    autoResize: true,
+    width: ScreenSize.width,
+    height: ScreenSize.height,
+    UIWidth: ScreenSize.width,
+    UIHeight: ScreenSize.height,
+    resolution: devicePixelRatio,
+};
+
+function extendGame(event) {
+    event.on('created', function (_a) {
+        var PIXI = _a.PIXI, configure = _a.configure, game = _a.game;
+        game.Loader = PIXI.Loader;
+        game.resources = PIXI.Loader.shared.resources;
+        Scene.prototype.game = game;
+        var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight;
+        var width = game.view.width / configure.resolution;
+        var height = game.view.height / configure.resolution;
+        game.PIXEL_RATIOS = shared.PIXEL_RATIOS = { x: width / UIWidth, y: height / UIHeight };
+        Object.defineProperty(game, 'PIXEL_RATIO', {
+            get: function () {
+                return UIWidth < UIHeight ? game.PIXEL_RATIOS.x : game.PIXEL_RATIOS.y;
+            },
+        });
+    });
+}
+
+function createScene(event) {
+    event.on('created', function (_a) {
+        var game = _a.game, configure = _a.configure;
+        var keys = Object.keys(configure.scenes).map(function (key) { return key.toLowerCase(); });
+        var values = Object.values(configure.scenes);
+        values.map(function (Scene, index) { return new Scene(keys[index]); });
+        Route.game = game;
+        Route.to(keys[0]);
+    });
+}
+
+function eventBUS(event) {
+    event.on('created', function (_a) {
+        var game = _a.game;
+        game.on = function on() {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            event.on.apply(event, args);
+        };
+        game.emit = function emit() {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            event.emit.apply(event, args);
+        };
+    });
+}
+
+var extensions = [
+    extendGame,
+    createScene,
+    eventBUS,
+];
+
+function createGame(configure) {
+    var view = configure.view;
+    configure = Object.assign(defaultConfigure, configure);
+    configure.view = view || getView();
+    event.emit('beforeCreate', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure });
+    var game = new Application(configure);
+    event.emit('created', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure, game: game });
+    return game;
+}
+use(extensions);
+
 window.PIXI = PIXI;
 
-export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, createScene, event, getGame, getStage, getType, shared, use };
+export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, event, getGame, getStage, getType, shared, use };
 //# sourceMappingURL=scene.es.js.map

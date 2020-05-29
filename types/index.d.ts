@@ -126,6 +126,8 @@ declare namespace SCENE {
         resources: any
         Loader: typeof PIXI.Loader
         configure: SCENE.IConfigure
+        on(name: string, cb: () => void): void
+        emit(name: string, ...args: Array<any>): void
     }
 
     interface Shared {
@@ -139,6 +141,14 @@ declare namespace SCENE {
     type EXTENSION = (event: EventEmitter) => void
     type EXTENSIONS = EXTENSION | EXTENSION[]
     type ResourceGetter = { [key: string]: string | string[] } | Function
+
+    interface EVENT_EXPORT {
+        PIXI: typeof PIXI,
+        Component: Component,
+        Resource: Resource,
+        configure: IConfigure,
+        game: IGame,
+    }
 }
 declare class EventEmitter<EventTypes extends string | symbol = string | symbol> {
     static prefixed: string | boolean;
@@ -177,5 +187,4 @@ declare module '@amoy/scene' {
     function getStage(): SCENE.Stage
     function getType(target: any): string
     function createGame(configure: SCENE.IConfigure): SCENE.IGame
-    function createScene(game: PIXI.Application, scenes: Map<string, SCENE.Scene>): void
 }
