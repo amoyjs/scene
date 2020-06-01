@@ -3,18 +3,18 @@ import { Loader, Ticker, Graphics, Container, Application } from 'pixi.js';
 import Event from 'eventemitter3';
 
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
@@ -43,10 +43,11 @@ var __assign = function() {
 };
 
 function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 }
@@ -116,7 +117,7 @@ var ResourceLoader = {
         Loader.shared.load(function () { return onLoaded(Loader.shared.resources); });
     },
 };
-var Resource = (function () {
+var Resource = /** @class */ (function () {
     function Resource() {
     }
     Resource.use = function (resourceGetter) {
@@ -142,7 +143,7 @@ var Resource = (function () {
                 ResourceLoader.Load(this.getLoad(), this.options);
                 this.resourceGetters = [];
                 this.state = 'Loading';
-                return [2, new Promise(function (resolve) { return Loader.shared.load(function () {
+                return [2 /*return*/, new Promise(function (resolve) { return Loader.shared.load(function () {
                         _this.state = 'Loaded';
                         resolve(Loader.shared.resources);
                         onLoaded(Loader.shared.resources);
@@ -165,7 +166,7 @@ var Resource = (function () {
     return Resource;
 }());
 
-var Route = (function () {
+var Route = /** @class */ (function () {
     function Route() {
     }
     Route.push = function (scene) {
@@ -200,7 +201,9 @@ var Route = (function () {
     Route.setCurrentScene = function (pendingSceneName) {
         if (!this.isScene(pendingSceneName))
             return console.warn("Scene " + pendingSceneName + " is not exist.");
+        // hide all scenes
         this.game.stage.children.map(function (stage) { return stage.visible = false; });
+        // set current scene
         this.currentScene = this.scenes[pendingSceneName];
         this.currentScene.stage.visible = true;
         this.fetchNextScene();
@@ -266,7 +269,9 @@ var Route = (function () {
 Ticker.shared.add(function () { return Route.update(); });
 
 function getView() {
+    // @ts-ignore
     if (typeof canvas !== 'undefined') {
+        // @ts-ignore
         return canvas;
     }
     else {
@@ -279,7 +284,7 @@ function remove(display) {
     display.children.map(function (item) { return remove(item); });
     display.removeChildren();
 }
-var ScreenSize = (function () {
+var ScreenSize = /** @class */ (function () {
     function ScreenSize() {
     }
     Object.defineProperty(ScreenSize, "width", {
@@ -317,7 +322,7 @@ function getType(target) {
     }
 }
 
-var Stage = (function (_super) {
+var Stage = /** @class */ (function (_super) {
     __extends(Stage, _super);
     function Stage(name) {
         var _this = _super.call(this) || this;
@@ -346,13 +351,14 @@ var Stage = (function (_super) {
     return Stage;
 }(Graphics));
 
-var Scene = (function () {
+var Scene = /** @class */ (function () {
     function Scene(name) {
         this.Loader = ResourceLoader;
         this.name = name;
         this.canUpdate = false;
         this.ratios = this.game.PIXEL_RATIOS;
         this.stage = new Stage(name);
+        // @ts-ignore
         Route.push(this);
     }
     Object.defineProperty(Scene.prototype, "ratio", {
@@ -398,7 +404,7 @@ function getGame() {
 function getStage() {
     return getGame().stage.children.find(function (stage) { return stage.name === Route.currentScene.name; });
 }
-var Component = (function (_super) {
+var Component = /** @class */ (function (_super) {
     __extends(Component, _super);
     function Component() {
         var _this = _super.call(this) || this;
@@ -417,7 +423,7 @@ var Component = (function (_super) {
     });
     return Component;
 }(Container));
-var SizeComponent = (function (_super) {
+var SizeComponent = /** @class */ (function (_super) {
     __extends(SizeComponent, _super);
     function SizeComponent(x, y, width, height, radius, color, opacity) {
         if (x === void 0) { x = 0; }
@@ -508,6 +514,7 @@ function extendGame(event) {
         var width = game.view.width / configure.resolution;
         var height = game.view.height / configure.resolution;
         game.PIXEL_RATIOS = shared.PIXEL_RATIOS = { x: width / UIWidth, y: height / UIHeight };
+        // 竖屏应用，以宽为准；横屏应用，以高为准
         Object.defineProperty(game, 'PIXEL_RATIO', {
             get: function () {
                 return UIWidth < UIHeight ? game.PIXEL_RATIOS.x : game.PIXEL_RATIOS.y;
@@ -554,6 +561,7 @@ var extensions = [
 ];
 
 function createGame(configure) {
+    if (configure === void 0) { configure = { scenes: {} }; }
     var view = configure.view;
     configure = Object.assign(defaultConfigure, configure);
     configure.view = view || getView();

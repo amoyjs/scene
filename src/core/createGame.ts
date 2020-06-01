@@ -10,7 +10,7 @@ import defaultConfigure from '../configure'
 // extensions
 import extensions from '../extensions'
 
-export function createGame(configure: SCENE.IConfigure) {
+export function createGame(configure: SCENE.IConfigure = { scenes: {} }) {
     const { view } = configure
 
     configure = Object.assign(defaultConfigure, configure)
