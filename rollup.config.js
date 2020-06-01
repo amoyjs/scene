@@ -5,7 +5,7 @@ import commonjs from 'rollup-plugin-commonjs'
 
 const isProd = process.env.NODE_ENV === 'production'
 const { moduleName, name } = require('./package.json')
-const fileName = name.replace('@amoy/', '')
+const fileName = 'index'
 const getFilePath = (type = '') => `dist/${fileName}${type == '' ? '' : '.'}${type}.js`
 const output = options => ({
     name: moduleName,

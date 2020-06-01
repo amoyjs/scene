@@ -567,4 +567,4 @@ use(extensions);
 window.PIXI = PIXI;
 
 export { Component, Resource, ResourceLoader, Route, Scene, SizeComponent, createGame, event, getGame, getStage, getType, shared, use };
-//# sourceMappingURL=scene.es.js.map
+//# sourceMappingURL=index.es.js.map
