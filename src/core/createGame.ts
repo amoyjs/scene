@@ -21,6 +21,7 @@ export function createGame(configure: SCENE.IConfigure = { scenes: {} }) {
     const game = new Game(configure) as SCENE.IGame
 
     event.emit('created', { PIXI, Component, Resource, configure, game })
+    event.emit('create-scene', { PIXI, Component, Resource, configure, game })
 
     return game
 }

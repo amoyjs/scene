@@ -7,5 +7,8 @@ export function eventBUS(event: any) {
         game.emit = function emit(...args: any) {
             event.emit(...args)
         }
+        game.eventNames = function eventNames() {
+            return event.eventNames()
+        }
     })
 }

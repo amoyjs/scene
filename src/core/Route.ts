@@ -11,6 +11,7 @@ export class Route {
     public static history: string[] = []
     public static game: SCENE.IGame
     public static beforeCreated: boolean = false
+    public static isLoaded: boolean = false
 
     public static push(scene: SCENE.Scene) {
         this.scenes[scene.name] = scene
@@ -66,18 +67,31 @@ export class Route {
                 this.beforeCreated = false
                 beforeCreate.then(() => {
                     this.beforeCreated = true
-                    if (Resource.state === 'Loaded') this.currentScene.create()
-                })
+                    if (this.isLoaded === true) this.currentScene.create()
+                }).catch(() => this.currentScene.create())
             }
             this.currentScene.stage.visible = true
             this.game.stage.addChild(this.currentScene.stage)
-            Resource.Load(() => {
+
+            const executable = () => {
+                this.isLoaded = true
                 this.currentScene.onLoaded(Loader.shared.resources)
                 const canCreate = !isPromise || (isPromise && this.beforeCreated)
                 if (canCreate) this.currentScene.create()
                 this.currentScene.onShow()
-            })
-            Resource.onLoading((percent: number, name: string, url: string) => this.currentScene.onLoading(percent, name, url))
+            }
+
+            if (this.game.useExternalLoader) {
+                this.game.on(this.game.EVENT_NAMES.LOADED, () => executable())
+                // @ts-ignore
+                this.game.on(this.game.EVENT_NAMES.LOADING, (name: string, percent: number, url: string) => {
+                    this.currentScene.onLoading(percent, name, url)
+                })
+            } else {
+                Resource.Load(() => executable())
+                Resource.onLoading((percent: number, name: string, url: string) => this.currentScene.onLoading(percent, name, url))
+            }
+
             this.pendingSceneName = ''
         }
     }

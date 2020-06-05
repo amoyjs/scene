@@ -8,6 +8,7 @@ export declare class Route {
     static history: string[];
     static game: SCENE.IGame;
     static beforeCreated: boolean;
+    static isLoaded: boolean;
     static push(scene: SCENE.Scene): void;
     static to(sceneName: string, query?: object): void;
     static back(query?: object): void;

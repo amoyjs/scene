@@ -3,7 +3,7 @@ import { createScene } from './createScene'
 import { eventBUS } from './eventBUS'
 
 export default [
+    eventBUS,
     extendGame,
     createScene,
-    eventBUS,
 ]

@@ -5,6 +5,9 @@ export function extendGame(event: any) {
     event.on('created', ({ PIXI, configure, game }: SCENE.EVENT_EXPORT) => {
         game.Loader = PIXI.Loader
         game.resources = PIXI.Loader.shared.resources
+        game.EVENT_NAMES = {}
+        game.EVENT_NAMES.LOADED = 'LOADED'
+        game.EVENT_NAMES.LOADING = 'LOADING'
 
         Scene.prototype.game = game
 

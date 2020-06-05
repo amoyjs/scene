@@ -126,8 +126,14 @@ declare namespace SCENE {
         resources: any
         Loader: typeof PIXI.Loader
         configure: SCENE.IConfigure
+        useExternalLoader: boolean
+        EVENT_NAMES: {
+            LOADED?: 'LOADED'
+            LOADING?: 'LOADING'
+        }
         on(name: string, cb: () => void): void
         emit(name: string, ...args: Array<any>): void
+        eventNames(): string[]
     }
 
     interface Shared {

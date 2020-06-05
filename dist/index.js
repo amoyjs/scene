@@ -146,9 +146,7 @@
                 return __generator(this, function (_a) {
                     ResourceLoader.Load(this.getLoad(), this.options);
                     this.resourceGetters = [];
-                    this.state = 'Loading';
                     return [2 /*return*/, new Promise(function (resolve) { return PIXI.Loader.shared.load(function () {
-                            _this.state = 'Loaded';
                             resolve(PIXI.Loader.shared.resources);
                             onLoaded(PIXI.Loader.shared.resources);
                             _this._onLoaded(PIXI.Loader.shared.resources);
@@ -165,7 +163,6 @@
             this._onLoaded = onLoaded;
         };
         Resource._onLoaded = function (resources) { };
-        Resource.state = 'Loading';
         Resource.resourceGetters = [];
         return Resource;
     }());
@@ -227,20 +224,31 @@
                     this.beforeCreated = false;
                     beforeCreate.then(function () {
                         _this.beforeCreated = true;
-                        if (Resource.state === 'Loaded')
+                        if (_this.isLoaded === true)
                             _this.currentScene.create();
-                    });
+                    }).catch(function () { return _this.currentScene.create(); });
                 }
                 this.currentScene.stage.visible = true;
                 this.game.stage.addChild(this.currentScene.stage);
-                Resource.Load(function () {
+                var executable_1 = function () {
+                    _this.isLoaded = true;
                     _this.currentScene.onLoaded(PIXI.Loader.shared.resources);
                     var canCreate = !isPromise_1 || (isPromise_1 && _this.beforeCreated);
                     if (canCreate)
                         _this.currentScene.create();
                     _this.currentScene.onShow();
-                });
-                Resource.onLoading(function (percent, name, url) { return _this.currentScene.onLoading(percent, name, url); });
+                };
+                if (this.game.useExternalLoader) {
+                    this.game.on(this.game.EVENT_NAMES.LOADED, function () { return executable_1(); });
+                    // @ts-ignore
+                    this.game.on(this.game.EVENT_NAMES.LOADING, function (name, percent, url) {
+                        _this.currentScene.onLoading(percent, name, url);
+                    });
+                }
+                else {
+                    Resource.Load(function () { return executable_1(); });
+                    Resource.onLoading(function (percent, name, url) { return _this.currentScene.onLoading(percent, name, url); });
+                }
                 this.pendingSceneName = '';
             }
         };
@@ -268,6 +276,7 @@
         Route.query = {};
         Route.history = [];
         Route.beforeCreated = false;
+        Route.isLoaded = false;
         return Route;
     }());
     PIXI.Ticker.shared.add(function () { return Route.update(); });
@@ -513,6 +522,9 @@
             var PIXI = _a.PIXI, configure = _a.configure, game = _a.game;
             game.Loader = PIXI.Loader;
             game.resources = PIXI.Loader.shared.resources;
+            game.EVENT_NAMES = {};
+            game.EVENT_NAMES.LOADED = 'LOADED';
+            game.EVENT_NAMES.LOADING = 'LOADING';
             Scene.prototype.game = game;
             var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight;
             var width = game.view.width / configure.resolution;
@@ -528,7 +540,7 @@
     }
 
     function createScene(event) {
-        event.on('created', function (_a) {
+        event.on('create-scene', function (_a) {
             var game = _a.game, configure = _a.configure;
             var keys = Object.keys(configure.scenes).map(function (key) { return key.toLowerCase(); });
             var values = Object.values(configure.scenes);
@@ -555,13 +567,16 @@
                 }
                 event.emit.apply(event, args);
             };
+            game.eventNames = function eventNames() {
+                return event.eventNames();
+            };
         });
     }
 
     var extensions = [
+        eventBUS,
         extendGame,
         createScene,
-        eventBUS,
     ];
 
     function createGame(configure) {
@@ -572,6 +587,7 @@
         event.emit('beforeCreate', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure });
         var game = new PIXI.Application(configure);
         event.emit('created', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure, game: game });
+        event.emit('create-scene', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure, game: game });
         return game;
     }
     use(extensions);

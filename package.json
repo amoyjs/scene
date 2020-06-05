@@ -1,7 +1,7 @@
 {
   "name": "@amoy/scene",
   "moduleName": "SceneKit",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Scene for pixi.js.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

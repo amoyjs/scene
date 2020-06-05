@@ -5,7 +5,6 @@ export declare const ResourceLoader: {
 };
 export declare class Resource {
     static _onLoaded: (resources: any) => void;
-    static state: 'Loading' | 'Loaded';
     static options: any;
     static resourceGetters: SCENE.ResourceGetter[];
     static use(resourceGetter: SCENE.ResourceGetter): void;
