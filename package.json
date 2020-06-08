@@ -1,7 +1,7 @@
 {
   "name": "@amoy/scene",
   "moduleName": "SceneKit",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Scene for pixi.js.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -29,6 +29,7 @@
     "typescript": "^3.7.5"
   },
   "peerDependencies": {
+    "eventemitter3": "^4.0.4",
     "pixi.js": "^5.1.5"
   },
   "dependencies": {}

@@ -1,19 +1,21 @@
 import { Loader, Ticker } from 'pixi.js'
 import { Resource } from './Resource'
+import { Scene } from './Scene'
+import { Stage } from './Stage'
 
 export class Route {
     public static scenes = {}
     public static prevSceneName: string
     public static currentSceneName: string
     public static pendingSceneName: string
-    public static currentScene: SCENE.Scene
+    public static currentScene: Scene
     public static query = {}
     public static history: string[] = []
     public static game: SCENE.IGame
     public static beforeCreated: boolean = false
     public static isLoaded: boolean = false
 
-    public static push(scene: SCENE.Scene) {
+    public static push(scene: Scene) {
         this.scenes[scene.name] = scene
     }
 
@@ -47,7 +49,7 @@ export class Route {
         if (!this.isScene(pendingSceneName)) return console.warn(`Scene ${pendingSceneName} is not exist.`)
 
         // hide all scenes
-        this.game.stage.children.map((stage: SCENE.Stage) => stage.visible = false)
+        this.game.stage.children.map((stage: Stage) => stage.visible = false)
         // set current scene
         this.currentScene = this.scenes[pendingSceneName]
         this.currentScene.stage.visible = true
@@ -57,7 +59,7 @@ export class Route {
     }
 
     public static fetchNextScene() {
-        const isExist = this.game.stage.children.find((stage: SCENE.Stage) => stage === this.currentScene.stage)
+        const isExist = this.game.stage.children.find((stage: Stage) => stage === this.currentScene.stage)
         if (isExist) {
             this.currentScene.onShow()
         } else {

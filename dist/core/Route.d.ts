@@ -1,15 +1,16 @@
+import { Scene } from './Scene';
 export declare class Route {
     static scenes: {};
     static prevSceneName: string;
     static currentSceneName: string;
     static pendingSceneName: string;
-    static currentScene: SCENE.Scene;
+    static currentScene: Scene;
     static query: {};
     static history: string[];
     static game: SCENE.IGame;
     static beforeCreated: boolean;
     static isLoaded: boolean;
-    static push(scene: SCENE.Scene): void;
+    static push(scene: Scene): void;
     static to(sceneName: string, query?: object): void;
     static back(query?: object): void;
     static getQuery(name?: string): any;

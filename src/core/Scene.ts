@@ -9,9 +9,9 @@ export class Scene {
         x: number,
         y: number,
     }
-    public stage: SCENE.Stage
+    public stage: Stage
     public game: SCENE.IGame
-    public route: SCENE.Route
+    public route: Route
     public Loader = ResourceLoader
 
     constructor(name: string) {
@@ -31,11 +31,11 @@ export class Scene {
         Resource.Load()
     }
 
-    public onLoading() {}
+    public onLoading(percent: number, name: string, url: string) {}
 
-    public onLoaded() { }
+    public onLoaded(resources: any) { }
 
-    public beforeCreate() { }
+    public async beforeCreate(): Promise<any> { }
     public create() { }
 
     public onShow() { }

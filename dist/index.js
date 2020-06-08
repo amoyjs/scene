@@ -384,9 +384,13 @@
         Scene.prototype.Load = function () {
             Resource.Load();
         };
-        Scene.prototype.onLoading = function () { };
-        Scene.prototype.onLoaded = function () { };
-        Scene.prototype.beforeCreate = function () { };
+        Scene.prototype.onLoading = function (percent, name, url) { };
+        Scene.prototype.onLoaded = function (resources) { };
+        Scene.prototype.beforeCreate = function () {
+            return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+                return [2 /*return*/];
+            }); });
+        };
         Scene.prototype.create = function () { };
         Scene.prototype.onShow = function () { };
         Scene.prototype.onHide = function () { };

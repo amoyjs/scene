@@ -1,3 +1,5 @@
+import { Stage } from './Stage';
+import { Route } from './Route';
 export declare class Scene {
     name: string;
     canUpdate: boolean;
@@ -5,9 +7,9 @@ export declare class Scene {
         x: number;
         y: number;
     };
-    stage: SCENE.Stage;
+    stage: Stage;
     game: SCENE.IGame;
-    route: SCENE.Route;
+    route: Route;
     Loader: {
         add: (...args: any) => void;
         Load(images: object, options: any): void;
@@ -16,9 +18,9 @@ export declare class Scene {
     constructor(name: string);
     get ratio(): number;
     Load(): void;
-    onLoading(): void;
-    onLoaded(): void;
-    beforeCreate(): void;
+    onLoading(percent: number, name: string, url: string): void;
+    onLoaded(resources: any): void;
+    beforeCreate(): Promise<any>;
     create(): void;
     onShow(): void;
     onHide(): void;
