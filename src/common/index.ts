@@ -42,3 +42,9 @@ export function getType(target: any) {
         return 'Container'
     }
 }
+
+export function isLandScape() {
+    if (window.orientation === undefined) return true
+    const orientation = (+window.orientation / 90) % 2
+    return orientation === 1 || orientation === -1
+}

@@ -331,6 +331,12 @@ function getType(target) {
         return 'Container';
     }
 }
+function isLandScape() {
+    if (window.orientation === undefined)
+        return true;
+    var orientation = (+window.orientation / 90) % 2;
+    return orientation === 1 || orientation === -1;
+}
 
 var Stage = /** @class */ (function (_super) {
     __extends(Stage, _super);
@@ -538,8 +544,14 @@ function extendGame(event) {
         Scene.prototype.game = game;
         var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight;
         game.PIXEL_RATIOS = {
-            get x() { return game.view.width / configure.resolution / UIWidth; },
-            get y() { return game.view.height / configure.resolution / UIHeight; },
+            get x() {
+                var width = isLandScape() ? game.view.width : game.view.height;
+                return width / configure.resolution / UIWidth;
+            },
+            get y() {
+                var height = isLandScape() ? game.view.height : game.view.width;
+                return height / configure.resolution / UIHeight;
+            },
         };
         // 竖屏应用，以宽为准；横屏应用，以高为准
         Object.defineProperty(game, 'PIXEL_RATIO', {

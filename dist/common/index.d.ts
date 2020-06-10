@@ -8,4 +8,5 @@ export declare class ScreenSize {
 }
 export declare const shared: SCENE.Shared;
 export declare function getType(target: any): "Text" | "Graphics" | "AnimatedSprite" | "Sprite" | "Container";
+export declare function isLandScape(): boolean;
 //# sourceMappingURL=index.d.ts.map
