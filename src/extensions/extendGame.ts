@@ -18,9 +18,6 @@ export function extendGame(event: any) {
             get x() { return game.view.width / configure.resolution / UIWidth },
             get y() { return game.view.height / configure.resolution / UIHeight },
         }
-        window.addEventListener('resize', () => {
-            console.log(game.PIXEL_RATIOS.x, game.PIXEL_RATIOS.y)
-        })
         // 竖屏应用，以宽为准；横屏应用，以高为准
         Object.defineProperty(game, 'PIXEL_RATIO', {
             get() {
