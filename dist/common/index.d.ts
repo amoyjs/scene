@@ -1,4 +1,5 @@
 /// <reference types="pixi.js" />
+import { SCENE } from '../../types';
 export declare function getView(): any;
 export declare function remove(display: PIXI.Container): void;
 export declare class ScreenSize {

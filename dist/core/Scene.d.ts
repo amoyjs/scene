@@ -1,5 +1,6 @@
 import { Stage } from './Stage';
 import { Route } from './Route';
+import { Game } from './Game';
 export declare class Scene {
     name: string;
     canUpdate: boolean;
@@ -8,7 +9,7 @@ export declare class Scene {
         y: number;
     };
     stage: Stage;
-    game: SCENE.IGame;
+    game: Game;
     route: Route;
     Loader: {
         add: (...args: any) => void;

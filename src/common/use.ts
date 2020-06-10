@@ -1,4 +1,5 @@
 import { event } from './event'
+import { SCENE } from '../../types'
 
 export function use(extendsions: SCENE.EXTENSIONS): void {
     if (Array.isArray(extendsions)) {

@@ -289,6 +289,7 @@
         }
         else {
             var view = document.createElement('canvas');
+            view.id = 'GAME_VIEW';
             document.body.appendChild(view);
             return view;
         }
@@ -495,6 +496,14 @@
         return SizeComponent;
     }(PIXI.Graphics));
 
+    var Game = /** @class */ (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return Game;
+    }(PIXI.Application));
+
     var event = new Event();
 
     function use(extendsions) {
@@ -531,15 +540,20 @@
             game.EVENT_NAMES.LOADING = 'LOADING';
             Scene.prototype.game = game;
             var UIWidth = configure.UIWidth, UIHeight = configure.UIHeight;
-            var width = game.view.width / configure.resolution;
-            var height = game.view.height / configure.resolution;
-            game.PIXEL_RATIOS = shared.PIXEL_RATIOS = { x: width / UIWidth, y: height / UIHeight };
+            game.PIXEL_RATIOS = {
+                get x() { return game.view.width / configure.resolution / UIWidth; },
+                get y() { return game.view.height / configure.resolution / UIHeight; },
+            };
+            window.addEventListener('resize', function () {
+                console.log(game.PIXEL_RATIOS.x, game.PIXEL_RATIOS.y);
+            });
             // 竖屏应用，以宽为准；横屏应用，以高为准
             Object.defineProperty(game, 'PIXEL_RATIO', {
                 get: function () {
                     return UIWidth < UIHeight ? game.PIXEL_RATIOS.x : game.PIXEL_RATIOS.y;
                 },
             });
+            shared.PIXEL_RATIOS = game.PIXEL_RATIOS;
         });
     }
 
@@ -588,10 +602,10 @@
         var view = configure.view;
         configure = Object.assign(defaultConfigure, configure);
         configure.view = view || getView();
-        event.emit('beforeCreate', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure });
-        var game = new PIXI.Application(configure);
-        event.emit('created', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure, game: game });
-        event.emit('create-scene', { PIXI: PIXI, Component: Component, Resource: Resource, configure: configure, game: game });
+        event.emit('beforeCreate', { PIXI: PIXI, Resource: Resource, configure: configure });
+        var game = new Game(configure);
+        event.emit('created', { PIXI: PIXI, Resource: Resource, configure: configure, game: game });
+        event.emit('create-scene', { PIXI: PIXI, Resource: Resource, configure: configure, game: game });
         return game;
     }
     use(extensions);

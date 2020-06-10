@@ -1,13 +1,14 @@
 import { Container, Graphics } from 'pixi.js';
-export declare function getGame(): SCENE.IGame;
-export declare function getStage(): SCENE.Stage;
+import { Stage } from './Stage';
+export declare function getGame(): import("./Game").Game;
+export declare function getStage(): Stage;
 export declare class Component extends Container {
     ratios: {
         x: number;
         y: number;
     };
-    game: SCENE.IGame;
-    stage: SCENE.Stage;
+    game: import("./Game").Game;
+    stage: Stage;
     constructor();
     get ratio(): number;
 }
@@ -16,8 +17,8 @@ export declare class SizeComponent extends Graphics {
         x: number;
         y: number;
     };
-    game: SCENE.IGame;
-    stage: SCENE.Stage;
+    game: import("./Game").Game;
+    stage: Stage;
     private color;
     private opacity;
     private frame;

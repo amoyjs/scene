@@ -1,3 +1,4 @@
+import { SCENE } from '../../types';
 export declare const ResourceLoader: {
     add: (...args: any) => void;
     Load(images: object, options: any): void;

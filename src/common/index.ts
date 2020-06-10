@@ -1,3 +1,5 @@
+import { SCENE } from '../../types'
+
 export function getView() {
     // @ts-ignore
     if (typeof canvas !== 'undefined') {
@@ -5,6 +7,7 @@ export function getView() {
         return canvas
     } else {
         const view = document.createElement('canvas')
+        view.id = 'GAME_VIEW'
         document.body.appendChild(view)
         return view
     }

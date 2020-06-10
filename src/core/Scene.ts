@@ -1,6 +1,7 @@
 import { Resource, ResourceLoader } from './Resource'
 import { Stage } from './Stage'
 import { Route } from './Route'
+import { Game } from './Game'
 
 export class Scene {
     public name: string
@@ -10,7 +11,7 @@ export class Scene {
         y: number,
     }
     public stage: Stage
-    public game: SCENE.IGame
+    public game: Game
     public route: Route
     public Loader = ResourceLoader
 

@@ -2,6 +2,7 @@ import { Loader, Ticker } from 'pixi.js'
 import { Resource } from './Resource'
 import { Scene } from './Scene'
 import { Stage } from './Stage'
+import { Game } from './Game'
 
 export class Route {
     public static scenes = {}
@@ -11,7 +12,7 @@ export class Route {
     public static currentScene: Scene
     public static query = {}
     public static history: string[] = []
-    public static game: SCENE.IGame
+    public static game: Game
     public static beforeCreated: boolean = false
     public static isLoaded: boolean = false
 

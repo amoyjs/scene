@@ -1,14 +1,15 @@
 import { Container, Graphics } from 'pixi.js'
 import { Scene } from './Scene'
 import { Route } from './Route'
+import { Stage } from './Stage'
 import { ScreenSize } from '../common'
 
 export function getGame() {
     return Scene.prototype.game
 }
 
-export function getStage(): SCENE.Stage {
-    return getGame().stage.children.find((stage: SCENE.Stage) => stage.name === Route.currentScene.name) as SCENE.Stage
+export function getStage(): Stage {
+    return getGame().stage.children.find((stage: Stage) => stage.name === Route.currentScene.name) as Stage
 }
 
 export class Component extends Container {

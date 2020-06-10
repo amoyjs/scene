@@ -1,4 +1,5 @@
 import { Route } from '../core/Route'
+import { SCENE } from '../../types'
 
 export function createScene(event: any) {
     event.on('create-scene', ({ game, configure }: SCENE.EVENT_EXPORT) => {

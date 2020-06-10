@@ -1,4 +1,5 @@
 import { Scene } from './Scene';
+import { Game } from './Game';
 export declare class Route {
     static scenes: {};
     static prevSceneName: string;
@@ -7,7 +8,7 @@ export declare class Route {
     static currentScene: Scene;
     static query: {};
     static history: string[];
-    static game: SCENE.IGame;
+    static game: Game;
     static beforeCreated: boolean;
     static isLoaded: boolean;
     static push(scene: Scene): void;
