@@ -9,6 +9,7 @@ export function extendGame(event: any) {
         game.EVENT_NAMES = {}
         game.EVENT_NAMES.LOADED = 'LOADED'
         game.EVENT_NAMES.LOADING = 'LOADING'
+        configure.view.setAttribute('resolution', `${configure.resolution}`)
 
         Scene.prototype.game = game
 
