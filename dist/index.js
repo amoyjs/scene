@@ -403,7 +403,7 @@
             var _a;
             if (typeof GameLoading !== 'undefined') {
                 (_a = GameLoading) === null || _a === void 0 ? void 0 : _a.update(percent);
-                if (percent >= 100)
+                if (Math.round(percent) >= 100)
                     setTimeout(function () { var _a; return (_a = GameLoading) === null || _a === void 0 ? void 0 : _a.remove(); }, 100);
             }
         };

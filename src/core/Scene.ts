@@ -40,7 +40,7 @@ export class Scene {
     public onLoading(percent: number, name: string, url: string) {
         if (typeof GameLoading !== 'undefined') {
             GameLoading?.update(percent)
-            if (percent >= 100) setTimeout(() => GameLoading?.remove(), 100)
+            if (Math.round(percent) >= 100) setTimeout(() => GameLoading?.remove(), 100)
         }
     }
 
