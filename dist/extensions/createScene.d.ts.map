@@ -1,1 +1,1 @@
-{"version":3,"file":"createScene.d.ts","sourceRoot":"","sources":["../src/extensions/createScene.ts"],"names":[],"mappings":"AAGA,wBAAgB,WAAW,CAAC,KAAK,EAAE,GAAG,QAUrC"}
+{"version":3,"file":"createScene.d.ts","sourceRoot":"","sources":["../src/extensions/createScene.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,eAAe,CAAA;AAIjC,wBAAgB,WAAW,CAAC,SAAS,EAAE,KAAK,QAU3C"}

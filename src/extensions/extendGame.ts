@@ -1,9 +1,10 @@
+import Event from 'eventemitter3'
 import { Scene } from '../core/Scene'
 import { shared, isLandScape } from '../common'
 import { SCENE } from '../../types'
 
-export function extendGame(event: any) {
-    event.on('created', ({ PIXI, configure, game }: SCENE.EVENT_EXPORT) => {
+export function extendGame(LifeCycle: Event) {
+    LifeCycle.on('created', ({ PIXI, configure, game }: SCENE.EVENT_EXPORT) => {
         game.Loader = PIXI.Loader
         game.resources = PIXI.Loader.shared.resources
         game.EVENT_NAMES = {}

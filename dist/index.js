@@ -84,6 +84,14 @@
         }
     }
 
+    function __spreadArrays() {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    }
+
     var ResourceLoader = {
         add: function () {
             var _a;
@@ -536,8 +544,8 @@
         resolution: devicePixelRatio,
     };
 
-    function extendGame(event) {
-        event.on('created', function (_a) {
+    function extendGame(LifeCycle) {
+        LifeCycle.on('created', function (_a) {
             var PIXI = _a.PIXI, configure = _a.configure, game = _a.game;
             game.Loader = PIXI.Loader;
             game.resources = PIXI.Loader.shared.resources;
@@ -567,8 +575,8 @@
         });
     }
 
-    function createScene(event) {
-        event.on('create-scene', function (_a) {
+    function createScene(LifeCycle) {
+        LifeCycle.on('sceneCreate', function (_a) {
             var game = _a.game, configure = _a.configure;
             var keys = Object.keys(configure.scenes).map(function (key) { return key.toLowerCase(); });
             var values = Object.values(configure.scenes);
@@ -578,25 +586,21 @@
         });
     }
 
-    function eventBUS(event) {
-        event.on('created', function (_a) {
+    function eventBUS(LifeCycle) {
+        LifeCycle.on('created', function (_a) {
             var game = _a.game;
-            game.on = function on() {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                event.on.apply(event, args);
+            game.on = function on(event, fn, context) {
+                LifeCycle.on(event, fn, context);
             };
-            game.emit = function emit() {
+            game.emit = function emit(event) {
                 var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    args[_i - 1] = arguments[_i];
                 }
-                event.emit.apply(event, args);
+                LifeCycle.emit.apply(LifeCycle, __spreadArrays([event], args));
             };
             game.eventNames = function eventNames() {
-                return event.eventNames();
+                return LifeCycle.eventNames();
             };
         });
     }
@@ -612,10 +616,12 @@
         var view = configure.view;
         configure = Object.assign(defaultConfigure, configure);
         configure.view = view || getView();
-        event.emit('beforeCreate', { PIXI: PIXI, Resource: Resource, configure: configure });
+        var EVENT_EXPORTS = { PIXI: PIXI, Route: Route, Scene: Scene, Resource: Resource, configure: configure };
+        event.emit('beforeCreate', EVENT_EXPORTS);
         var game = new Game(configure);
-        event.emit('created', { PIXI: PIXI, Resource: Resource, configure: configure, game: game });
-        event.emit('create-scene', { PIXI: PIXI, Resource: Resource, configure: configure, game: game });
+        event.emit('created', __assign(__assign({}, EVENT_EXPORTS), { game: game }));
+        event.emit('sceneCreate', __assign(__assign({}, EVENT_EXPORTS), { game: game }));
+        event.emit('sceneCreated', __assign(__assign({}, EVENT_EXPORTS), { game: game }));
         return game;
     }
     use(extensions);

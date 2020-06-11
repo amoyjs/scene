@@ -1,8 +1,9 @@
+import Event from 'eventemitter3'
 import { Route } from '../core/Route'
 import { SCENE } from '../../types'
 
-export function createScene(event: any) {
-    event.on('create-scene', ({ game, configure }: SCENE.EVENT_EXPORT) => {
+export function createScene(LifeCycle: Event) {
+    LifeCycle.on('sceneCreate', ({ game, configure }: SCENE.EVENT_EXPORT) => {
         const keys = Object.keys(configure.scenes).map((key) => key.toLowerCase())
         const values = Object.values(configure.scenes)
 

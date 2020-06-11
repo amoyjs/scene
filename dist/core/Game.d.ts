@@ -14,8 +14,8 @@ export declare class Game extends Application {
         LOADED?: 'LOADED';
         LOADING?: 'LOADING';
     };
-    on: (name: string, cb: () => void) => void;
+    on: (event: string | symbol, fn: (...args: any[]) => void, context?: any) => void;
     emit: (name: string, ...args: any[]) => void;
-    eventNames: () => string[];
+    eventNames: () => Array<string | symbol>;
 }
 //# sourceMappingURL=Game.d.ts.map

@@ -15,7 +15,7 @@ export class Game extends Application {
         LOADED?: 'LOADED'
         LOADING?: 'LOADING',
     }
-    public on: (name: string, cb: () => void) => void
+    public on: (event: string | symbol, fn: (...args: any[]) => void, context?: any) => void
     public emit: (name: string, ...args: any[]) => void
-    public eventNames: () => string[]
+    public eventNames: () => Array<string | symbol>
 }

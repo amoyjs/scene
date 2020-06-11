@@ -4,6 +4,8 @@ import { getView } from '../common'
 import { event } from '../common/event'
 import { use } from '../common/use'
 // event exports
+import { Route } from './Route'
+import { Scene } from './Scene'
 import { Resource } from './Resource'
 import defaultConfigure from '../configure'
 // extensions
@@ -16,12 +18,15 @@ export function createGame(configure: SCENE.IConfigure = { scenes: {} }) {
     configure = Object.assign(defaultConfigure, configure)
     configure.view = view || getView()
 
-    event.emit('beforeCreate', { PIXI, Resource, configure })
+    const EVENT_EXPORTS = { PIXI, Route, Scene, Resource, configure }
+
+    event.emit('beforeCreate', EVENT_EXPORTS)
 
     const game = new Game(configure)
 
-    event.emit('created', { PIXI, Resource, configure, game })
-    event.emit('create-scene', { PIXI, Resource, configure, game })
+    event.emit('created', { ...EVENT_EXPORTS, game })
+    event.emit('sceneCreate', { ...EVENT_EXPORTS, game })
+    event.emit('sceneCreated', { ...EVENT_EXPORTS, game })
 
     return game
 }
