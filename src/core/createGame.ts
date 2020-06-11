@@ -25,7 +25,6 @@ export function createGame(configure: SCENE.IConfigure = { scenes: {} }) {
     const game = new Game(configure)
 
     event.emit('created', { ...EVENT_EXPORTS, game })
-    event.emit('sceneCreate', { ...EVENT_EXPORTS, game })
     event.emit('sceneCreated', { ...EVENT_EXPORTS, game })
 
     return game

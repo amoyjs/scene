@@ -572,7 +572,7 @@ function extendGame(LifeCycle) {
 }
 
 function createScene(LifeCycle) {
-    LifeCycle.on('sceneCreate', function (_a) {
+    LifeCycle.on('created', function (_a) {
         var game = _a.game, configure = _a.configure;
         var keys = Object.keys(configure.scenes).map(function (key) { return key.toLowerCase(); });
         var values = Object.values(configure.scenes);
@@ -616,7 +616,6 @@ function createGame(configure) {
     event.emit('beforeCreate', EVENT_EXPORTS);
     var game = new Game(configure);
     event.emit('created', __assign(__assign({}, EVENT_EXPORTS), { game: game }));
-    event.emit('sceneCreate', __assign(__assign({}, EVENT_EXPORTS), { game: game }));
     event.emit('sceneCreated', __assign(__assign({}, EVENT_EXPORTS), { game: game }));
     return game;
 }

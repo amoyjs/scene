@@ -3,7 +3,7 @@ import { Route } from '../core/Route'
 import { SCENE } from '../../types'
 
 export function createScene(LifeCycle: Event) {
-    LifeCycle.on('sceneCreate', ({ game, configure }: SCENE.EVENT_EXPORT) => {
+    LifeCycle.on('created', ({ game, configure }: SCENE.EVENT_EXPORT) => {
         const keys = Object.keys(configure.scenes).map((key) => key.toLowerCase())
         const values = Object.values(configure.scenes)
 

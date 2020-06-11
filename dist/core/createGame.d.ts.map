@@ -1,1 +1,1 @@
-{"version":3,"file":"createGame.d.ts","sourceRoot":"","sources":["../src/core/createGame.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,IAAI,EAAE,MAAM,QAAQ,CAAA;AAW7B,OAAO,EAAE,KAAK,EAAE,MAAM,aAAa,CAAA;AAEnC,wBAAgB,UAAU,CAAC,SAAS,GAAE,KAAK,CAAC,UAA2B,QAiBtE"}
+{"version":3,"file":"createGame.d.ts","sourceRoot":"","sources":["../src/core/createGame.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,IAAI,EAAE,MAAM,QAAQ,CAAA;AAW7B,OAAO,EAAE,KAAK,EAAE,MAAM,aAAa,CAAA;AAEnC,wBAAgB,UAAU,CAAC,SAAS,GAAE,KAAK,CAAC,UAA2B,QAgBtE"}
