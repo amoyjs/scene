@@ -3,6 +3,11 @@ import { Stage } from './Stage'
 import { Route } from './Route'
 import { Game } from './Game'
 
+declare const GameLoading: {
+    remove: () => void,
+    update: (percent: number) => void,
+}
+
 export class Scene {
     public name: string
     public canUpdate: boolean
@@ -32,7 +37,12 @@ export class Scene {
         Resource.Load()
     }
 
-    public onLoading(percent: number, name: string, url: string) {}
+    public onLoading(percent: number, name: string, url: string) {
+        if (typeof GameLoading !== 'undefined') {
+            GameLoading?.update(percent)
+            if (percent >= 100) setTimeout(() => GameLoading?.remove(), 100)
+        }
+    }
 
     public onLoaded(resources: any) { }
 

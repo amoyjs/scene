@@ -1,6 +1,9 @@
 /// <reference types="pixi.js" />
 
 import { Game } from '../src/core/Game'
+import { Route } from '../src/core/Route'
+import { Scene } from '../src/core/Scene'
+import { Resource } from '../src/core/Resource'
 import Event from 'eventemitter3'
 
 declare const canvas: any
@@ -51,7 +54,10 @@ export declare namespace SCENE {
 
     interface EVENT_EXPORT {
         PIXI: typeof PIXI,
-        configure: IConfigure,
         game: Game,
+        Route: Route,
+        Scene: Scene,
+        Resource: Resource,
+        configure: IConfigure,
     }
 }

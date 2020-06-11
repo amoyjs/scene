@@ -399,7 +399,14 @@
         Scene.prototype.Load = function () {
             Resource.Load();
         };
-        Scene.prototype.onLoading = function (percent, name, url) { };
+        Scene.prototype.onLoading = function (percent, name, url) {
+            var _a;
+            if (typeof GameLoading !== 'undefined') {
+                (_a = GameLoading) === null || _a === void 0 ? void 0 : _a.update(percent);
+                if (percent >= 100)
+                    setTimeout(function () { var _a; return (_a = GameLoading) === null || _a === void 0 ? void 0 : _a.remove(); }, 100);
+            }
+        };
         Scene.prototype.onLoaded = function (resources) { };
         Scene.prototype.beforeCreate = function () {
             return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
