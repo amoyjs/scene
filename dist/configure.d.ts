@@ -1,6 +1,7 @@
 declare const _default: {
     backgroundColor: number;
     autoResize: boolean;
+    antialias: boolean;
     width: number;
     height: number;
     UIWidth: number;
