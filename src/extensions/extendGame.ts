@@ -18,12 +18,10 @@ export function extendGame(LifeCycle: Event) {
 
         game.PIXEL_RATIOS = {
             get x() {
-                const width = isLandScape() ? game.view.width : game.view.height
-                return width / configure.resolution / UIWidth
+                return game.view.width / configure.resolution / UIWidth
             },
             get y() {
-                const height = isLandScape() ? game.view.height : game.view.width
-                return height / configure.resolution / UIHeight
+                return game.view.height / configure.resolution / UIHeight
             },
         }
         // 竖屏应用，以宽为准；横屏应用，以高为准
